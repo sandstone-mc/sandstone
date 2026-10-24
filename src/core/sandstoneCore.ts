@@ -5,7 +5,6 @@ import { EncodingOption } from 'fs'
 import fs from 'fs/promises'
 import crypto from 'crypto'
 import { isBinaryFileSync } from 'isbinaryfile'
-import binaryExtensions from 'binary-extensions'
 import { getSandstoneContext, hasContext } from 'sandstone/context'
 import type { SandstonePack } from 'sandstone/pack'
 import { MCMetaCache } from './mcmeta'
@@ -18,12 +17,12 @@ import type { TextureMeta } from './resources/resourcepack/texture'
 import { BinaryResource, JsonResource, type ResourceClass, ResourceNodesMap, TextResource } from './resources/resource'
 import type { GenericCoreVisitor } from './visitors'
 import { REGISTRIES, RESOURCE_PATHS, TextureType } from 'sandstone/arguments'
-import { Set, SetType } from '../utils'
+import { BINARY_EXTENSIONS_SET, BinaryExtension, Set, SetType } from '../utils'
 import { JsonSymbolResource } from 'sandstone/arguments/generated/_json/dispatcher'
 import type { MathContainerNode } from '../flow/math/ast/MathContainerNode'
 import type { MathFunctionNode } from '../flow/math/ast/MathFunctionNode'
 import { _RawTestMCFunctionClass } from 'sandstone/test'
-import { TestMCFunctionClass, TestMCFunctionNode } from 'sandstone/test/mcfunction';
+import { TestMCFunctionClass, TestMCFunctionNode } from 'sandstone/test/mcfunction'
 
 /**
  * After `getExistingResource` resolves a resource's bytes, thread them back
@@ -70,6 +69,8 @@ export type BinaryResourceTypes = SetType<typeof BinaryResourceTypesSet>
 export type JsonResourceTypes = Exclude<({
   [K in keyof typeof RESOURCE_PATHS]: typeof RESOURCE_PATHS[K]['ext'] extends '.json' ? K : never
 }[keyof typeof RESOURCE_PATHS]), 'tag'>
+
+const TextEncodersSet = new Set(['ascii', 'utf8', 'utf-8', 'utf16le', 'utf-16le'] as const) 
 
 export class SandstoneCore {
   /**
@@ -313,7 +314,9 @@ export class SandstoneCore {
     return this._mcMetaCache as MCMetaCache
   }
 
-  async getExistingResource(relativePath: `${string}.json`): Promise<unknown>
+  async getExistingResource(relativePath: `${string}.${BinaryExtension}`): Promise<ArrayBuffer | Buffer>
+
+  async getExistingResource(relativePath: `${string}.${'json' | 'mcmeta'}`): Promise<unknown>
 
   async getExistingResource(
     relativePath: string & {},
@@ -341,11 +344,13 @@ export class SandstoneCore {
       const fullPath = path.isAbsolute(pathOrResource)
         ? pathOrResource
         : path.join(getSandstoneContext().workingDir, 'resources', pathOrResource)
-      if (encoding === false) {
-        return fs.readFile(fullPath)
+      const extIdx = pathOrResource.lastIndexOf('.')
+      const ext = extIdx === -1 ? pathOrResource : pathOrResource.slice(extIdx + 1)
+      if (encoding === false || !TextEncodersSet.has(encoding) || BINARY_EXTENSIONS_SET.has(ext)) {
+        return fs.readFile(fullPath, encoding === false ? undefined : encoding)
       }
       const text = await fs.readFile(fullPath, encoding)
-      return pathOrResource.endsWith('.json') ? JSON.parse(text as string) : text
+      return (ext === 'json' || ext === 'mcmeta') ? JSON.parse(text as string) : text
     }
     const _path = pathOrResource.path
     if (_path[0] === 'minecraft' && pathOrResource._resourceType in RESOURCE_PATHS) {
@@ -464,7 +469,6 @@ export class SandstoneCore {
 
     const resources = this.generateResources(opts)
 
-    const binaryExt = new Set(binaryExtensions)
     const encoder = new TextDecoder()
 
     for await (const node of resources) {
@@ -491,7 +495,7 @@ export class SandstoneCore {
           if (typeof value === 'string') {
             return value
           }
-          if (!binaryExt.has(fileExtension) && !isBinaryFileSync(value)) {
+          if (!BINARY_EXTENSIONS_SET.has(fileExtension) && !isBinaryFileSync(value)) {
             return encoder.decode(value)
           }
 
