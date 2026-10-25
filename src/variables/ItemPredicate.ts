@@ -2,13 +2,14 @@ import type { SymbolDataComponent, SymbolDataComponentPredicate } from 'sandston
 import type { Registry } from 'sandstone/arguments/generated/registry'
 import type { MinMaxBounds } from 'sandstone/arguments/generated/data/util'
 import type { SandstonePack } from 'sandstone/pack'
-import { nbtResolver } from 'sandstone/variables/nbt/NBTs'
+import { NBTInt, nbtResolver } from 'sandstone/variables/nbt/NBTs'
 import * as util from 'util'
 import { formatDebugString } from '../utils'
 import type { MacroArgument } from 'sandstone/core/Macro'
 import { TagClass } from 'sandstone/core/resources/datapack/tag'
 import type { NBTObject } from 'sandstone/arguments'
 import type { ItemModelBuilder } from 'sandstone/core/resources/resourcepack/itemDefinition'
+import { JsonItemPredicate } from 'sandstone/arguments/generated/_json/data/advancement/predicate'
 
 /** Item type: specific item, tag, or wildcard */
 export type ItemPredicateItemType = Registry['minecraft:item'] | `#${string}` | TagClass<'item'> | '*'
@@ -20,7 +21,7 @@ type PredicateKeys = keyof SymbolDataComponentPredicate<'map'>
 type ComponentKeys = keyof SymbolDataComponent<'map'>
 
 /** Range for count test */
-type CountRange = number | MinMaxBounds<number> | { min?: number; max?: number }
+type CountRange = number | NBTInt | MinMaxBounds<number | NBTInt> | { min?: number | NBTInt; max?: number | NBTInt }
 
 /** A single test entry */
 type TestEntry = {
@@ -123,6 +124,29 @@ export class ItemPredicateClass {
   count(range: CountRange): this {
     this.addTest({ negated: false, component: 'count', operator: '~', value: range })
     return this
+  }
+
+  /** Test stack count */
+  notCount(range: CountRange): this {
+    this.addTest({ negated: false, component: 'count', operator: '~', value: range })
+    return this
+  }
+
+  from(json: Omit<JsonItemPredicate, 'items'>, negated?: boolean): this {
+	if (json.count) negated
+		? this.notCount(json.count)
+		: this.count(json.count)
+	for (const [k, c] of Object.entries(json.components ?? {}) as [ComponentKeys, SymbolDataComponent<'map'>[ComponentKeys]][]) {
+		negated
+			? this.notExact(k, c)
+			: this.exact(k, c)
+	}
+	for (const [k, p] of Object.entries(json.predicates ?? {}) as [PredicateKeys, SymbolDataComponentPredicate<'map'>[PredicateKeys]][]) {
+		negated
+			? this.notMatch(k, p)
+			: this.match(k, p)
+	}
+	return this
   }
 
   /**
