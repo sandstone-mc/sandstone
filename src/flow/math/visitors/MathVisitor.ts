@@ -121,10 +121,10 @@ export abstract class MathVisitor {
    * replacement node (same instance for pass-through).
    */
   visit(node: MathNode): MathNode {
+    if (MathReturnNode.is(node)) return this.visitReturnNode(node)
     if (MathIfNode.is(node)) return this.visitIfNode(node)
     if (MathElseIfNode.is(node)) return this.visitElseIfNode(node)
     if (MathElseNode.is(node)) return this.visitElseNode(node)
-    if (MathReturnNode.is(node)) return this.visitReturnNode(node)
     if (MathSwitchNode.is(node)) return this.visitSwitchNode(node)
     if (MathCaseNode.is(node)) return this.visitCaseNode(node)
     if (MathConditionCaseNode.is(node)) return this.visitConditionCaseNode(node)

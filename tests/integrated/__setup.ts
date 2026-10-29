@@ -32,8 +32,7 @@ function resolveCliBin() {
 const CLI_BIN = resolveCliBin()
 
 const STARTUP_DEADLINE_MS = 120_000
-const RUN_DEADLINE_MS = 15_000
-const SHUTDOWN_GRACE_MS = 5_000
+const SHUTDOWN_GRACE_MS = 240_000
 
 type TestResultBase = Omit<Extract<TestEvent, { event: 'test_result' }>, 'event'>
 
@@ -114,14 +113,12 @@ function triggerFinishRunIfReady(): void {
   }
 }
 
-export function ensureLiveMC(opts: { expectedCount: number }) {
+export function ensureLiveMC() {
   ensureLiveMCCalled = true
-  getOrSetExpectedTotal(opts.expectedCount)
   if (daemonReady !== null) return
 
   beforeAll(async () => {
     await ensureDaemonReady()
-    triggerFinishRunIfReady()
   }, STARTUP_DEADLINE_MS)
 
   afterAll(async () => {
@@ -134,7 +131,21 @@ export function ensureLiveMC(opts: { expectedCount: number }) {
     if (daemonProc !== null) {
       console.log(chalk`{blue [test]} Test server finished shutting down`)
     }
-  }, SHUTDOWN_GRACE_MS + 10_000)
+  }, SHUTDOWN_GRACE_MS)
+}
+
+/**
+ * Call this at the bottom of `index.test.ts` (after every
+ * `register*Tests()` call) to signal that all tests are registered
+ * and the run can start. Replaces the old `expectedCount` mechanic —
+ * the grace timer / count-watching is fragile under Bun's
+ * concurrent runner (N>20 tests queue up and never register before
+ * the timer fires). Explicit start is reliable.
+ */
+export function startTests() {
+  if (runStarted) return
+  runStarted = true
+  if (runFinished === null) finishRun().catch(() => {})
 }
 
 export function registerTest(name: string, buildCb: (create: CreateFn, pack: SandstonePack) => TestMCFunctionClass, options?: RegisterTestOptions): Promise<TestResult> {
@@ -165,12 +176,9 @@ export function registerTest(name: string, buildCb: (create: CreateFn, pack: San
       optional: options?.optional,
     })
 
-    const expectedTotal = getOrSetExpectedTotal()
-    if (registeredTests.size >= expectedTotal) {
-      startRunImmediate()
-    } else {
-      startRun()
-    }
+    // Run start is driven exclusively by `startTests()` from
+    // `index.test.ts` — the auto-start heuristic (count vs
+    // expectedTotal) was fragile and now obsolete.
   })
 
   return promise
@@ -184,13 +192,16 @@ export function test(
   timeoutMs = 120_000,
 ) {
   if (!ensureLiveMCCalled) {
-    throw new Error(`test("${testName}") called before ensureLiveMC({ expectedCount: N }). ensureLiveMC must be called once, before any test() registrations.`)
+    throw new Error(`test("${testName}") called before ensureLiveMC(). ensureLiveMC must be called once, before any test() registrations.`)
   }
 
-  bunTest.concurrent(description, async () => {
-    const resultPromise = registerTest(testName, buildCb, { description })
-    triggerFinishRunIfReady()
+  // Register the test SYNCHRONOUSLY at call time (not inside the test
+  // body). This way every `test(...)` call lands in `registeredTests`
+  // before `startTests()` fires, regardless of how Bun schedules the
+  // test bodies. The test body just waits for the result.
+  const resultPromise = registerTest(testName, buildCb, { description })
 
+  bunTest.concurrent(description, async () => {
     if (daemonReady === null) throw new Error('daemonReady was not set before test body ran')
     await daemonReady
     const r = await resultPromise
@@ -201,7 +212,25 @@ export function test(
 async function startDaemon() {
   await ensureTestingPackDir()
 
-  const proc = Bun.spawn([CLI_BIN, 'connect'], {
+  // Mirror the template's host config (`sandstone-template/sandstone.config.ts`)
+  // — integrated host with packtest disabled + the additionalMods jar.
+  // Passed via CLI args instead of a `sandstone.config.ts` so the
+  // test project doesn't need its own config file.
+  const hostConfig = JSON.stringify({
+    mods: {
+      packtest: false,
+      additionalMods: [{
+        url: 'https://github.com/sandstone-mc/packtest-mod/releases/download/2.7.0/packtest-2.7.0.jar',
+      }],
+    },
+  })
+
+  const proc = Bun.spawn([
+    CLI_BIN,
+    'connect',
+    '--host-type', 'integrated',
+    '--host-config', hostConfig,
+  ], {
     cwd: PROJECT_ROOT,
     stdout: 'pipe',
     stderr: 'pipe',
@@ -294,25 +323,6 @@ async function clearWorldDatapacks() {
     return
   }
   await Promise.all(entries.map((entry) => rm(path.join(MC_WORLD_DATAPACKS, entry), { recursive: true, force: true })))
-}
-
-function startRun() {
-  if (graceTimerScheduled || runStarted) return
-  graceTimerScheduled = true
-  graceTimer = setTimeout(() => {
-    runStarted = true
-    if (runFinished === null) finishRun().catch(() => {})
-  }, RUN_DEADLINE_MS)
-}
-
-function startRunImmediate() {
-  if (runStarted) return
-  runStarted = true
-  if (graceTimer !== null) {
-    clearTimeout(graceTimer)
-    graceTimer = null
-  }
-  finishRun().catch(() => {})
 }
 
 async function finishRun() {
@@ -431,8 +441,9 @@ async function finishRun() {
         },
       }
 
-      console.log(chalk`{blue [test]} Build complete, reloading...`)
-
+      console.log(chalk`{blue [test]} Build complete, resetting MC state...`)
+      await client.clearSandstoneMCState()
+      console.log(chalk`{blue [test]} MC State reset, reloading...`)
       await client.reloadResources()
       console.log(chalk`{blue [test]} Reload complete, testing...`)
       await runJsonTestProcess(registeredTests, attach)

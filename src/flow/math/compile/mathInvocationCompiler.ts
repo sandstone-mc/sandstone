@@ -1,9 +1,13 @@
 import type { FloatNumberProviderClass } from '../../../core/resources/datapack/numberProvider'
 import type { SandstoneCore } from '../../../core/sandstoneCore'
 import type { DataPointClass } from '../../../variables/Data'
-import { LiteralNode } from '../ast/nodes/leaves'
+import { LiteralNode, StorageRefNode } from '../ast/nodes/leaves'
+import { MathExpressionNode } from '../ast/MathExpressionNode'
+import { MathReturnNode } from '../ast/nodes/control'
 import { NBTFloat, NBTInt } from '../../../variables/nbt/NBTs'
-import { buildSharedPlanContent } from './multiStatementEmit'
+import { buildSharedPlanContent, buildProviderName } from './multiStatementEmit'
+import { compileMathExpressionToProvider } from './mathProviderCompiler'
+import { runDefaultMathVisitors } from '../visitors'
 import type { BridgeGroup } from './groupBridges'
 import type { MathInvocationNode } from './MathInvocationNode'
 
@@ -133,26 +137,50 @@ export function compileMathInvocationGroup(
     inputShapeKey: group.key,
   })
 
+  // Non-primary-fn bridges carry their own AST and their own
+  // `MathFunctionNode`. The shared plan above only describes the
+  // primary's chain, so the other fns' `constantResult` fields
+  // still need their visitor pipeline run. Without this pass, the
+  // bridge loop's "emit bridge's own const_result" branch sees an
+  // empty constant and silently drops the `set value` command for
+  // every non-primary bridge — the math result path stays at its
+  // default (0f) and the test's equality check fires `fail`.
+  for (const bridge of group.bridges) {
+    if (bridge.mathFunction === fn) continue
+    runDefaultMathVisitors(bridge.mathFunction)
+  }
+
   // Per-bridge imperative-command emission. Each bridge in the
   // group gets its own copy of the per-update commands, but writes
   // to its OWN result storage. Provider JSON references are shared
   // across the group (queued once below).
   for (const bridge of group.bridges) {
     const host = bridge.hostFunction
+    const bridgeFn = bridge.mathFunction
+    // Bridges can come from different `_RawMathFunction` instances
+    // (e.g. two unrelated `_.Math(Float, _ => ...)` calls that happen
+    // to share an input shape). Each instance owns its own result
+    // DataPoint, its own `constantResult`, and its own chain
+    // analysis — the shared `content` was built from the primary
+    // bridge's fn, so it only describes the primary's storage
+    // topology. For a non-primary-fn bridge, we use the bridge's
+    // own fn for the result path AND emit its own const_result
+    // command instead of iterating the primary's shared commands.
+    const isPrimaryFn = bridgeFn === fn
 
     // This bridge's own result DataPoint. Each call's `a.data()` /
     // `b.data()` reads from a different path, so the math result
     // must land in per-bridge storage even when the provider is
     // shared. `bridge.callIdx` (per-bridge, set by the user's
     // `_.Math(fn)(...)` call site) controls the suffix.
-    const resultDataPoint = fn.getResultStorage(
+    const resultDataPoint = bridgeFn.getResultStorage(
       bridge.callIdx,
       bridge.useCallNamespace,
     )
 
     // Switch into the bridge so subsequent commands commit here.
     host.enterContext(bridge, false)
-    ;(core as unknown as { mcfunctionStack: unknown[] }).mcfunctionStack.push(host)
+    core.mcfunctionStack.push(host)
 
     // Shared input address population: one `set from <caller_N> →
     // shared_<N>` per storage-kind slot. Only emitted when the
@@ -183,57 +211,161 @@ export function compileMathInvocationGroup(
     // Provider JSON references are SHARED across the group (the
     // provider was generated from the primary and stored in
     // `content.providers`).
-    for (const cmd of content.commands) {
-      const dataPoint: DataPointClass<'storage'> = cmd.isFinalFold
-        ? resultDataPoint
-        : content.handleStorageByHandle.get(cmd.handleName)!
-      // Constant-result path: the chain analysis promoted a
-      // folded-literal return to a synthetic update; emit it
-      // directly via `set value Nf` / `Ni` instead of looking up a
-      // provider resource. No JSON file is queued for these —
-      // the literal IS the value, and its `kind` selects the
-      // NBT primitive (float vs integer).
-      if (cmd.isConstant && LiteralNode.is(cmd.isConstant)) {
-        const nbt = cmd.isConstant.kind === 'integer'
-          ? new NBTInt(cmd.isConstant.value)
-          : new NBTFloat(cmd.isConstant.value)
-        core.pack.commands.data.modify(dataPoint).set.value(nbt as never)
-        continue
+    //
+    // Record outputs skip the chain-analysis update loop entirely:
+    // each field's returned expression is compiled directly into a
+    // self-contained provider (no chain reads of intermediate handle
+    // storages) and emitted as its own `set compute` against the
+    // field's result path. The handle-storage writes the chain
+    // analysis produced are pure overhead for record outputs.
+    const bridgeOutputs = bridgeFn.outputs as { kind?: 'scalar' | 'record' } | undefined
+    const isRecordOutput = bridgeOutputs?.kind === 'record'
+
+    if (!isRecordOutput && isPrimaryFn) {
+      for (const cmd of content.commands) {
+        const dataPoint: DataPointClass<'storage'> = cmd.isFinalFold
+          ? resultDataPoint
+          : content.handleStorageByHandle.get(cmd.handleName)!
+        // Constant-result path: the chain analysis promoted a
+        // folded-literal return to a synthetic update; emit it
+        // directly via `set value Nf` / `Ni` instead of looking up a
+        // provider resource. No JSON file is queued for these —
+        // the literal IS the value, and its `kind` selects the
+        // NBT primitive (float vs integer).
+        if (cmd.isConstant && LiteralNode.is(cmd.isConstant)) {
+          const nbt = cmd.isConstant.kind === 'integer'
+            ? new NBTInt(cmd.isConstant.value)
+            : new NBTFloat(cmd.isConstant.value)
+          core.pack.commands.data.modify(dataPoint).set.value(nbt as never)
+          continue
+        }
+        core.pack.commands.data
+          .modify(dataPoint)
+          .set
+          .compute
+          .default()
+          .float(cmd.providerName)
       }
-      core.pack.commands.data
-        .modify(dataPoint)
-        .set
-        .compute
-        .default()
-        .float(cmd.providerName as unknown as FloatNumberProviderClass)
+
+      // Final-return fold: if the last op already wrote to THIS
+      // bridge's result storage, skip the trailing `set from`. The
+      // shared plan doesn't know the per-bridge resultDataPoint, so
+      // we infer folding from the plan's `commands` instead: if the
+      // last command is `isFinalFold`, the math result is already at
+      // `resultDataPoint` and no copy is needed.
+      const lastCmd = content.commands[content.commands.length - 1]
+      if (
+        content.returnHandleName &&
+        lastCmd &&
+        !lastCmd.isFinalFold
+      ) {
+        // No folding in the shared plan for this group — emit a
+        // trailing `set from <lastHandleStorage> → <bridgeResultStorage>`.
+        // Source is the last handle's storage (the chain's terminal
+        // intermediate), target is THIS bridge's resultDataPoint.
+        const lastHandleDp = content.handleStorageByHandle.get(lastCmd.handleName)!
+        core.pack.commands.data
+          .modify(resultDataPoint)
+          .set
+          .from
+          .storage(lastHandleDp.currentTarget as any, lastHandleDp.path as any)
+      }
+    } else if (!isRecordOutput) {
+      // Non-primary-fn bridge: the shared content describes the
+      // primary's handle storages, not this bridge's. Emit the
+      // bridge's own const_result command instead — the only thing
+      // the shared plan would have produced for a constant-return
+      // bridge. For non-constant returns of a non-primary fn the
+      // shared plan is structurally unable to describe them; future
+      // multi-fn plan synthesis would handle that case.
+      const bridgeConst = bridgeFn.constantResult
+      if (bridgeConst && LiteralNode.is(bridgeConst)) {
+        const nbt = bridgeConst.kind === 'integer'
+          ? new NBTInt(bridgeConst.value)
+          : new NBTFloat(bridgeConst.value)
+        core.pack.commands.data
+          .modify(resultDataPoint)
+          .set
+          .value(nbt as never)
+      }
     }
 
-    // Final-return fold: if the last op already wrote to THIS
-    // bridge's result storage, skip the trailing `set from`. The
-    // shared plan doesn't know the per-bridge resultDataPoint, so
-    // we infer folding from the plan's `commands` instead: if the
-    // last command is `isFinalFold`, the math result is already at
-    // `resultDataPoint` and no copy is needed.
-    const lastCmd = content.commands[content.commands.length - 1]
-    if (
-      content.returnHandleName &&
-      lastCmd &&
-      !lastCmd.isFinalFold
-    ) {
-      // No folding in the shared plan for this group — emit a
-      // trailing `set from <lastHandleStorage> → <bridgeResultStorage>`.
-      // Source is the last handle's storage (the chain's terminal
-      // intermediate), target is THIS bridge's resultDataPoint.
-      const lastHandleDp = content.handleStorageByHandle.get(lastCmd.handleName)!
-      core.pack.commands.data
-        .modify(resultDataPoint)
-        .set
-        .from
-        .storage(lastHandleDp.currentTarget as any, lastHandleDp.path as any)
+    // Record-output per-field handling: for each field, emit the
+    // command that lands the field's returned expression at the
+    // field's result path. The MathReturnNode captured at
+    // `_.return({ x, y, ... })` time holds a record of
+    // `{ fieldName: MathExpressionNode }` — each entry IS the
+    // expression to write. `recordConstantResult` carries the
+    // folded-to-literal path (e.g. y = multiply(2, 4) → 8d, emitted
+    // as `set value 8d`); non-folded values run through
+    // `compileMathExpressionToProvider` and emit `set compute`.
+    if (bridgeOutputs?.kind === 'record') {
+      const outputs = bridgeFn.outputs as {
+        kind: 'record'
+        fields: Record<string, 'float' | 'integer'>
+      }
+      // Pull the MathReturnNode's record value (the actual returned
+      // expressions per field). `body[0]` is the trailing return
+      // statement; for record schemas its value is a plain object
+      // whose keys are the field names.
+      const retNode = bridgeFn.body[0]
+      const record = MathReturnNode.is(retNode)
+        && retNode.value
+        && typeof retNode.value === 'object'
+        && !Array.isArray(retNode.value)
+        ? retNode.value as Record<string, unknown>
+        : {}
+      for (const [fieldName, fieldKind] of Object.entries(outputs.fields)) {
+        const fieldDp = bridgeFn.getResultStorageForField?.(fieldName, bridge.callIdx, bridge.useCallNamespace)
+          ?? core.pack.DataVariable(
+            undefined,
+            `math_${bridgeFn.resourceName ?? '0'}_${fieldName}${bridge.useCallNamespace ? `_${bridge.callIdx}` : ''}`,
+          )
+        const constantValue = bridgeFn.recordConstantResult?.[fieldName]
+        if (constantValue !== undefined) {
+          // Folded field — emit `set value` directly.
+          const nbt = fieldKind === 'integer'
+            ? new NBTInt(constantValue)
+            : new NBTFloat(constantValue)
+          core.pack.commands.data.modify(fieldDp).set.value(nbt as never)
+          continue
+        }
+        // Non-folded field — look up the field's returned expression.
+        // The return record's entries are `MathExpressionNode` values
+        // captured at `_.return({...})` time (each is the handle's
+        // `node` snapshot). Compile each expression into its own
+        // self-contained provider; no intermediate handle-storage
+        // writes are needed because the expression carries everything
+        // from the chain roots down.
+        const fieldExpr = record[fieldName]
+        if (MathExpressionNode.is(fieldExpr)) {
+          if (StorageRefNode.is(fieldExpr)) {
+            core.pack.commands.data
+              .modify(fieldDp)
+              .set
+              .from
+              .storage(fieldExpr.dataPoint.currentTarget as never, fieldExpr.dataPoint.path as never)
+            continue
+          }
+          const providerName = buildProviderName(
+            bridgeFn,
+            `field_${fieldName}_${bridge.callIdx}`,
+            `${bridge.callIdx}_${fieldName}`,
+          )
+          core.pack.commands.data
+            .modify(fieldDp)
+            .set
+            .compute
+            .default()
+            .float(providerName as unknown as FloatNumberProviderClass)
+          bridgeFn.queueProvider(providerName, compileMathExpressionToProvider(fieldExpr))
+          continue
+        }
+      }
     }
 
     // Pop back out of the bridge.
-    ;(core as unknown as { mcfunctionStack: unknown[] }).mcfunctionStack.pop()
+    core.mcfunctionStack.pop()
     host.exitContext()
   }
 

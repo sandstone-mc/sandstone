@@ -68,7 +68,12 @@ export function computeInputShapeKey(inputs: readonly MathExpressionNode[]): str
         case 'literal':
           return `literal:${shape.mathKind}:${shape.value}`
         case 'complex':
-          return `complex:${String(shape.node)}`
+          // Use the node's structural key (recurses into operands for
+          // operator/condition nodes) so two distinct complex inputs
+          // produce distinct shape keys. `String(node)` falls back to
+          // `[object Object]` and silently merges every complex input
+          // into one bucket — that's the multi-call input-rebind bug.
+          return `complex:${shape.node.getStructuralKey()}`
       }
     })
     .join('|')

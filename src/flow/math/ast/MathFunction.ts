@@ -5,7 +5,6 @@ import { Score } from '../../../variables/Score'
 import type { MathFunctionOutputs } from './MathFunctionNode'
 import { MathFunctionNode } from './MathFunctionNode'
 import { LiteralNode, ScoreboardRefNode } from './nodes/leaves'
-import { TestMCFunctionNode } from 'sandstone/test/mcfunction'
 import type { SandstoneCore } from '../../../core/sandstoneCore'
 import type { MCFunctionNode } from 'sandstone/core'
 import type { MathKind, MathExpressionNode } from './MathExpressionNode'
@@ -16,7 +15,7 @@ import type { MathSchemaValue } from '../../math/Math'
 import { SandstoneMath } from '../../math/Math'
 import { StorageRefNode } from './nodes/leaves'
 import { DataPointPickClass } from 'sandstone/core'
-import { MathInvocationNode as MathInvocationBridgeNode } from '../compile/MathInvocationNode'
+import { MathInvocationNode as MathInvocationBridgeNode, SharedInputSlot } from '../compile/MathInvocationNode'
 import { computeInputShapeKey } from '../compile/groupBridges'
 
 /**
@@ -226,7 +225,7 @@ class _RawMathFunction<P extends readonly MathInput[], R>
     node.resourceName = this._resourceKey
     // Plumb user options onto the inspector so they're reported
     // alongside the AST.
-    node.options = this.options as unknown as Record<string, unknown> | undefined
+    node.options = this.options
     // `rebindInput` ran in `__call__` BEFORE the MathFunctionNode
     // existed, so the bound StorageRefNodes missed the base
     // `MathNode` ctor's audit-trail registration. Catch up here —
@@ -241,6 +240,17 @@ class _RawMathFunction<P extends readonly MathInput[], R>
       const nextIndex = node.perClassCounters.get(cls) ?? 0
       startNode.index = nextIndex
       node.perClassCounters.set(cls, nextIndex + 1)
+      // The input handle's `startNode` was constructed BEFORE the
+      // MathFunctionNode was on the mathStack, so the base
+      // `MathNode` ctor skipped registering it in `allNodes`. Add
+      // it now so the chain analysis can classify the input as a
+      // root and emit updates when the handle is mutated
+      // (`x.multiply(_.float(2))` etc.). Without this, DataPoint
+      // inputs produce zero updates and the compiler emits no
+      // compute command for the result.
+      if (!node.allNodes.includes(startNode)) {
+        node.allNodes.unshift(startNode)
+      }
     }
     try {
       const helper = new SandstoneMath<unknown>(this.sandstoneCore)
@@ -271,18 +281,14 @@ class _RawMathFunction<P extends readonly MathInput[], R>
     // sees branded handles throughout. Kind inferred from the runtime
     // type of the input (IntegerDataPointClass → integer, Score → integer
     // by default; everything else → float).
-    const rebound = (inputs as unknown as readonly MathInput[]).map(
-      (i): Float | Integer => this.rebindInput(i),
-    )
+    const rebound = inputs.map((i): Float | Integer => this.rebindInput(i))
     // Snapshot the rebound handles' starting storage references so
     // the inspector can render them ahead of the AST AND so
     // `buildAst` can register them with the about-to-be-created
     // MathFunctionNode (their construction happens BEFORE that
     // node exists, so the base `MathNode` ctor's mathStack-based
     // registration skips them).
-    this._lastReboundStarts = rebound.map(
-      (h) => (h as unknown as { startNode: MathExpressionNode }).startNode,
-    )
+    this._lastReboundStarts = rebound.map((h) => h.startNode)
     const node = this.buildAst(rebound as unknown as P)
     // Compile + emit. Passes the caller's MCFunction so the lowering
     // pass can attach the bridge `MathInvocationNode` to that body.
@@ -327,9 +333,9 @@ class _RawMathFunction<P extends readonly MathInput[], R>
     // LiteralNode (literal — no slot), or ScoreboardRefNode (future
     // score input). Only storage inputs get a slot; the others
     // leave that position out of the array.
-    const slots: import('../compile/MathInvocationNode').SharedInputSlot[] = []
+    const slots: SharedInputSlot[] = []
     rebound.forEach((h, i) => {
-      const startNode = (h as unknown as { startNode: MathExpressionNode }).startNode
+      const startNode = h.startNode
       if (!StorageRefNode.is(startNode)) return // literal or score — skip
       const callerDp = startNode.dataPoint as DataPointClass<'storage'>
       // Allocate the per-position shared input DataPoint via
@@ -374,9 +380,15 @@ class _RawMathFunction<P extends readonly MathInput[], R>
     // determines whether this bridge can share a compile with
     // others. Literals vs DataPointClass vs ScoreboardRefNode all
     // participate in the key.
-    bridge.reboundInputs = rebound.map(
-      (h) => (h as unknown as { node: MathExpressionNode }).node,
-    )
+    //
+    // MUST use the ORIGINAL startNode (captured in `_lastReboundStarts`
+    // before the callback ran), not the handle's current `.node` —
+    // the callback mutates the handle's chain (`x['+='](10)` replaces
+    // `x.node` with an AggregateNode), so reading `.node` here would
+    // capture the post-mutation expression and collapse every call's
+    // shape key to `complex:[object Object]`, silently merging all
+    // calls into one group and reusing the primary's plan.
+    bridge.reboundInputs = (this._lastReboundStarts ?? []) as MathExpressionNode[]
     parentFn.body.push(bridge)
 
     return this.makeDeferredResult(node, callIdx, useCallNamespace)
@@ -475,6 +487,17 @@ class _RawMathFunction<P extends readonly MathInput[], R>
       const ref = new StorageRefNode(this.sandstoneCore, dp, kind)
       const handle = kind === 'float' ? new _RawFloatHandle(ref) : new _RawIntegerHandle(ref)
       handle._isOutput = true
+      node.fieldResultRoots.set(k, ref)
+      // Push the field-result StorageRefNode onto `allNodes` so the
+      // chain analysis classifies it as a root. The compiler looks
+      // up each field's chain root by matching against `rootToId` to
+      // fold the field's last chain update into the field's result
+      // path. Without this registration, field results are never
+      // written — the test sees `math_<key>_<field>` stay at its
+      // default value and the equality assert fires `fail`.
+      if (!node.allNodes.includes(ref)) {
+        node.allNodes.unshift(ref)
+      }
       result[k] = handle
     }
     return result as unknown as MathSchemaValue<R>

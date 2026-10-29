@@ -3,6 +3,7 @@ import type { MathNode } from '../ast/MathNode'
 import { MathExpressionNode } from '../ast/MathExpressionNode'
 import type { MathFunctionNode } from '../ast/MathFunctionNode'
 import { LiteralNode, CopyNode } from '../ast/nodes/leaves'
+import { MathFlowClauseNode, MathIfNode } from '../ast/nodes/control'
 import { AggregateNode, BinaryOpNode, UnaryOpNode } from '../ast/nodes/operators'
 import { MathReturnNode } from '../ast/nodes/control'
 import { MathVisitor } from './MathVisitor'
@@ -82,6 +83,15 @@ export class ConstantFoldingVisitor extends MathVisitor {
    */
   private readonly _newRootLiterals: LiteralNode[] = []
 
+  override onStart(fn: MathFunctionNode): void {
+    // Capture the function so `visitReturnNode` can stash the folded
+    // constant on it. Without this `_fn` stays null and the
+    // `if (this._fn)` guard silently drops every `constantResult`
+    // write — the chain analysis then sees no synthetic update and
+    // the compiler emits no `set value Xf` for the result path.
+    this._fn = fn
+  }
+
   onEnd(fn: MathFunctionNode): void {
     // Constant-result handoff: if the math function's return
     // value is now a Literal (because every operator on the
@@ -92,10 +102,9 @@ export class ConstantFoldingVisitor extends MathVisitor {
     // isn't a BinaryOp or Aggregate), and the compiler would
     // emit no command — the fold would be invisible at the
     // JSON layer.
-    const ret = fn.body[0] as unknown as { value?: unknown } | undefined
-    const finalValue = ret?.value as MathExpressionNode | undefined
-    if (finalValue && LiteralNode.is(finalValue)) {
-      fn.constantResult = finalValue
+    const ret = fn.body[0]
+    if (MathReturnNode.is(ret) && LiteralNode.is(ret.value)) {
+      fn.constantResult = ret.value
     }
     if (this._newRootLiterals.length === 0) return
     for (const lit of this._newRootLiterals) {
@@ -150,15 +159,19 @@ export class ConstantFoldingVisitor extends MathVisitor {
     const oldOperand = node.operand
     const newOperand = this.visit(oldOperand) as MathExpressionNode
     if (newOperand !== oldOperand) {
-      // `UnaryOpNode.operand` is `readonly` — allocate a fresh node
-      // and rely on the caller's in-place mutation to wire it in.
-      const replacement = new UnaryOpNode(
-        node.sandstoneCore,
-        node.op,
-        newOperand,
-      )
-      this.orphans.push(node)
-      return replacement
+      // Mutate `operand` in place (same pattern as `BinaryOpNode` /
+      // `AggregateNode`). The field is declared `readonly`, but the
+      // fold visitor owns the in-place mutation contract — there is
+      // no caller in the visitor pipeline that would rewire the
+      // parent (unlike the BinaryOp case, UnaryOpNode's only parent
+      // is whatever walk reached it, and `MathVisitor.run` discards
+      // return values). Without this mutation, a chain like
+      // `x.negate().abs().sqrt()` keeps its original operand nodes
+      // and never folds.
+      node.operand = newOperand
+      // Push the old operand (now unreferenced) so the post-pass
+      // orphan filter removes it from `fn.allNodes`.
+      this.orphans.push(oldOperand as BinaryOpNode | AggregateNode | UnaryOpNode)
     }
     const folded = this.tryFoldUnary(node)
     if (folded === undefined) return node
@@ -167,33 +180,154 @@ export class ConstantFoldingVisitor extends MathVisitor {
   }
 
   override visitReturnNode(node: MathReturnNode): MathNode {
-    // Recursively fold the return value until stable. Each visit
-    // may collapse an operator into a literal (or a single-survivor
-    // aggregate into its survivor), and the next iteration folds
-    // anything above. Handles deep chains where the return value
-    // holds a stale reference to an orphan aggregate whose
-    // children folded to constants.
-    let current: MathExpressionNode = node.value as unknown as MathExpressionNode
-    for (let iter = 0; iter < 32; iter++) {
-      const next = this.visit(current) as MathExpressionNode
-      if (next === current) break
-      current = next
+    // `node.value` is the snapshot taken at `_.return` time:
+    //   - scalar return → a Float/Integer handle's current `node`
+    //     (a `MathExpressionNode`)
+    //   - record return → `{ [field]: MathExpressionNode }` (each
+    //     field's handle's current `node`)
+    // Type as `unknown` and use guards — the previous `MathExpressionNode`
+    // annotation was a type lie that compiled only because the record
+    // case was never exercised.
+    let current = node.value
+    if (MathExpressionNode.is(current)) {
+      const expr = current
+      for (let iter = 0; iter < 32; iter++) {
+        const next = this.visit(expr)
+        if (next === expr) break
+        if (!MathExpressionNode.is(next)) break
+        current = next
+        if (current === expr) break
+      }
     }
-    if (current !== node.value) {
-      ;(node as unknown as { value: MathExpressionNode }).value = current
+    if (
+      MathExpressionNode.is(current as MathNode) &&
+      current !== node.value
+    ) {
+      node.value = current
     }
-    // Detect a fully-folded return. The chain analysis promotes
-    // constants via `fn.constantResult` — set it if the value is
-    // (effectively) a literal.
-    let final: MathExpressionNode = current
-    if (CopyNode.is(final)) {
-      const source = (final as unknown as { source: unknown }).source
-      if (LiteralNode.is(source)) final = source
+    // Scalar constant: a single `MathExpressionNode` that folded to
+    // a literal. Promote to `fn.constantResult` so the chain analysis
+    // emits a synthetic update.
+    if (MathExpressionNode.is(current)) {
+      let final = current
+      if (CopyNode.is(final) && LiteralNode.is(final.source)) {
+        final = final.source
+      }
+      if (LiteralNode.is(final)) {
+        this._fn!.constantResult = final
+      }
+      return node
     }
-    if (LiteralNode.is(final)) {
-      if (this._fn) this._fn.constantResult = final
+    // Record return: `_.return({ x: handle, y: handle })`. Each
+    // field is tracked independently — a constant field gets its
+    // value stored in `recordConstantResult[field]`; a non-constant
+    // field is left for the compiler's imperative path.
+    if (
+      current !== null &&
+      typeof current === 'object' &&
+      !Array.isArray(current) &&
+      Object.getPrototypeOf(current) === Object.prototype
+    ) {
+      const record = current as Record<string, unknown>
+      if (!this._fn!.recordConstantResult) this._fn!.recordConstantResult = {}
+      for (const [key, value] of Object.entries(record)) {
+        // Fold the field's expression to a stable value. The return
+        // visitor runs before every aggregate has been visited, so
+        // a field that's a literal-foldable aggregate needs folding
+        // here (not waiting for the post-return walk).
+        let v = value
+        if (MathExpressionNode.is(v)) {
+          let expr: MathNode = v
+          for (let iter = 0; iter < 32; iter++) {
+            const next = this.visit(expr)
+            if (next === expr) break
+            if (!MathExpressionNode.is(next)) break
+            expr = next
+          }
+          v = expr
+        }
+        if (CopyNode.is(v) && LiteralNode.is(v.source)) {
+          v = v.source
+        }
+        if (LiteralNode.is(v)) {
+          this._fn!.recordConstantResult![key] = v.value
+        }
+      }
     }
     return node
+  }
+
+  override visitIfNode(node: MathIfNode): MathNode {
+    const condValue = node.condition.evaluateConstant()
+    if (condValue === true) {
+      // If-branch matches — fold it, drop the elseIf/else chain
+      // from `allNodes` AND from the AST so the `run` walk doesn't
+      // visit them and overwrite `fn.constantResult`.
+      const next = node.nextFlowNode
+      if (next) {
+        this.removeChainFromAllNodes(next)
+        node.nextFlowNode = undefined
+      }
+      for (let i = 0; i < node.body.length; i++) {
+        node.body[i] = this.visit(node.body[i]) as typeof node.body[0]
+      }
+      return node
+    }
+    if (condValue === false) {
+      // If-branch doesn't match — skip it, recurse into elseIf/else
+      // as if they were the new head.
+      const next = node.nextFlowNode
+      if (next) {
+        // Remove the dead if-branch from allNodes.
+        for (const child of node.body) {
+          this.removeFromAllNodes(child)
+        }
+        // Replace the if-node with its elseIf/else successor in the
+        // body's chain. Easiest: recurse into the successor — the
+        // visitor will handle it as a new head.
+        this.visit(next)
+      }
+      return node
+    }
+    // Condition unknown — fold all branches (imperative lowering
+    // handles the runtime dispatch).
+    return this.genericVisit(node)
+  }
+
+  /**
+   * Walk a clause chain (`MathIfNode` → `nextFlowNode` → ...) and
+   * remove every node from `fn.allNodes`. Used when a condition folds
+   * to a known value and the unselected branches are dead code.
+   */
+  private removeChainFromAllNodes(start: MathNode): void {
+    const visited = new Set<MathNode>()
+    const queue: MathNode[] = [start]
+    while (queue.length > 0) {
+      const node = queue.shift()!
+      if (visited.has(node)) continue
+      visited.add(node)
+      this.removeFromAllNodes(node)
+      // Recurse into clause successors + body.
+      if (MathIfNode.is(node) && node.nextFlowNode !== undefined) {
+        queue.push(node.nextFlowNode)
+      }
+      if (MathFlowClauseNode.is(node)) {
+        for (const child of node.body) {
+          queue.push(child)
+        }
+      }
+    }
+  }
+
+  private removeFromAllNodes(node: MathNode): void {
+    if (this._fn) {
+      // Mutate in place — `run` already captured the array reference
+      // and is iterating over the original indices. Reassigning
+      // `allNodes` to a new array would leave the iterator walking
+      // the stale (now-mutated) copy.
+      const idx = this._fn.allNodes.indexOf(node)
+      if (idx >= 0) this._fn.allNodes.splice(idx, 1)
+    }
   }
 
   // -------------------------------------------------------------------------
@@ -294,7 +428,7 @@ export class ConstantFoldingVisitor extends MathVisitor {
       // constant promote only fires on `LiteralNode`).
       let survivor: MathExpressionNode = filtered[0]
       if (CopyNode.is(survivor)) {
-        const source = (survivor as unknown as { source: unknown }).source
+        const source = survivor.source
         if (LiteralNode.is(source)) survivor = source
       }
       return survivor

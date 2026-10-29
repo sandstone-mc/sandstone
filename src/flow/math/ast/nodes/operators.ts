@@ -273,7 +273,7 @@ export class UnaryOpNode extends MathExpressionNode {
   constructor(
     sandstoneCore: SandstoneCore,
     readonly op: UnaryOp,
-    readonly operand: MathExpressionNode,
+    public operand: MathExpressionNode,
   ) {
     super(sandstoneCore)
     // Operand stays parent-less (independent value).

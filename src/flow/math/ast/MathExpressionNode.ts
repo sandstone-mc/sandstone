@@ -133,6 +133,27 @@ export abstract class MathExpressionNode extends MathNode {
     void this
     return []
   }
+
+  /**
+   * @internal
+   *
+   * Stable, structural identity for this node's subtree. Two nodes with
+   * the same key represent the same computation (same op, same operands
+   * in the same order). Used by `compile/groupBridges.ts` to derive a
+   * per-bridge input-shape key for the `complex` case — without it the
+   * default `String(node)` falls back to `[object Object]` and silently
+   * merges every complex input into one bucket.
+   *
+   * Subclasses with structural children (operators, conditions) override
+   * to recurse into their operands. Leaves (LiteralNode, StorageRefNode,
+   * ScoreboardRefNode, etc.) override with their own typed identity.
+   * The base fallback uses the class name + the node's stable `index`
+   * so the key is at least distinct per-instance within one `allNodes`
+   * list.
+   */
+  getStructuralKey(): string {
+    return `${this.inspectClassName}#${this.index}`
+  }
 }
 
 /**

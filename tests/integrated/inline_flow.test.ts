@@ -6,8 +6,7 @@ import chalk from 'chalk-template'
 console.log(chalk`{blue [test]} Registered 8 inline_flow tests`)
 
 export function registerInlineFlowTests() {
-  describe.concurrent('inline_flow.test.ts @ main', () => {
-    test('Basic', 'inline_flow_basic',
+  test('Basic', 'inline_flow_basic',
       (create, { Test, _ }) => create(() => {
         const o = Objective.create('if_else_score')
         const s = o('#if_else_player')['='](4)
@@ -94,7 +93,6 @@ export function registerInlineFlowTests() {
 
     test('NotOr', 'inline_flow_not_or',
       (create, { Test, _ }) => create(() => {
-        // De Morgan: `_.not(_.or(a, b))` → AND(NOT a, NOT b) → runs only when neither holds.
         const o = Objective.create('not_or_score')
         const s = o('#not_or_player')['='](4)
         _.if(
@@ -104,5 +102,4 @@ export function registerInlineFlowTests() {
       }),
       async (r) => expect(r.passed).toBe(true)
     )
-  })
 }

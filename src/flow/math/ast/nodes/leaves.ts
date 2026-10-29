@@ -145,13 +145,24 @@ export class StorageRefNode extends MathExpressionNode {
 
   readonly kind: MathKind
 
+  /**
+   * Mutable: the compiler rewrites this in-place for multi-call math
+   * to point each input's `StorageRefNode` at the shared input
+   * address (instead of the caller's per-invocation DataPoint) —
+   * `buildPlan` mutates `target.dataPoint = sharedDp` before chain
+   * analysis runs so every read lands on the same path the bridge's
+   * per-call `set from <caller> → shared` copy writes.
+   */
+  dataPoint: DataPointClass
+
   constructor(
     sandstoneCore: SandstoneCore,
-    readonly dataPoint: DataPointClass,
+    dataPoint: DataPointClass,
     kind: MathKind = 'float',
   ) {
     super(sandstoneCore)
     this.kind = kind
+    this.dataPoint = dataPoint
   }
 
   getValue() {

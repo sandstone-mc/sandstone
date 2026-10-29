@@ -2,7 +2,6 @@ import type { DataPointClass } from '../../../variables/Data'
 import type { MathExpressionNode } from '../ast/MathExpressionNode'
 import { MathExpressionNode as MathExpressionNodeClass } from '../ast/MathExpressionNode'
 import { AggregateNode, BinaryOpNode } from '../ast/nodes/operators'
-import { LiteralNode } from '../ast/nodes/leaves'
 import type { MathFunctionNode } from '../ast/MathFunctionNode'
 import type { MathNode } from '../ast/MathNode'
 import { MathAnalysisVisitor } from './MathVisitor'
@@ -279,6 +278,4 @@ export class MathChainAnalysisVisitor extends MathAnalysisVisitor<MathChainAnaly
   }
 }
 
-// Re-export so callers can `import { MathChainAnalysisVisitor }`
-// without reaching into individual files.
 export { DataPointClass, MathExpressionNode, MathFunctionNode, MathNode }

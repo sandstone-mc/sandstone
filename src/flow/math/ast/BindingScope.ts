@@ -1,4 +1,4 @@
-import type { Float, Integer } from './handles'
+import type { BaseHandle, Float, Integer } from './handles'
 
 /**
  * Tracks let-bindings inside a Math DSL callback.
@@ -22,18 +22,18 @@ import type { Float, Integer } from './handles'
  * enough.
  */
 export class BindingScope {
-  private bindings = new Map<string, Float | Integer>()
+  private bindings = new Map<string, BaseHandle>()
 
   /** Create or overwrite a binding. Links the handle back to this scope. */
-  define(name: string, handle: Float | Integer): Float | Integer {
+  define(name: string, handle: Float | Integer) {
     handle._link(this, name)
     this.bindings.set(name, handle)
     return handle
   }
 
   /** Read a binding or `undefined` if not defined. */
-  lookup(name: string): Float | Integer | undefined {
-    return this.bindings.get(name)
+  lookup(name: string) {
+    return this.bindings.get(name) as Float | Integer | undefined
   }
 
   /** True if `name` is currently bound. */
@@ -46,7 +46,7 @@ export class BindingScope {
    * the scope's stored pointer so subsequent `scope.lookup(name)` reads
    * return the up-to-date handle.
    */
-  _update(name: string, handle: Float | Integer): void {
+  _update(name: string, handle: BaseHandle): void {
     this.bindings.set(name, handle)
   }
 
@@ -62,12 +62,12 @@ export class BindingScope {
    * Take a snapshot of the current bindings (for nested-scope entry).
    * Callers can `restore()` to pop back. Cheap: shallow-clones the map.
    */
-  snapshot(): Map<string, Float | Integer> {
-    return new Map(this.bindings)
+  snapshot() {
+    return new Map(this.bindings as Map<string, Float | Integer>)
   }
 
   restore(snapshot: Map<string, Float | Integer>): void {
-    this.bindings = new Map(snapshot)
+    this.bindings = new Map(snapshot) as Map<string, BaseHandle>
   }
 
   /** All current binding names. Read-only view. */
@@ -82,7 +82,7 @@ export class BindingScope {
    * distinct chain roots instead of being mis-classified as
    * extensions of their source handle's chain.
    */
-  handles(): IterableIterator<Float | Integer> {
-    return this.bindings.values()
+  handles() {
+    return this.bindings.values() as IterableIterator<Float | Integer>
   }
 }

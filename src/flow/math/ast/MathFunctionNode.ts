@@ -10,9 +10,11 @@ import {
   MATH_INDENT,
 } from './inspectHelpers'
 import type { DataPointClass } from '../../../variables/Data'
+import { StorageRefNode } from './nodes/leaves'
 import type { MathExpressionNode } from './MathExpressionNode'
 import type { MathNode } from './MathNode'
 import type { Float, Integer } from './handles'
+import type { MathChainAnalysis } from '../visitors/mathChainAnalysis'
 
 /**
  * Top-level Math DSL container — the analog of `MCFunctionNode` for math.
@@ -140,6 +142,70 @@ export class MathFunctionNode extends MathContainerNode {
    * consulted again.
    */
   constantResult: MathExpressionNode | null = null
+
+  /**
+   * Record-output equivalent of `constantResult`. When the return
+   * value is a record (`_.return({ x: ..., y: ... })`) and every
+   * field folds to a literal, this map stores `{ fieldName: literal
+   * value }`. The compiler emits one `set value` per field's result
+   * path. Without this, record outputs produce no commands at all
+   * (chain analysis can't walk a record, `constantResult` is a
+   * single value).
+   */
+  recordConstantResult: Record<string, number> | null = null
+
+  /**
+   * Per-field `StorageRefNode` for record outputs. Populated by
+   * `_RawMathFunction.makeDeferredResult` when each field's
+   * `StorageRefNode` is allocated. The compiler reads this to find
+   * each field's chain root in `rootToId` (so it can fold the last
+   * chain update into the field's result path with a `set compute`).
+   */
+  fieldResultRoots: Map<string, StorageRefNode> = new Map()
+
+  /**
+   * Typed accessor for the chain-analysis result. The underlying
+   * `analyses` map is `Map<string, unknown>` because each visitor
+   * registers its own key; this helper narrows to `MathChainAnalysis`
+   * so call sites don't repeat the `as` cast.
+   *
+   * Throws if the analysis is missing — `MathChainAnalysisVisitor`
+   * is unconditionally registered by `runDefaultMathVisitors`, so a
+   * missing entry indicates a pipeline ordering bug. Surface that
+   * as a hard error rather than letting downstream `analysis.x`
+   * accesses silently produce `undefined`.
+   */
+  get chainAnalysisResult(): MathChainAnalysis {
+    const v = this.analyses.get('chain') as MathChainAnalysis | undefined
+    if (v === undefined) {
+      throw new Error(
+        'MathFunctionNode.chainAnalysisResult: chain analysis missing — '
+          + 'runDefaultMathVisitors must run before reading analysis results.',
+      )
+    }
+    return v
+  }
+
+  /**
+   * Typed accessor for the return-handle analysis. Returns the
+   * chain handle ID (or `null` if the return is a literal).
+   */
+  get returnHandleNameResult(): string | null {
+    return (this.analyses.get('returnHandle') as string | null | undefined) ?? null
+  }
+
+  /**
+   * Caches for the storage-DataPoint allocators below. The compiler
+   * can call `getHandleStorage` / `getResultStorage` /
+   * `getResultStorageForField` many times for the same key (once
+   * per bridge, per plan-emit iteration); without caching every
+   * call instantiates a fresh `DataVariable` whose only difference
+   * is the cached `.path` string. Memoize so identity matches
+   * across the bridge loop and the user-side `.data()` reads.
+   */
+  private readonly handleStorageCache: Map<string, DataPointClass<'storage'>> = new Map()
+  private readonly resultStorageCache: Map<string, DataPointClass<'storage'>> = new Map()
+  private readonly fieldStorageCache: Map<string, DataPointClass<'storage'>> = new Map()
 
   /**
    * Provider JSONs deferred to a save-time pass. Each call to
@@ -271,10 +337,47 @@ export class MathFunctionNode extends MathContainerNode {
    * (no per-call suffix).
    */
   getHandleStorage(handleName: string): DataPointClass<'storage'> {
-    return this.sandstoneCore.pack.DataVariable(
-      undefined,
-      `math_${this.resourceName ?? '0'}_h_${handleName}`,
-    )
+    let cached = this.handleStorageCache.get(handleName)
+    if (cached === undefined) {
+      cached = this.sandstoneCore.pack.DataVariable(
+        undefined,
+        `math_${this.resourceName ?? '0'}_h_${handleName}`,
+      )
+      this.handleStorageCache.set(handleName, cached)
+    }
+    return cached
+  }
+
+  /**
+   * Look up the `StorageRefNode` for a record output field. Used by
+   * the compiler to find each field's chain root in `rootToId`.
+   * Returns `undefined` if the field doesn't exist.
+   */
+  getResultStorageRootForField(fieldName: string): StorageRefNode | undefined {
+    return this.fieldResultRoots.get(fieldName)
+  }
+
+  /**
+   * Storage `DataPoint` for a record output field. Per-call suffixed
+   * when `useCallNamespace` so concurrent calls land at distinct
+   * paths. Same suffix scheme as `getResultStorage`.
+   */
+  getResultStorageForField(
+    fieldName: string,
+    callIdx: number,
+    useCallNamespace: boolean,
+  ): DataPointClass<'storage'> {
+    const key = `${fieldName}|${callIdx}|${useCallNamespace ? 'ns' : 's'}`
+    let cached = this.fieldStorageCache.get(key)
+    if (cached === undefined) {
+      const suffix = useCallNamespace ? `_${callIdx}` : ''
+      cached = this.sandstoneCore.pack.DataVariable(
+        undefined,
+        `math_${this.resourceName ?? '0'}_${fieldName}${suffix}`,
+      )
+      this.fieldStorageCache.set(key, cached)
+    }
+    return cached
   }
 
   /**
@@ -284,11 +387,17 @@ export class MathFunctionNode extends MathContainerNode {
    * Same `DataPoint` is what the output handle's `.data()` returns.
    */
   getResultStorage(callIdx: number, useCallNamespace: boolean): DataPointClass<'storage'> {
-    const suffix = useCallNamespace ? `_${callIdx}` : ''
-    return this.sandstoneCore.pack.DataVariable(
-      undefined,
-      `math_${this.resourceName ?? '0'}_result${suffix}`,
-    )
+    const key = `${callIdx}|${useCallNamespace ? 'ns' : 's'}`
+    let cached = this.resultStorageCache.get(key)
+    if (cached === undefined) {
+      const suffix = useCallNamespace ? `_${callIdx}` : ''
+      cached = this.sandstoneCore.pack.DataVariable(
+        undefined,
+        `math_${this.resourceName ?? '0'}_result${suffix}`,
+      )
+      this.resultStorageCache.set(key, cached)
+    }
+    return cached
   }
 
   /**

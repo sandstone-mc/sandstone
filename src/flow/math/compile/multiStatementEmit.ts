@@ -49,7 +49,7 @@ export interface MultiStatementEmit {
      * the write/read suffix mismatch crept in).
      */
     dataPoint: DataPointClass<'storage'>
-    providerName: string
+    providerName: NamespacedString
     /**
      * True when this command writes to its bridge's per-call
      * `resultDataPoint` (final-fold path).
@@ -149,7 +149,7 @@ export interface SharedPlanContent {
    *  bridge's `resultDataPoint` for the final fold). */
   commands: Array<{
     handleName: string
-    providerName: string
+    providerName: NamespacedString
     isFinalFold: boolean
     /**
      * When the chain analysis produced a synthetic update for a
@@ -166,6 +166,13 @@ export interface SharedPlanContent {
   providers: Map<string, JsonContextFloatProvider>
   handleStorageByHandle: Map<string, DataPointClass<'storage'>>
   returnHandleName: string | null
+  /**
+   * Root → forward-reachable nodes map from `ChainReachabilityAnalysis`.
+   * Bundled here so the compiler doesn't reach back into
+   * `fn.analyses` for an analysis key — all relevant analyses
+   * flow through the plan.
+   */
+  chainReachability: Map<MathExpressionNode, Set<MathExpressionNode>>
 }
 
 /**
@@ -213,9 +220,9 @@ function buildPlan(
   if (sharedInputs && sharedInputs.length > 0) {
     for (const slot of sharedInputs) {
       if (slot.kind !== 'storage') continue
-      const target = (fn.inputs as readonly MathExpressionNode[])[slot.position]
+      const target = fn.inputs[slot.position]
       if (!StorageRefNode.is(target)) continue
-      ;(target as unknown as { dataPoint: DataPointClass<'storage'> }).dataPoint = slot.sharedDp
+      target.dataPoint = slot.sharedDp
     }
   }
 
@@ -229,18 +236,18 @@ function buildPlan(
   // and doesn't have to re-derive chain structure. The `as` cast
   // pins the type — `MathChainAnalysisVisitor.key` is `'chain'` and
   // its `analyze()` always returns `MathChainAnalysis`.
-  const analysis = fn.analyses.get('chain') as MathChainAnalysis
+  const analysis = fn.chainAnalysisResult
   // `chainReachability` — root → forward-reachable nodes map. Used
   // by the incremental provider compiler to know which chain nodes
   // can be substituted with a `minecraft:storage` read.
   // `returnHandle` — handle ID of the chain that `_.return(value)`
   // references; used to fold the last update on that chain into the
   // result storage. Both produced by analysis visitors during the
-  // same pipeline run (above). The `as unknown as` casts pin the
-  // types since `fn.analyses` is `Map<string, unknown>`.
+  // same pipeline run (above).
+  const returnHandle = fn.returnHandleNameResult
+  // `as` cast pins the type — `fn.analyses` is `Map<string, unknown>`.
   const chainReachability = fn.analyses.get('chainReachability') as
     Map<MathExpressionNode, Set<MathExpressionNode>>
-  const returnHandle = fn.analyses.get('returnHandle') as string | null
 
   // Each chain's intermediate-storage DataPoint. Allocated via
   // `fn.getHandleStorage` so packUid suffixing matches the runtime
@@ -379,22 +386,22 @@ export function buildSharedPlanContent(
   if (sharedInputs && sharedInputs.length > 0) {
     for (const slot of sharedInputs) {
       if (slot.kind !== 'storage') continue
-      const target = (fn.inputs as readonly MathExpressionNode[])[slot.position]
+      const target = fn.inputs[slot.position]
       if (!StorageRefNode.is(target)) continue
-      ;(target as unknown as { dataPoint: DataPointClass<'storage'> }).dataPoint = slot.sharedDp
+      target.dataPoint = slot.sharedDp
     }
   }
 
   // Run the visitor pipeline (transforms + analyses). Subsequent
-  // // pipelines see the cached analyses in `fn.analyses` so this is
+  // pipelines see the cached analyses in `fn.analyses` so this is
   // cheap to re-run if the compiler is called more than once per
   // save (it shouldn't be, but the runner's idempotent).
   runDefaultMathVisitors(fn)
 
-  const analysis = fn.analyses.get('chain') as MathChainAnalysis
+  const analysis = fn.chainAnalysisResult
   const chainReachability = fn.analyses.get('chainReachability') as
     Map<MathExpressionNode, Set<MathExpressionNode>>
-  const returnHandle = fn.analyses.get('returnHandle') as string | null
+  const returnHandle = fn.returnHandleNameResult ?? null
 
   const handleStorageByHandle = new Map<string, DataPointClass<'storage'>>()
   for (const root of analysis.inputRoots) {
@@ -423,6 +430,7 @@ export function buildSharedPlanContent(
     providers: new Map(),
     handleStorageByHandle,
     returnHandleName: returnHandle,
+    chainReachability: chainReachability ?? new Map(),
   }
 
   analysis.updates.forEach((u, i) => {
@@ -490,7 +498,7 @@ export function buildSharedPlanContent(
  * applied once inside `DataVariable` and stays consistent between
  * the two consumers — no opportunity for write/read drift.
  */
-function compileIncrementalProvider(
+export function compileIncrementalProvider(
   update: ChainUpdate,
   analysis: MathChainAnalysis,
   handleStorageByHandle: Map<string, DataPointClass<'storage'>>,
@@ -654,11 +662,11 @@ function substituteRoots(
  * string derived from each input position's type + identity. It's
  * opaque — only used to namespace the provider name.
  */
-function buildProviderName(
+export function buildProviderName(
   fn: MathFunctionNode,
   suffix: string,
   inputShapeKey: string,
-): string {
+): NamespacedString {
   // Short hash of the input shape key (8 chars of [a-z0-9]) —
   // the full key can be long (one entry per input position with
   // type/value pairs), and provider names end up as filenames via
@@ -674,5 +682,6 @@ function buildProviderName(
     hash = Math.imul(hash, 0x01000193)
   }
   const safeShape = (hash >>> 0).toString(36).padStart(8, '0')
-  return `default:math_${fn.resourceName ?? '0'}_${suffix}_${safeShape}`
+  const namespace = fn.sandstoneCore.pack.defaultNamespace
+  return `${namespace}:math_${fn.resourceName ?? '0'}_${suffix}_${safeShape}` as NamespacedString
 }

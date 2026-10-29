@@ -13,6 +13,47 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **Format/Fix**: `bun format` - Lints and auto-fixes issues
 - **Basic command syntax**: Do not add or run dedicated command-output tests for direct syntax additions; use build/type checks unless behavior beyond serialization changes.
 
+## Runtime verification via `bun sand`
+
+For debugging the integrated-test pipeline against a live MC server, use the bundled CLI script:
+
+```bash
+bun sand run "<mc-command>"
+```
+
+This is a package script for the sandstone library (same directory as this CLAUDE file) — the `sand` script auto-`cd`s to `tests/integrated/.server` and dispatches the command via the running daemon's RCON. Useful for spot-checking storage state:
+
+```bash
+bun sand run "data get storage __sandstone:variable"                       # dump full compound
+bun sand run "data get storage __sandstone:variable math_24_sum_integ0001"  # specific path
+```
+
+Output format is the raw MC chat response — keys may use single quotes around IDs and unquoted compound keys with `[A-Za-z0-9_.\-+]+`. The Sandstone SNBT parser (`parseNBT` from `sandstone/variables`) handles either form.
+
+Requires the daemon to be alive (an `bun test tests/integrated/` run leaves one behind; the endpoint file lives at `tests/integrated/.server/.sandstone/connect.url`).
+
+### Integrated test scripts
+
+The full test cycle uses three scripts:
+
+```bash
+bun run test:server:up        # Spawn a detached `sand connect` daemon in tests/integrated/.server
+bun run test:integrated      # Run all integrated tests; pipe ALL output to .temp/integrated.log (silent on terminal)
+bun run test:server:down     # Send --shutdown to the daemon
+```
+
+`test:server:up` is detached + unref'd, so the daemon survives the shell that started it. `test:integrated` does `rm -f .temp/integrated.log && bun test tests/integrated/ &> .temp/integrated.log` — the `&>` collapses stdout+stderr into the log, so the terminal stays silent while every line lands in `.temp/integrated.log` for grep. Read it after: `grep -nE '^ +[0-9]+ (pass|fail)|\(fail\)' .temp/integrated.log`.
+
+**Do NOT run `test:server:up` / `test:server:down` yourself.** `test:integrated` starts the daemon on its own if one isn't already running (and reuses an existing one if it is). The up/down scripts exist only for the user to manually restart the daemon after a CLI change — if you've just edited `sandstone-cli/` and need the new build to be live, ask the user to run `test:server:down && test:server:up` instead of doing it yourself. Otherwise the harness owns the daemon lifecycle.
+
+### `tests/integrated/.server/` is sacred — treat it as read-only
+
+**NEVER delete `tests/integrated/.server/`.** Not for a "clean rebuild", not to fix a stale state, not ever. If something looks broken in there, the bug is elsewhere — in source, in the CLI, in the daemon — never in the directory itself. The directory holds the live MC server's world, mods, generated datapacks, and the daemon's `.sandstone/connect.url` (whose PID is how `test:server:down` finds and kills the daemon). Clearing it strands the server process AND destroys every debugging artifact you might need to diagnose the actual problem.
+
+If a stale daemon is wedged, run `bun run test:server:down` (the user runs it — see the up/down note above). If a test wrote unexpected state, read the offending file from inside `.server/` and reason about it. Never `rm`, never `mv`, never recreate the directory.
+
+**Daemons don't "go stale" — they only need to be down'd when the CLI itself was rebuilt.** A long-running daemon serves any number of test runs perfectly. Only a fresh `sandstone-cli/lib/index.js` (a CLI rebuild) requires `test:server:down && test:server:up` to pick up the new binary. If something looks "wrong" in `.server/`, that is data, not rot — read it, don't reach for the reset button.
+
 **Note**: The build scripts auto-retry on "Excessive complexity" TypeScript errors caused by stale types. If you see this error followed by "cleaning and retrying..." and the build succeeds, ignore it.
 
 ## Design Principles for State, Scope, and Naming

@@ -266,6 +266,20 @@ export class SandstoneMath<R = MathOutputsSchema> {
     return binaryOp(this.sandstoneCore, op, a, b, 'float')
   }
 
+  add(...values: (Float | Integer)[]): Float
+  add(values: (Float | Integer)[]): Float
+  add(values: Integer[]): Integer
+  add(...args: ((Float | Integer)[] | Float | Integer)[]): Float | Integer {
+    return aggregate(this.sandstoneCore, 'add', args, 'float', 'add')
+  }
+
+  multiply(...values: (Float | Integer)[]): Float
+  multiply(values: (Float | Integer)[]): Float
+  multiply(values: Integer[]): Integer
+  multiply(...args: ((Float | Integer)[] | Float | Integer)[]): Float | Integer {
+    return aggregate(this.sandstoneCore, 'mul', args, 'float', 'mul')
+  }
+
   divide(a: Float, b: Float | Integer): Float
   divide(a: Integer, b: Float | Integer, floored?: boolean): Integer
   divide(a: Float | Integer, b: Float | Integer, floored = true): any {
@@ -441,12 +455,8 @@ export class SandstoneMath<R = MathOutputsSchema> {
    * that fire early in the block see the early values, not the
    * final post-mutation state.
    */
-  return(value: MathSchemaValue<R>): void {
-    void ({} as MathSchemaValue<R>)
-    const snap = this.snapshotValue(value as unknown) as
-      | Float
-      | Integer
-      | Record<string, Float | Integer>
+  return(value: MathSchemaValue<R>) {
+    const snap = this.snapshotValue(value) as Float | Integer | Record<string, Float | Integer>
     const ret = new MathReturnNode(this.sandstoneCore, snap)
     const stack = this.sandstoneCore.mathStack
     const top = stack[stack.length - 1] as { append?: (n: MathReturnNode) => void } | undefined
@@ -524,7 +534,6 @@ export class SandstoneMath<R = MathOutputsSchema> {
   }
 
   mcfunction(fn: unknown): Integer {
-    void fn
     throw new Error('_.Math.mcfunction: TODO — needs mcfunction-tracker flag plumbing.')
   }
 }
@@ -540,7 +549,6 @@ function aggregate(
   defaultKind: MathKind,
   _opName: string,
 ): Float | Integer {
-  void _opName
   const flat: (Float | Integer)[] = []
   let explicitKind: MathKind | undefined
   for (const a of args) {
@@ -587,12 +595,3 @@ function unaryOp<K extends MathKind>(
 ): K extends 'float' ? Float : Integer {
   return handleFromKind(core, new UnaryOpNode(core, op, value.node), resultKind) as K extends 'float' ? Float : Integer
 }
-
-// Reference unused-but-imported symbols so TS doesn't drop the import
-// (some are kept for the AST surface even if not called here).
-void MathIfNode
-void MathElseNode
-void StorageRefNode
-void ScoreboardRefNode
-void LiteralNode
-void CopyNode

@@ -1,11 +1,12 @@
 import * as util from 'util'
-import { DataPointClass, DATA_TYPES, IntegerDataPointClass } from '../../../variables/Data'
+import { DataPointClass, IntegerDataPointClass } from '../../../variables/Data'
 import type { DataPointPickClass } from '../../../core/Macro'
 import type { Score } from '../../../variables/Score'
 import type { SandstoneCore } from '../../../core/sandstoneCore'
 import type { BindingScope } from './BindingScope'
 import type { MathKind } from './MathExpressionNode'
 import { MathExpressionNode } from './MathExpressionNode'
+import { MathFunctionNode } from './MathFunctionNode'
 import { BinaryOpNode, AggregateNode, UnaryOpNode, ArcSineNode, ArcCosineNode } from './nodes/operators'
 import { LiteralNode } from './nodes/leaves'
 import { CopyNode } from './nodes/leaves'
@@ -53,7 +54,7 @@ interface IntegerBranded {
   readonly [IntegerBrand]: true
 }
 
-abstract class BaseHandle {
+export abstract class BaseHandle {
   /** Mutable: operator methods replace this on each mutation. */
   abstract node: MathExpressionNode
 
@@ -102,7 +103,7 @@ abstract class BaseHandle {
   setNode(node: MathExpressionNode): void {
     this.node = node
     this._wasMutated = true
-    this.binding?.scope._update(this.binding.name, this as unknown as Float | Integer)
+    this.binding?.scope._update(this.binding.name, this)
   }
 
   /**
@@ -130,10 +131,8 @@ abstract class BaseHandle {
    */
   _registerHandleWithActiveFunction(): void {
     const stack = this.startNode.sandstoneCore.mathStack
-    const top = stack[stack.length - 1] as unknown as {
-      startNodes?: Set<MathExpressionNode>
-    } | undefined
-    if (top && top.startNodes instanceof Set) {
+    const top = stack[stack.length - 1]
+    if (MathFunctionNode.is(top)) {
       top.startNodes.add(this.startNode)
     }
   }
@@ -346,6 +345,36 @@ export class _RawFloatHandle extends BaseHandle implements FloatBranded {
     return this.equals(other)
   }
 
+  ['!='](other: number): ComparisonConditionNode
+  ['!='](other: Float | Integer): ComparisonConditionNode
+  ['!='](other: Float | Integer | number): ComparisonConditionNode {
+    return compare(this.node.sandstoneCore, '!=', this, other as Float | Integer)
+  }
+
+  ['<'](other: number): ComparisonConditionNode
+  ['<'](other: Float | Integer): ComparisonConditionNode
+  ['<'](other: Float | Integer | number): ComparisonConditionNode {
+    return compare(this.node.sandstoneCore, '<', this, other as Float | Integer)
+  }
+
+  ['<='](other: number): ComparisonConditionNode
+  ['<='](other: Float | Integer): ComparisonConditionNode
+  ['<='](other: Float | Integer | number): ComparisonConditionNode {
+    return compare(this.node.sandstoneCore, '<=', this, other as Float | Integer)
+  }
+
+  ['>'](other: number): ComparisonConditionNode
+  ['>'](other: Float | Integer): ComparisonConditionNode
+  ['>'](other: Float | Integer | number): ComparisonConditionNode {
+    return compare(this.node.sandstoneCore, '>', this, other as Float | Integer)
+  }
+
+  ['>='](other: number): ComparisonConditionNode
+  ['>='](other: Float | Integer): ComparisonConditionNode
+  ['>='](other: Float | Integer | number): ComparisonConditionNode {
+    return compare(this.node.sandstoneCore, '>=', this, other as Float | Integer)
+  }
+
   /**
    * `equals(value)` — primary comparison entry point. `['==']` sugar
    * delegates here. Accepts `number`, `Float`, `Integer`, or any
@@ -370,7 +399,10 @@ export class _RawFloatHandle extends BaseHandle implements FloatBranded {
     if (!this._isOutput) {
       throw new Error('FloatHandle.data() can only be called on output handles (use _.Math(...) output).')
     }
-    return (this.node as unknown as StorageRefNode).dataPoint
+    if (!StorageRefNode.is(this.node)) {
+      throw new Error(`FloatHandle.data(): expected output node to be StorageRefNode, got ${this.node.constructor.name}`)
+    }
+    return this.node.dataPoint
   }
 
   /**
@@ -523,6 +555,36 @@ export class _RawIntegerHandle extends BaseHandle implements IntegerBranded {
   ['=='](other: Integer): ComparisonConditionNode
   ['=='](other: Integer | number): ComparisonConditionNode {
     return this.equals(other)
+  }
+
+  ['!='](other: number): ComparisonConditionNode
+  ['!='](other: Integer): ComparisonConditionNode
+  ['!='](other: Integer | number): ComparisonConditionNode {
+    return compare(this.node.sandstoneCore, '!=', this, other as Integer)
+  }
+
+  ['<'](other: number): ComparisonConditionNode
+  ['<'](other: Integer): ComparisonConditionNode
+  ['<'](other: Integer | number): ComparisonConditionNode {
+    return compare(this.node.sandstoneCore, '<', this, other as Integer)
+  }
+
+  ['<='](other: number): ComparisonConditionNode
+  ['<='](other: Integer): ComparisonConditionNode
+  ['<='](other: Integer | number): ComparisonConditionNode {
+    return compare(this.node.sandstoneCore, '<=', this, other as Integer)
+  }
+
+  ['>'](other: number): ComparisonConditionNode
+  ['>'](other: Integer): ComparisonConditionNode
+  ['>'](other: Integer | number): ComparisonConditionNode {
+    return compare(this.node.sandstoneCore, '>', this, other as Integer)
+  }
+
+  ['>='](other: number): ComparisonConditionNode
+  ['>='](other: Integer): ComparisonConditionNode
+  ['>='](other: Integer | number): ComparisonConditionNode {
+    return compare(this.node.sandstoneCore, '>=', this, other as Integer)
   }
 
   /** `equals(value)` — primary comparison entry point. `['==']` delegates here. */

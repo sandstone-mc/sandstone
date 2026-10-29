@@ -319,10 +319,10 @@ const grammar: Grammar = {
         return keyValues
       },
     },
-    { name: 'objectKeyValue$ebnf$1', symbols: [/[a-zA-Z]/] },
+    { name: 'objectKeyValue$ebnf$1', symbols: [/[A-Za-z0-9_.\-+]/] },
     {
       name: 'objectKeyValue$ebnf$1',
-      symbols: ['objectKeyValue$ebnf$1', /[a-zA-Z]/],
+      symbols: ['objectKeyValue$ebnf$1', /[A-Za-z0-9_.\-+]/],
       postprocess: (d) => d[0].concat([d[1]]),
     },
     {

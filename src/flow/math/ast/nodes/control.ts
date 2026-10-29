@@ -9,7 +9,7 @@ import {
   getIndent,
   MATH_NODE_DEFAULT_DEPTH,
 } from '../inspectHelpers'
-import type { MathExpressionNode } from '../MathExpressionNode'
+import { MathExpressionNode } from '../MathExpressionNode'
 import type { Float, Integer } from '../handles'
 import type { MathFunctionNode } from '../MathFunctionNode'
 import { MathContainerNode } from '../MathContainerNode'
@@ -63,16 +63,13 @@ export abstract class MathFlowClauseNode extends MathContainerNode {
 
   [util.inspect.custom](depth: number = MATH_NODE_DEFAULT_DEPTH, options?: unknown): string {
     const repr = this.inspectClassName
-    const head = this._isElseIf ? ' (continuation)' : ''
-    const hasCondition = 'condition' in this
     const indent = getIndent(options)
     const children: unknown[] = []
-    if (hasCondition) {
-      const c = (this as unknown as { condition: MathConditionNode }).condition
+    if ('condition' in this) {
       // Condition goes first in the body — emits as the first child.
       // The wrapper's args don't carry a redundant `if=…` string; the
       // condition's own class name distinguishes it inside the body.
-      children.push(c)
+      children.push(this.condition)
     }
     const bodyWithNext = this.nextFlowNode ? [...this.body, this.nextFlowNode] : this.body
     children.push(...bodyWithNext)
@@ -124,8 +121,8 @@ export class MathIfNode extends MathFlowClauseNode {
     // condition + body. body + allNodes display together covers both
     // the statement and the audit trail.
     const outer = sandstoneCore.mathStack[sandstoneCore.mathStack.length - 1]
-    if (outer && outer !== this && 'append' in outer) {
-      ;(outer as unknown as { append: (n: MathNode) => void }).append(this)
+    if (outer && outer !== this) {
+      outer.append(this)
     }
 
     if (this.body.length === 0) {
@@ -273,7 +270,7 @@ export class MathReturnNode extends MathNode {
 
   constructor(
     sandstoneCore: SandstoneCore,
-    readonly value: Float | Integer | Record<string, Float | Integer> | unknown,
+    public value: Float | Integer | Record<string, Float | Integer> | unknown,
   ) {
     super(sandstoneCore)
   }
@@ -579,8 +576,8 @@ export class MathLoopNode extends MathContainerNode {
     // walk surfaces the loop with its condition + body. See the
     // matching note in `MathIfNode`'s constructor for rationale.
     const outer = sandstoneCore.mathStack[sandstoneCore.mathStack.length - 1]
-    if (outer && outer !== this && 'append' in outer) {
-      ;(outer as unknown as { append: (n: MathNode) => void }).append(this)
+    if (outer && outer !== this) {
+      outer.append(this)
     }
     if (this.body.length === 0) {
       throw new Error('Math loop body is empty. Add at least one statement.')
@@ -759,8 +756,8 @@ export class MathSwitchNode extends MathContainerNode {
     // walk surfaces the dispatch node alongside the cases. See the
     // matching note in `MathIfNode`'s constructor for rationale.
     const outer = sandstoneCore.mathStack[sandstoneCore.mathStack.length - 1]
-    if (outer && outer !== this && 'append' in outer) {
-      ;(outer as unknown as { append: (n: MathNode) => void }).append(this)
+    if (outer && outer !== this) {
+      outer.append(this)
     }
   }
 
@@ -781,7 +778,7 @@ export class MathSwitchNode extends MathContainerNode {
     // then static cases, condition cases, and (optionally) default case.
     // Cases each have their own body block — the formatMath walker
     // emits a brace block per child so depth + indent both apply.
-    const dispatchNode = (this.dispatchValue as unknown as { node?: MathExpressionNode }).node
+    const dispatchNode = MathExpressionNode.is(this.dispatchValue) ? undefined : this.dispatchValue.node
     const children: unknown[] = []
     if (dispatchNode) children.push(dispatchNode)
     for (const c of this.staticCases) children.push(c)
