@@ -915,11 +915,13 @@ that kind picks **which MC provider family the expression compiles into**:
 | `float` | `minecraft:context_float_provider` | `data/<ns>/context_float_provider/*.json` | `data modify … set compute default float <provider>` |
 | `integer` | `minecraft:context_int_provider` | `data/<ns>/context_int_provider/*.json` | `data modify … set compute default integer <provider>` |
 
-**A chain computes in ONE numeric context.** An operator's result kind is
-the **receiver's** kind — an integer handle's chain computes integers, a
-float handle's chain computes floats. The block's declared output schema
-(`_.Math(Integer, …)` vs `_.Math(Float, …)`) fixes the kind of the RESULT;
-a result of the other kind is bridged on the way out.
+**The numeric tower: the widest kind wins.** An operator's result kind is
+the widest among its receiver and its operands — an integer combined with
+a float is a float. The rule is LOCAL to each expression: it never
+consults the math block's schema. A block can hold SEVERAL chains at
+once — an integer one feeding an integer operand, a float one feeding a
+float operand — and each decides its own context from the values that
+actually flow through it.
 
 **The two contexts are bridged by MC's `from_int` / `from_float`.** MC's
 provider families are separate, and these are the only bridges:
@@ -929,40 +931,58 @@ provider families are separate, and these are the only bridges:
 | `from_int` | int → float | widens exactly (an int always fits a float) |
 | `from_float` | float → int | **truncates toward zero** — `from_float(-2.5)` is `-2`, not `-3` (verified live against the server) |
 
-A mismatched operand is bridged **where it's consumed**, not by widening
-the whole chain: `NumericCoalescingVisitor` wraps it in a `ConversionNode`
+A mismatched operand is bridged **where it's consumed**:
+`NumericCoalescingVisitor` wraps it in a `ConversionNode`
 (`src/flow/math/ast/nodes/conversion.ts`), which the lowering pass compiles
-into the matching provider. An integer chain therefore keeps its integers
-exact — a widened chain would round-trip every integer through a float and
-lose precision above 2²⁴.
+into the matching provider.
 
 ```ts
-// An integer chain: the float operand is truncated in place.
-_.Math(Integer, (math, x: Integer) => {
-  const y = math.float(floatDp)
-  math.return(x.add(y))
-})
-// → add(integer_x, from_float(float_dp))   →  x + trunc(y)
+// A float chain with a score in it — the score holds an integer, and
+// MC's float provider family has no `score` provider, so it's read
+// through the int family and widened.
+_.Math(Float, (math, x: Float) => {
+  math.return(x.multiply(math.float(0.5)))
+})(score)
+// → mul(from_int(score), 0.5f)   →  7.0 × 0.5
 ```
 
 `NumericCoalescingVisitor` runs after the algebraic pass (which can change
 an operator's kind) and before the constant folder (which folds a
 conversion of a constant source — `from_float(2.5)` folds to `2`).
 
-**Inputs.** An integer math block's inputs are `NBT.int(69)` (a constant),
-an integer-typed DataPoint (`dp.integer()`, or a plain DataPoint — an
-integer block assumes its DataPoint holds an integer), or a `Score`. A
-float block additionally accepts a `Float` handle or a bare `number`
-(a bare number is a float literal; `ExpandInputs` rejects it for `Integer`
-parameters).
+**The block's schema fixes the kind of the RESULT.** `_.Math(Integer, …)`
+vs `_.Math(Float, …)` says what the block produces; a chain whose result
+has the other kind is bridged at the block boundary (`coerceToBlockKind`
+in `multiStatementEmit.ts`). So an integer block that adds a float
+computes the sum in float and truncates the RESULT — `5 + 2.5` is `7.5`
+→ `7`, and `5 + (-2.5)` is `2.5` → `2`.
+
+**Inputs carry their own kind.** Each input's kind is intrinsic to the
+value, and the runtime binds it to a handle of the matching class — the
+declared position type and the runtime handle always agree:
+
+| input | kind | handle |
+|---|---|---|
+| `NBT.int(69)` / `NBT.byte` / `NBT.short` | integer | `Integer` |
+| `NBT.float(1.5)` / `NBT.double` | float | `Float` |
+| `dp.integer()` — an integer-typed DataPoint | integer | `Integer` |
+| a plain DataPoint | float (read as a double — MC's default NBT number kind; MC converts an int tag on the way out) | `Float` |
+| a `Score` | integer (scores hold integers) | `Integer` |
+| a bare `number` | float | `Float` |
+
+`ExpandInputs` reflects this: a `Float` position takes floats, plain
+DataPoints and float NBT constants; an `Integer` position takes integers,
+integer-typed DataPoints, scores and integer NBT constants. Want the
+other context? Build it explicitly — `_.float(score)` reads a score as a
+float (`from_int`), `_.integer(dp)` reads a path as an integer.
 
 **The two families have different operator sets.** MC's int context has no
 `sqrt` / `sin` / `cos` / `ceil` / `floor` / `round` / `truncate` /
 `length` provider. The int context does have `floor_div` / `floor_mod`,
 which the float context lacks. `src/flow/math/compile/mathProviderCompiler.ts`
 holds one op table per family; an op missing from a family's table raises.
-A float-only op used inside an integer chain is fine — the whole float
-sub-expression is wrapped in `from_float` at the block boundary.
+A float-only op used inside an integer block is fine — the whole float
+sub-expression is bridged at the block boundary.
 
 **Division and modulo have two modes**, matching MC's int providers:
 

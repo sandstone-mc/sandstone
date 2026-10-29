@@ -68,13 +68,29 @@ export class NumericCoalescingVisitor extends MathVisitor {
     // does for nodes built while the math stack is active (the stack
     // is empty during a visitor pass, so the constructor can't).
     for (const conversion of this._freshConversions) {
-      const cls = conversion.constructor.name
-      const nextIndex = fn.perClassCounters.get(cls) ?? 0
-      conversion.index = nextIndex
-      fn.perClassCounters.set(cls, nextIndex + 1)
-      fn.allNodes.push(conversion)
+      this.publish(fn, conversion)
+      this.publish(fn, conversion.source)
     }
     this._freshConversions.length = 0
+  }
+
+  /**
+   * Add a node to the audit trail (if it isn't already there).
+   *
+   * The value a conversion WRAPS has to be in the trail too: when
+   * the conversion sits at the head of a chain (an input whose value
+   * is read in a different context than the value's own), the chain
+   * analysis finds the chain's root by walking through the
+   * conversion — and a root it can't see is a chain it can't
+   * compile.
+   */
+  private publish(fn: MathFunctionNode, node: MathExpressionNode): void {
+    if (fn.allNodes.includes(node)) return
+    const cls = node.constructor.name
+    const nextIndex = fn.perClassCounters.get(cls) ?? 0
+    node.index = nextIndex
+    fn.perClassCounters.set(cls, nextIndex + 1)
+    fn.allNodes.push(node)
   }
 
   override visitBinaryOpNode(node: BinaryOpNode): MathNode {

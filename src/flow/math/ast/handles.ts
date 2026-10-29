@@ -484,7 +484,7 @@ export class _RawIntegerHandle extends BaseHandle implements IntegerBranded {
         this.node.sandstoneCore,
         'add',
         [this.node, ...inputs],
-        this.node.kind,
+        resultKind(this.node.kind, inputs),
       ),
     )
     return this
@@ -492,7 +492,7 @@ export class _RawIntegerHandle extends BaseHandle implements IntegerBranded {
 
   subtract(value: IntegerOperand): this {
     const rhs = handleToExpr(this.node.sandstoneCore, value, 'integer')
-    this.setNode(new BinaryOpNode(this.node.sandstoneCore, 'sub', [this.node, rhs], this.node.kind))
+    this.setNode(new BinaryOpNode(this.node.sandstoneCore, 'sub', [this.node, rhs], resultKind(this.node.kind, [rhs])))
     return this
   }
 
@@ -506,7 +506,7 @@ export class _RawIntegerHandle extends BaseHandle implements IntegerBranded {
         this.node.sandstoneCore,
         'mul',
         [this.node, ...inputs],
-        this.node.kind,
+        resultKind(this.node.kind, inputs),
       ),
     )
     return this
@@ -515,14 +515,14 @@ export class _RawIntegerHandle extends BaseHandle implements IntegerBranded {
   divide(value: IntegerOperand, floored = true): this {
     const op = floored ? 'floor_div' : 'div'
     const rhs = handleToExpr(this.node.sandstoneCore, value, 'integer')
-    this.setNode(new BinaryOpNode(this.node.sandstoneCore, op, [this.node, rhs], this.node.kind))
+    this.setNode(new BinaryOpNode(this.node.sandstoneCore, op, [this.node, rhs], resultKind(this.node.kind, [rhs])))
     return this
   }
 
   modulo(value: IntegerOperand, floored = true): this {
     const op = floored ? 'floor_mod' : 'mod'
     const rhs = handleToExpr(this.node.sandstoneCore, value, 'integer')
-    this.setNode(new BinaryOpNode(this.node.sandstoneCore, op, [this.node, rhs], this.node.kind))
+    this.setNode(new BinaryOpNode(this.node.sandstoneCore, op, [this.node, rhs], resultKind(this.node.kind, [rhs])))
     return this
   }
 
@@ -710,20 +710,25 @@ function handleToExpr(core: SandstoneCore, h: FloatOperand, kind: MathKind): Mat
 }
 
 /**
- * The numeric tower's rule for an operator's RESULT kind: the
- * RECEIVER's kind wins.
+ * The numeric tower's rule for an operator's RESULT kind: the WIDEST
+ * kind among the receiver and the operands wins.
  *
- * A chain therefore stays in one numeric context — an integer handle's
- * chain computes integers, a float handle's chain computes floats —
- * and a mixed operand is bridged rather than widening the whole
- * chain. The bridge is MC's `from_int` / `from_float` provider,
- * inserted by `NumericCoalescingVisitor` at the point where the
- * operand is consumed.
+ * An integer chain with a float operand therefore becomes a float
+ * chain — and the operands that don't match are bridged by MC's
+ * `from_int` / `from_float` provider, inserted by
+ * `NumericCoalescingVisitor` at the point where each operand is
+ * consumed.
  *
- * Widening instead (integer chain + float operand → a float chain)
- * would force every integer in the chain through a float and back,
- * losing precision on large integers for no benefit.
+ * The rule is local to each expression: it never consults the math
+ * block's schema. A block can hold SEVERAL chains at once — an
+ * integer one feeding an integer result, a float one feeding a float
+ * operand — and each decides its own context from the values that
+ * actually flow through it.
  */
+function resultKind(receiver: MathKind, operands: readonly MathExpressionNode[]): MathKind {
+  if (receiver === 'float') return 'float'
+  return operands.some((o) => o.kind === 'float') ? 'float' : 'integer'
+}
 
 // ---------------------------------------------------------------------------
 // Constructors — produce handles from raw inputs.
@@ -770,12 +775,11 @@ export function integerFromInteger(core: SandstoneCore, source: Integer): Intege
 }
 
 export function floatFromScore(core: SandstoneCore, score: Score): Float {
-  // Score is int; widen to float via implicit `from_float` at lower time.
-  // The handle itself just wraps the score ref; the lowerer inserts
-  // `from_float` when serializing this node into provider JSON.
-  void core
-  void score
-  throw new Error('floatFromScore: TODO — needs from_float widening on lower')
+  // A score holds an INTEGER. MC's float provider family has no
+  // `score` provider at all — the only way to read one is through
+  // the int family, widened by `from_int`. The node's kind records
+  // the context the read belongs to; the lowering pass bridges it.
+  return new _RawFloatHandle(new ScoreboardRefNode(core, score, 'float'))
 }
 
 export function integerFromScore(core: SandstoneCore, score: Score): Integer {

@@ -141,7 +141,8 @@ describe('Math numeric coalescing', () => {
       })
     })
 
-    // 5 + from_float(2.5) = 5 + 2 = 7
+    // The tower makes the whole sum float: 5.0 + 2.5 = 7.5, and the
+    // integer block's boundary truncates it to 7.
     expect(mcfunctionBody(out, 'f')).toContain('set value 7i')
   })
 
@@ -154,8 +155,51 @@ describe('Math numeric coalescing', () => {
       })
     })
 
-    // 5 + from_float(-2.5) = 5 + (-2) = 3 — not 2.
-    expect(mcfunctionBody(out, 'f')).toContain('set value 3i')
+    // 5.0 + (-2.5) = 2.5, and the integer block's boundary truncates
+    // toward zero: 2 — not 3 (which is what truncating the OPERAND
+    // first would give).
+    expect(mcfunctionBody(out, 'f')).toContain('set value 2i')
+  })
+})
+
+describe('Math score coalescing', () => {
+  const providerJson = (out: Map<string, string>, family: string): string => {
+    const entry = [...out.entries()].find(([path]) => path.includes(`${family}/`))
+    return entry?.[1] ?? ''
+  }
+
+  // A score holds an INTEGER, and MC's float provider family has no
+  // `score` provider at all — so a score read in the float context
+  // is bridged by `from_int`.
+  test('a score read in a float chain is bridged with from_int', () => {
+    const out = compile('coalesce_score', (pack) => {
+      pack.MCFunction('f', () => {
+        const score = pack.Variable(7, 'math_score')
+        pack._.Math(Float, (math, x: Float) => {
+          math.return(x.multiply(math.float(0.5)))
+        })(score)
+      })
+    })
+
+    const json = providerJson(out, 'context_float_provider')
+    expect(json).toContain('"type": "mul"')
+    expect(json).toContain('"type": "from_int"')
+    expect(json).toContain('"type": "score"')
+  })
+
+  test('an integer chain reads the score natively', () => {
+    const out = compile('coalesce_score_int', (pack) => {
+      pack.MCFunction('f', () => {
+        const score = pack.Variable(7, 'math_score_int')
+        pack._.Math(Integer, (math, x: Integer) => {
+          math.return(x.add(math.integer(1)))
+        })(score)
+      })
+    })
+
+    const json = providerJson(out, 'context_int_provider')
+    expect(json).toContain('"type": "score"')
+    expect(json).not.toContain('"type": "from_int"')
   })
 })
 

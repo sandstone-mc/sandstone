@@ -178,13 +178,12 @@ export function compileFloatProvider(node: MathExpressionNode): JsonContextFloat
     return compileFloatProvider(node.source)
   }
   if (ScoreboardRefNode.is(node)) {
-    // A score is an integer source — the float context does not
-    // convert it automatically. Use an integer math block instead.
-    throw new Error(
-      'MathProviderCompiler: a score was read inside a float computation. '
-      + 'Automatic int → float conversion is not supported yet — use an '
-      + 'integer math block (`_.Math(Integer, …)`) for score inputs.',
-    )
+    // MC's float provider family has NO `score` provider — the only
+    // way to read one is through the int family, widened by
+    // `from_int`. (`floatFromScore` wraps the score ref in a
+    // conversion node, so this is the defensive path for an
+    // expression compiled outside the visitor pipeline.)
+    return { type: 'from_int', input: scoreProvider(node.score) }
   }
   if (RandomNode.is(node)) {
     // `_.random({min, max})` — emits MC's `uniform` provider. The

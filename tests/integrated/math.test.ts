@@ -885,6 +885,26 @@ export function registerMathTests() {
     }
   )
 
+  test('FloatScoreInput', 'math_float_score_input',
+    (create, pack) => create(() => {
+      const score = pack.Variable(7, 'math_float_score')
+
+      const out = pack._.Math(Float, (math, x: Float) => {
+        math.return(x.multiply(math.float(0.5)))
+      })(score).data()
+
+      // The score holds an integer; the float chain bridges it with
+      // `from_int` — 7 → 7.0, then 7.0 × 0.5 = 3.5.
+      pack._.if(out.equals(NBT.float(3.5)), () => pack.Test.succeed())
+      .else(() => pack.Test.fail(out))
+    }),
+    async (r) => {
+      expect(r.passed).toBe(true)
+      const raw = getRaw(r, 'math_float_score_input')
+      expect(raw).toContain('compute default float')
+    }
+  )
+
   test('IntegerFloatOperandTruncates', 'math_integer_float_operand_truncates',
     (create, { Test, _ }) => create(() => {
       const floatDp = DataVariable(undefined, 'math_int_float_trunc')
@@ -897,8 +917,10 @@ export function registerMathTests() {
         math.return(x.add(y))
       })(intDp).data()
 
-      // `from_float` truncates toward ZERO — -2.5 → -2, not -3.
-      _.if(out.equals(NBT.int(3)), () => Test.succeed())
+      // The tower makes the sum float: 5.0 + (-2.5) = 2.5, and the
+      // integer block's boundary truncates toward zero: 2 — not 3
+      // (which is what truncating the OPERAND first would give).
+      _.if(out.equals(NBT.int(2)), () => Test.succeed())
       .else(() => Test.fail(out))
     }),
     async (r) => {

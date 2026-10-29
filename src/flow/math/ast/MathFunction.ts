@@ -1,5 +1,4 @@
-import type { Float, Integer } from './handles'
-import { Float as _FloatClass, Integer as _IntegerClass, _RawFloatHandle, _RawIntegerHandle } from './handles'
+import { Float, Integer, _RawFloatHandle, _RawIntegerHandle } from './handles'
 import { DataPointClass, IntegerDataPointClass } from '../../../variables/Data'
 import { Score } from '../../../variables/Score'
 import type { MathFunctionOutputs } from './MathFunctionNode'
@@ -54,6 +53,12 @@ type NBTNumber = NBTInt | NBTByte | NBTShort | NBTFloat | NBTDouble
 type NBTIntNumber = NBTInt | NBTByte | NBTShort
 
 /**
+ * The float-valued subset of {@link NBTNumber} — the constants a
+ * float math block accepts.
+ */
+type NBTFloatNumber = NBTFloat | NBTDouble
+
+/**
  * Runtime shape of the input tuple `_.Math` accepts. An array of
  * `Float | Integer` handles, one per input param of the callback.
  */
@@ -76,12 +81,26 @@ type MathInputs = readonly (Float | Integer)[]
  * path is designed to avoid. Automatic conversion of bare numbers
  * (int → float widening, float → int narrowing) is a future change;
  * until then the explicit forms are required.
+ *
+ * Each position accepts the values whose kind is INTRINSIC to them —
+ * the runtime binds each input to a handle of the matching class, so
+ * the declared position type and the runtime handle always agree:
+ *
+ *   - a `Float` position takes floats, plain DataPoints (read as
+ *     doubles — MC's default NBT number kind) and float NBT constants.
+ *   - an `Integer` position takes integers, integer-typed DataPoints
+ *     (`dp.integer()`), scores (scores hold integers) and integer NBT
+ *     constants.
+ *
+ * A value of the other kind belongs in the other position — build it
+ * there with `_.float(...)` / `_.integer(...)` instead, which is
+ * explicit about the conversion you want.
  */
 type ExpandInputs<T> = {
   [K in keyof T]: T[K] extends Float
-    ? Float | number | DataPointClass | DataPointPickClass | Score | NBTNumber
+    ? Float | number | DataPointClass | DataPointPickClass | NBTFloatNumber
     : T[K] extends Integer
-      ? Integer | IntegerDataPointClass | DataPointClass | DataPointPickClass | Score | NBTIntNumber
+      ? Integer | IntegerDataPointClass | Score | NBTIntNumber
       : T[K]
 }
 
@@ -232,10 +251,10 @@ class _RawMathFunction<P extends readonly MathInput[], R>
    * user-defined record schemas — the compiler reads `kind` to decide.
    */
   private computeOutputsRecord(): MathFunctionOutputs {
-    if (this.outputs === _FloatClass) {
+    if (this.outputs === Float) {
       return { kind: 'scalar', value: 'float' }
     }
-    if (this.outputs === _IntegerClass) {
+    if (this.outputs === Integer) {
       return { kind: 'scalar', value: 'integer' }
     }
     const fields: Record<string, MathKind> = {}
@@ -243,24 +262,6 @@ class _RawMathFunction<P extends readonly MathInput[], R>
       fields[k] = v === _RawFloatHandle ? 'float' : 'integer'
     }
     return { kind: 'record', fields }
-  }
-
-  /**
-   * The math block's numeric kind, derived from its declared output
-   * schema. `Integer` → integer; `Float` → float; a record schema →
-   * integer only when EVERY field is integer.
-   *
-   * Used to decide how a plain `DataPointClass` input is read: an
-   * integer block assumes its DataPoint holds an integer, a float
-   * block assumes a float.
-   */
-  private get blockKind(): MathKind {
-    if (this.outputs === _IntegerClass) return 'integer'
-    if (this.outputs === _FloatClass) return 'float'
-    const fields = Object.values(this.outputs as Record<string, unknown>)
-    return fields.length > 0 && fields.every((v) => v === _IntegerClass)
-      ? 'integer'
-      : 'float'
   }
 
   /**
@@ -623,25 +624,32 @@ class _RawMathFunction<P extends readonly MathInput[], R>
       )
     }
     if (input instanceof IntegerDataPointClass) {
-      // Integer-typed NBT (or pick variant thereof) — wrap as Integer.
+      // Integer-typed NBT (or pick variant thereof). The value IS an
+      // integer — that's what the `.integer()` marker says — so both
+      // the node's kind and the handle's class are intrinsic. A chain
+      // that computes in the float context bridges it with `from_int`
+      // where it's consumed.
       return new _RawIntegerHandle(
         new StorageRefNode(this.sandstoneCore, input as DataPointClass, 'integer'),
       )
     }
     if (input instanceof DataPointClass || '_toDataPoint' in input) {
-      // Plain NBT (or pick variant) — the math block's declared kind
-      // decides: an integer block reads it as an integer, a float
-      // block as a float.
-      const kind = this.blockKind
-      return kind === 'integer'
-        ? new _RawIntegerHandle(
-            new StorageRefNode(this.sandstoneCore, input as DataPointClass, 'integer'),
-          )
-        : new _RawFloatHandle(
-            new StorageRefNode(this.sandstoneCore, input as DataPointClass, 'float'),
-          )
+      // Plain NBT (or pick variant). The path's NBT type isn't known
+      // statically, so the read takes the DEFAULT number kind — a
+      // double. MC's float storage provider converts an int tag on
+      // the way out, so an int-valued path still reads correctly.
+      //
+      // Want exact integer semantics? Mark the path with
+      // `.integer()` — that pins the read to the integer context.
+      return new _RawFloatHandle(
+        new StorageRefNode(this.sandstoneCore, input as DataPointClass, 'float'),
+      )
     }
     if (input instanceof Score) {
+      // MC scores hold integers — that's intrinsic, not a property of
+      // the block. Both the node's kind and the handle's class follow
+      // from it. A chain that computes in the float context bridges
+      // the score with `from_int` where it's consumed.
       return new _RawIntegerHandle(new ScoreboardRefNode(this.sandstoneCore, input))
     }
     throw new Error(
@@ -662,7 +670,7 @@ class _RawMathFunction<P extends readonly MathInput[], R>
     callIdx: number,
     useCallNamespace: boolean,
   ): MathSchemaValue<R> {
-    if (this.outputs === _FloatClass) {
+    if (this.outputs === Float) {
       // Scalar float — single result DataPoint, allocated via the
       // MathFunctionNode helper so packUid suffixing matches the
       // runtime write target and the caller's `.data()` handle.
@@ -672,7 +680,7 @@ class _RawMathFunction<P extends readonly MathInput[], R>
       handle._isOutput = true
       return handle as unknown as MathSchemaValue<R>
     }
-    if (this.outputs === _IntegerClass) {
+    if (this.outputs === Integer) {
       // Scalar integer — same flow as the float branch.
       const dp = node.getResultStorage(callIdx, useCallNamespace)
       const ref = new StorageRefNode(this.sandstoneCore, dp, 'integer')

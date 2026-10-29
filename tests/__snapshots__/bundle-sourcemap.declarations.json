@@ -1019,6 +1019,7 @@
   "resetContext": "../../src/context.ts",
   "resetSandstonePack": "../../src/sandstone.ts",
   "resolve": "../../src/variables/nbt/NBTs.ts",
+  "resultKind": "../../src/flow/math/ast/handles.ts",
   "returnCmd": "../../src/sandstone.ts",
   "ride": "../../src/commands/implementations/entity/ride.ts",
   "rotate": "../../src/commands/implementations/entity/rotate.ts",

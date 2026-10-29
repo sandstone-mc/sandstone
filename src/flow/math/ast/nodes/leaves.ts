@@ -253,9 +253,17 @@ export class ScoreboardRefNode extends MathExpressionNode {
   constructor(
     sandstoneCore: SandstoneCore,
     readonly score: Score,
+    /**
+     * The kind the score is READ AS. A score holds an integer, but
+     * MC's float provider family has no `score` provider — so a
+     * score read in the float context is bridged by `from_int` at
+     * lowering time. The kind records which context the read
+     * belongs to.
+     */
+    kind: MathKind = 'integer',
   ) {
     super(sandstoneCore)
-    this.kind = 'integer'
+    this.kind = kind
   }
 
   getValue() {

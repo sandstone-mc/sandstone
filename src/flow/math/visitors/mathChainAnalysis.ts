@@ -111,22 +111,29 @@ export class MathChainAnalysisVisitor extends MathAnalysisVisitor<MathChainAnaly
     for (const node of fn.allNodes) {
       if (BinaryOpNode.is(node)) {
         for (let i = 1; i < node.operands.length; i++) {
-          transients.add(node.operands[i])
+          const operand = node.operands[i]
+          transients.add(operand)
+          // A conversion at an operand position consumes the value it
+          // wraps — mark that too, so the wrapped value stays inside
+          // the enclosing operator's provider instead of being
+          // materialised in its own handle storage.
+          //
+          // A conversion at the HEAD of a chain (index 0) is
+          // different: the value it wraps is that chain's ROOT, and
+          // the chain analysis has to see it.
+          if (ConversionNode.is(operand)) {
+            transients.add(operand.source)
+          }
         }
       }
       if (AggregateNode.is(node)) {
         for (let i = 1; i < node.inputs.length; i++) {
-          transients.add(node.inputs[i])
+          const input = node.inputs[i]
+          transients.add(input)
+          if (ConversionNode.is(input)) {
+            transients.add(input.source)
+          }
         }
-      }
-      if (ConversionNode.is(node)) {
-        // A conversion wraps the value it converts. The wrapped value
-        // is consumed by the conversion (and through it, by the
-        // operator the conversion feeds) — exactly the position an
-        // operand at index ≥ 1 occupies. Marking it transient keeps
-        // its data inside the enclosing operator's provider instead
-        // of materialising it in its own handle storage.
-        transients.add(node.source)
       }
     }
 
