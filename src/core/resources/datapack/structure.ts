@@ -22,7 +22,13 @@ import type { BlockState } from 'sandstone/arguments/generated/util/block_state'
 
 const same = lodash.isEqual
 
-const extractNumber = <Range extends NBTRange>(double: number | NBTAllNumberClasses<Range>) => double instanceof NBTPrimitive ? double.value : (double as number)
+const extractNumber = <Range extends NBTRange>(double: number | NBTAllNumberClasses<Range>): number => {
+  if (double instanceof NBTPrimitive) {
+    // Longs are bigint-backed — structure coordinates are plain numbers.
+    return typeof double.value === 'bigint' ? Number(double.value) : double.value
+  }
+  return double as number
+}
 const diff = (num1: number, num2: number) =>
   Math.sign(num1) === -1 ? (Math.abs(num1) - Math.abs(num2)) * -1 : num1 - num2
 

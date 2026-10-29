@@ -9,12 +9,12 @@ export abstract class NBTClass {
   abstract [util.inspect.custom]: () => string
 }
 
-export class NBTPrimitive<Unit extends string> extends NBTClass {
-  value: number
+export class NBTPrimitive<Unit extends string, V extends number | bigint = number> extends NBTClass {
+  value: V
 
   unit: Unit
 
-  constructor(value: number, unit: Unit) {
+  constructor(value: V, unit: Unit) {
     super()
     this.value = value
     this.unit = unit
@@ -24,7 +24,11 @@ export class NBTPrimitive<Unit extends string> extends NBTClass {
    * @internal
    */
   toJSON() {
-    return this.value
+    // `bigint` isn't JSON-serializable — `JSON.stringify` throws on it.
+    // Longs are the only bigint-backed primitive; convert back to a
+    // plain number so their JSON shape is unchanged from before longs
+    // became bigint-backed.
+    return typeof this.value === 'bigint' ? Number(this.value) : this.value
   }
 
   [util.inspect.custom] = () => `${this.value}${this.unit}`
@@ -95,9 +99,17 @@ export type NBTRange = { min?: number, max?: number, leftExclusive?: boolean, ri
 
 /* oxlint-disable no-unused-vars */
 
-export class NBTLong<Range extends NBTRange = {}> extends NBTPrimitive<'l'> {
-  constructor(value: number) {
-    super(value, 'l')
+/**
+ * A 64-bit signed integer.
+ *
+ * Backed by a `bigint` — a JS `number` can't hold every value in
+ * MC's int64 range, so longs would silently lose precision above
+ * 2^53. The SNBT writer emits the value verbatim (`11l`), and the
+ * parser reads every `l` / `L` literal back as a bigint.
+ */
+export class NBTLong<Range extends NBTRange = {}> extends NBTPrimitive<'l', bigint> {
+  constructor(value: number | bigint) {
+    super(BigInt(value), 'l')
   }
 }
 

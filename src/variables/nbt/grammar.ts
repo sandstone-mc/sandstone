@@ -27,6 +27,7 @@ export type NBTExpression =
   | NBTDouble
   | NBTFloat
   | NBTByte
+  | NBTInt
   | NBTNumber
   | NBTShort
   | NBTBoolean
@@ -42,6 +43,7 @@ export type NBTString = DataType<'string', string>
 export type NBTLong = DataType<'long', number>
 export type NBTShort = DataType<'short', number>
 export type NBTByte = DataType<'byte', number>
+export type NBTInt = DataType<'int', number>
 
 export type NBTNumber = DataType<'number', number>
 
@@ -485,6 +487,7 @@ const grammar: Grammar = {
     },
     { name: 'typedNum$subexpression$1', symbols: ['typedByte'] },
     { name: 'typedNum$subexpression$1', symbols: ['typedShort'] },
+    { name: 'typedNum$subexpression$1', symbols: ['typedInt'] },
     { name: 'typedNum$subexpression$1', symbols: ['typedLong'] },
     { name: 'typedNum$subexpression$1', symbols: ['typedFloat'] },
     { name: 'typedNum', symbols: ['typedNum$subexpression$1'], postprocess: (data) => data[0][0] },
@@ -499,6 +502,18 @@ const grammar: Grammar = {
       name: 'typedByte',
       symbols: ['int', 'typedByte$subexpression$1'],
       postprocess: (data) => ({ dataType: 'byte', value: data[0] }),
+    },
+    {
+      name: 'typedInt$subexpression$1',
+      symbols: [/[iI]/],
+      postprocess(d) {
+        return d.join('')
+      },
+    },
+    {
+      name: 'typedInt',
+      symbols: ['int', 'typedInt$subexpression$1'],
+      postprocess: (data) => ({ dataType: 'int', value: data[0] }),
     },
     {
       name: 'typedShort$subexpression$1',
