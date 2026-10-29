@@ -2,6 +2,7 @@ import { spawn } from 'bun'
 import * as path from 'node:path'
 import * as fs from 'node:fs/promises'
 import { createRequire } from 'node:module'
+import { INTEGRATED_HOST_CONFIG } from '../tests/integrated/host-config'
 
 const require = createRequire(import.meta.url)
 
@@ -32,8 +33,17 @@ async function up(): Promise<void> {
   const sand = resolveSand()
   // Detached process — its stdout/stderr go to a log file under the pack dir
   // so the user can tail it without it being attached to the shell.
+  //
+  // The host config must match the one the test harness uses — without it
+  // the CLI installs the latest packtest from Modrinth instead of the
+  // pinned jar, and the two land side by side in `mods/`.
   const proc = spawn({
-    cmd: [sand, 'connect'],
+    cmd: [
+      sand,
+      'connect',
+      '--host-type', 'integrated',
+      '--host-config', JSON.stringify(INTEGRATED_HOST_CONFIG),
+    ],
     cwd: PROJECT_ROOT,
     stdout: 'ignore',
     stderr: 'ignore',
