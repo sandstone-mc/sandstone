@@ -6,6 +6,7 @@ import { FlattenExpressionChainVisitor } from './flattenExpressionChain'
 import { MathAnalysisVisitor, MathVisitor } from './MathVisitor'
 import { MathChainAnalysisVisitor } from './mathChainAnalysis'
 import { ChainReachabilityAnalysisVisitor } from './chainReachabilityAnalysis'
+import { NumericCoalescingVisitor } from './numericCoalescing'
 import { ReturnHandleVisitor } from './returnHandle'
 
 /**
@@ -39,7 +40,15 @@ import { ReturnHandleVisitor } from './returnHandle'
  *      fixpoint loop so arbitrarily-nested identity chains
  *      collapse fully in a single registration.
  *
- *   3. `ConstantFoldingVisitor` — evaluate literal-literal
+ *   3. `NumericCoalescingVisitor` — bridge the float and integer
+ *      contexts where they meet: an operand whose kind doesn't
+ *      match the operator consuming it is wrapped in a
+ *      `ConversionNode`, which lowers to MC's `from_int` /
+ *      `from_float` provider. Runs after the algebraic pass (which
+ *      can change an operator's kind) and before the constant
+ *      folder (which folds a conversion of a constant source).
+ *
+ *   4. `ConstantFoldingVisitor` — evaluate literal-literal
  *      arithmetic at build time, apply algebraic identity rules
  *      (`add(x, 0) → x`, `mul(x, 0) → 0`, `pow(x, 1) → x`, ...),
  *      and collapse aggregate identities (`add([0, x]) → x`,
@@ -55,6 +64,7 @@ export function defaultMathTransformVisitors(): MathVisitor[] {
   return [
     new FlattenExpressionChainVisitor(),
     new AlgebraicSimplificationVisitor(),
+    new NumericCoalescingVisitor(),
     new ConstantFoldingVisitor(),
   ]
 }
@@ -162,6 +172,7 @@ export {
   FlattenExpressionChainVisitor,
   MathAnalysisVisitor,
   MathChainAnalysisVisitor,
+  NumericCoalescingVisitor,
   ReturnHandleVisitor,
   MathVisitor,
 }

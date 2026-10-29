@@ -54,6 +54,30 @@ interface IntegerBranded {
   readonly [IntegerBrand]: true
 }
 
+/**
+ * An operand of a FLOAT chain: a float handle, an integer handle, or a
+ * bare number literal.
+ *
+ * A bare number is turned into a `LiteralNode` of the receiving chain's
+ * kind at use site (`handleToExpr`) — it is a real literal in the AST,
+ * not a cast. In a float chain it is a float literal; in an integer
+ * chain it must be a whole number (MC's integer providers have no
+ * fractional value).
+ */
+export type FloatOperand = Float | Integer | number
+
+/**
+ * An operand of an INTEGER chain: an integer handle, a float handle,
+ * or a bare number literal.
+ *
+ * A float handle is bridged by MC's `from_float` at the point of use
+ * — the conversion truncates it toward zero, so the integer chain
+ * stays in the integer context. A bare number must be a whole number
+ * within the 32-bit range — `LiteralNode` rejects both at
+ * construction.
+ */
+export type IntegerOperand = Integer | Float | number
+
 export abstract class BaseHandle {
   /** Mutable: operator methods replace this on each mutation. */
   abstract node: MathExpressionNode
@@ -188,10 +212,10 @@ export class _RawFloatHandle extends BaseHandle implements FloatBranded {
     this._registerHandleWithActiveFunction()
   }
 
-  add(value: Float | Integer): this
-  add(values: (Float | Integer)[]): this
-  add(...values: (Float | Integer)[]): this
-  add(...args: [Float | Integer | (Float | Integer)[]] | (Float | Integer)[]) {
+  add(value: FloatOperand): this
+  add(values: FloatOperand[]): this
+  add(...values: FloatOperand[]): this
+  add(...args: [FloatOperand | FloatOperand[]] | FloatOperand[]) {
     // Chain from `this.node` (current state) — matches the
     // `this.startNode + ...` accumulator semantics users expect from
     // `rx.add(5).add(10)` reading as `rx = ((rx + 5) + 10)`. Each
@@ -199,37 +223,37 @@ export class _RawFloatHandle extends BaseHandle implements FloatBranded {
     // chain state and swaps it into `this.node`. A future visitor
     // can flatten consecutive `+=` calls into a single n-ary
     // `add([startNode, 5, 10])` provider.
-    const inputs = args.flat().map((v) => handleToExpr(this.node.sandstoneCore, v))
+    const inputs = args.flat().map((v) => handleToExpr(this.node.sandstoneCore, v, this.kind))
     this.setNode(
       new AggregateNode(this.node.sandstoneCore, 'add', [this.node, ...inputs], this.kind),
     )
     return this
   }
 
-  subtract(value: Float | Integer): this {
-    this.setNode(new BinaryOpNode(this.node.sandstoneCore, 'sub', [this.node, handleToExpr(this.node.sandstoneCore, value)]))
+  subtract(value: FloatOperand): this {
+    this.setNode(new BinaryOpNode(this.node.sandstoneCore, 'sub', [this.node, handleToExpr(this.node.sandstoneCore, value, this.kind)], this.kind))
     return this
   }
 
-  multiply(value: Float | Integer): this
-  multiply(values: (Float | Integer)[]): this
-  multiply(...values: (Float | Integer)[]): this
-  multiply(...args: [Float | Integer | (Float | Integer)[]] | (Float | Integer)[]) {
+  multiply(value: FloatOperand): this
+  multiply(values: FloatOperand[]): this
+  multiply(...values: FloatOperand[]): this
+  multiply(...args: [FloatOperand | FloatOperand[]] | FloatOperand[]) {
     // Chain from `this.node` (current state) — mirrors `add` above.
-    const inputs = args.flat().map((v) => handleToExpr(this.node.sandstoneCore, v))
+    const inputs = args.flat().map((v) => handleToExpr(this.node.sandstoneCore, v, this.kind))
     this.setNode(
       new AggregateNode(this.node.sandstoneCore, 'mul', [this.node, ...inputs], this.kind),
     )
     return this
   }
 
-  divide(value: Float | Integer): this {
-    this.setNode(new BinaryOpNode(this.node.sandstoneCore, 'div', [this.node, handleToExpr(this.node.sandstoneCore, value)]))
+  divide(value: FloatOperand): this {
+    this.setNode(new BinaryOpNode(this.node.sandstoneCore, 'div', [this.node, handleToExpr(this.node.sandstoneCore, value, this.kind)], this.kind))
     return this
   }
 
-  modulo(value: Float | Integer): this {
-    this.setNode(new BinaryOpNode(this.node.sandstoneCore, 'mod', [this.node, handleToExpr(this.node.sandstoneCore, value)]))
+  modulo(value: FloatOperand): this {
+    this.setNode(new BinaryOpNode(this.node.sandstoneCore, 'mod', [this.node, handleToExpr(this.node.sandstoneCore, value, this.kind)], this.kind))
     return this
   }
 
@@ -239,37 +263,32 @@ export class _RawFloatHandle extends BaseHandle implements FloatBranded {
   // and TS reports a brand-conflict error).
   ['*='](value: number): this
   ['*='](value: Float | Integer): this
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  ['*='](value: Float | Integer | number): this {
-    return this.multiply(value as Float | Integer)
+  ['*='](value: FloatOperand): this {
+    return this.multiply(value)
   }
 
   ['+='](value: number): this
   ['+='](value: Float | Integer): this
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  ['+='](value: Float | Integer | number): this {
-    return this.add(value as Float | Integer)
+  ['+='](value: FloatOperand): this {
+    return this.add(value)
   }
 
   ['-='](value: number): this
   ['-='](value: Float | Integer): this
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  ['-='](value: Float | Integer | number): this {
-    return this.subtract(value as Float | Integer)
+  ['-='](value: FloatOperand): this {
+    return this.subtract(value)
   }
 
   ['/='](value: number): this
   ['/='](value: Float | Integer): this
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  ['/='](value: Float | Integer | number): this {
-    return this.divide(value as Float | Integer)
+  ['/='](value: FloatOperand): this {
+    return this.divide(value)
   }
 
-  ['%='](value: Float | Integer): this
   ['%='](value: number): this
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  ['%='](value: Float | Integer | number): this {
-    return this.modulo(value as Float | Integer)
+  ['%='](value: Float | Integer): this
+  ['%='](value: FloatOperand): this {
+    return this.modulo(value)
   }
 
   negate(): this {
@@ -341,38 +360,38 @@ export class _RawFloatHandle extends BaseHandle implements FloatBranded {
   // otherwise and TS reports a brand-conflict error).
   ['=='](other: number): ComparisonConditionNode
   ['=='](other: Float | Integer): ComparisonConditionNode
-  ['=='](other: Float | Integer | number): ComparisonConditionNode {
+  ['=='](other: FloatOperand): ComparisonConditionNode {
     return this.equals(other)
   }
 
   ['!='](other: number): ComparisonConditionNode
   ['!='](other: Float | Integer): ComparisonConditionNode
-  ['!='](other: Float | Integer | number): ComparisonConditionNode {
-    return compare(this.node.sandstoneCore, '!=', this, other as Float | Integer)
+  ['!='](other: FloatOperand): ComparisonConditionNode {
+    return compare(this.node.sandstoneCore, '!=', this, other)
   }
 
   ['<'](other: number): ComparisonConditionNode
   ['<'](other: Float | Integer): ComparisonConditionNode
-  ['<'](other: Float | Integer | number): ComparisonConditionNode {
-    return compare(this.node.sandstoneCore, '<', this, other as Float | Integer)
+  ['<'](other: FloatOperand): ComparisonConditionNode {
+    return compare(this.node.sandstoneCore, '<', this, other)
   }
 
   ['<='](other: number): ComparisonConditionNode
   ['<='](other: Float | Integer): ComparisonConditionNode
-  ['<='](other: Float | Integer | number): ComparisonConditionNode {
-    return compare(this.node.sandstoneCore, '<=', this, other as Float | Integer)
+  ['<='](other: FloatOperand): ComparisonConditionNode {
+    return compare(this.node.sandstoneCore, '<=', this, other)
   }
 
   ['>'](other: number): ComparisonConditionNode
   ['>'](other: Float | Integer): ComparisonConditionNode
-  ['>'](other: Float | Integer | number): ComparisonConditionNode {
-    return compare(this.node.sandstoneCore, '>', this, other as Float | Integer)
+  ['>'](other: FloatOperand): ComparisonConditionNode {
+    return compare(this.node.sandstoneCore, '>', this, other)
   }
 
   ['>='](other: number): ComparisonConditionNode
   ['>='](other: Float | Integer): ComparisonConditionNode
-  ['>='](other: Float | Integer | number): ComparisonConditionNode {
-    return compare(this.node.sandstoneCore, '>=', this, other as Float | Integer)
+  ['>='](other: FloatOperand): ComparisonConditionNode {
+    return compare(this.node.sandstoneCore, '>=', this, other)
   }
 
   /**
@@ -381,8 +400,8 @@ export class _RawFloatHandle extends BaseHandle implements FloatBranded {
    * combination (cross-kind compare is allowed; the lowerer inserts
    * implicit `from_int`/`from_float`).
    */
-  equals(other: number | Float | Integer): ComparisonConditionNode {
-    return compare(this.node.sandstoneCore, '==', this, other as Float | Integer)
+  equals(other: FloatOperand): ComparisonConditionNode {
+    return compare(this.node.sandstoneCore, '==', this, other)
   }
 
   /**
@@ -403,19 +422,6 @@ export class _RawFloatHandle extends BaseHandle implements FloatBranded {
       throw new Error(`FloatHandle.data(): expected output node to be StorageRefNode, got ${this.node.constructor.name}`)
     }
     return this.node.dataPoint
-  }
-
-  /**
-   * `score()` — convert this output handle into a `Score`. Only valid
-   * on output handles. Throws on internal computation handles.
-   */
-  score(): Score {
-    if (!this._isOutput) {
-      throw new Error('FloatHandle.score() can only be called on output handles.')
-    }
-    // Output wraps a StorageRefNode; promote the path to a Score
-    // (ScoreboardRefNode) so downstream consumers see a score handle.
-    throw new Error('FloatHandle.score() not yet implemented.')
   }
 
   /**
@@ -464,79 +470,94 @@ export class _RawIntegerHandle extends BaseHandle implements IntegerBranded {
     this._registerHandleWithActiveFunction()
   }
 
-  add(value: Integer): this
-  add(values: Integer[]): this
-  add(...values: Integer[]): this
-  add(...args: [Integer | Integer[]] | Integer[]) {
-    // Same model as the Float `add` — build the aggregate as a
-    // side-effect AST node, do NOT replace the handle's `node`.
-    new AggregateNode(
-      this.node.sandstoneCore,
-      'add',
-      [this.startNode, ...args.flat().map((v) => handleToExpr(this.node.sandstoneCore, v))],
+  add(value: IntegerOperand): this
+  add(values: IntegerOperand[]): this
+  add(...values: IntegerOperand[]): this
+  add(...args: [IntegerOperand | IntegerOperand[]] | IntegerOperand[]) {
+    // Same model as the Float `add` — chain from the CURRENT node and
+    // swap the fresh aggregate in. (The previous version built the
+    // aggregate as a side-effect node and never replaced `this.node`,
+    // so `x.add(1)` left the handle pointing at its old value.)
+    const inputs = args.flat().map((v) => handleToExpr(this.node.sandstoneCore, v, 'integer'))
+    this.setNode(
+      new AggregateNode(
+        this.node.sandstoneCore,
+        'add',
+        [this.node, ...inputs],
+        this.node.kind,
+      ),
     )
     return this
   }
 
-  subtract(value: Integer): this {
-    this.setNode(new BinaryOpNode(this.node.sandstoneCore, 'sub', [this.node, handleToExpr(this.node.sandstoneCore, value)]))
+  subtract(value: IntegerOperand): this {
+    const rhs = handleToExpr(this.node.sandstoneCore, value, 'integer')
+    this.setNode(new BinaryOpNode(this.node.sandstoneCore, 'sub', [this.node, rhs], this.node.kind))
     return this
   }
 
-  multiply(value: Integer): this
-  multiply(values: Integer[]): this
-  multiply(...values: Integer[]): this
-  multiply(...args: [Integer | Integer[]] | Integer[]) {
-    // Same model as the Float `multiply` — build the aggregate as a
-    // side-effect AST node, do NOT replace the handle's `node`.
-    new AggregateNode(
-      this.node.sandstoneCore,
-      'mul',
-      [this.startNode, ...args.flat().map((v) => handleToExpr(this.node.sandstoneCore, v))],
+  multiply(value: IntegerOperand): this
+  multiply(values: IntegerOperand[]): this
+  multiply(...values: IntegerOperand[]): this
+  multiply(...args: [IntegerOperand | IntegerOperand[]] | IntegerOperand[]) {
+    const inputs = args.flat().map((v) => handleToExpr(this.node.sandstoneCore, v, 'integer'))
+    this.setNode(
+      new AggregateNode(
+        this.node.sandstoneCore,
+        'mul',
+        [this.node, ...inputs],
+        this.node.kind,
+      ),
     )
     return this
   }
 
-  divide(value: Integer, floored = true): this {
+  divide(value: IntegerOperand, floored = true): this {
     const op = floored ? 'floor_div' : 'div'
-    this.setNode(new BinaryOpNode(this.node.sandstoneCore, op, [this.node, handleToExpr(this.node.sandstoneCore, value)]))
+    const rhs = handleToExpr(this.node.sandstoneCore, value, 'integer')
+    this.setNode(new BinaryOpNode(this.node.sandstoneCore, op, [this.node, rhs], this.node.kind))
     return this
   }
 
-  modulo(value: Integer, floored = true): this {
+  modulo(value: IntegerOperand, floored = true): this {
     const op = floored ? 'floor_mod' : 'mod'
-    this.setNode(new BinaryOpNode(this.node.sandstoneCore, op, [this.node, handleToExpr(this.node.sandstoneCore, value)]))
+    const rhs = handleToExpr(this.node.sandstoneCore, value, 'integer')
+    this.setNode(new BinaryOpNode(this.node.sandstoneCore, op, [this.node, rhs], this.node.kind))
     return this
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  ['*='](value: Integer | number): this
-  ['*='](value: number): this {
-    return this.multiply(value as unknown as Integer)
+  // Sugar: `rx['*='](scale)` ≡ `rx.multiply(scale)`.
+  // Overload order matters: `number` first so TS picks it for numeric
+  // literals (otherwise the `Integer` overload wins by order and TS
+  // reports a brand-conflict error).
+  ['*='](value: number): this
+  ['*='](value: Integer): this
+  ['*='](value: IntegerOperand): this {
+    return this.multiply(value)
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  ['+='](value: Integer | number): this
-  ['+='](value: number): this {
-    return this.add(value as unknown as Integer)
+  ['+='](value: number): this
+  ['+='](value: Integer): this
+  ['+='](value: IntegerOperand): this {
+    return this.add(value)
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  ['-='](value: Integer | number): this
-  ['-='](value: number): this {
-    return this.subtract(value as unknown as Integer)
+  ['-='](value: number): this
+  ['-='](value: Integer): this
+  ['-='](value: IntegerOperand): this {
+    return this.subtract(value)
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  ['/='](value: Integer | number, floored?: boolean): this
-  ['/='](value: number, floored?: boolean): this {
-    return this.divide(value as unknown as Integer, floored)
+  ['/='](value: number, floored?: boolean): this
+  ['/='](value: Integer, floored?: boolean): this
+  ['/='](value: IntegerOperand, floored?: boolean): this {
+    return this.divide(value, floored)
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  ['%='](value: Integer | number, floored?: boolean): this
-  ['%='](value: number, floored?: boolean): this {
-    return this.modulo(value as unknown as Integer, floored)
+  ['%='](value: number, floored?: boolean): this
+  ['%='](value: Integer, floored?: boolean): this
+  ['%='](value: IntegerOperand, floored?: boolean): this {
+    return this.modulo(value, floored)
   }
 
   negate(): this {
@@ -553,45 +574,47 @@ export class _RawIntegerHandle extends BaseHandle implements IntegerBranded {
   // evaluated). Same lowering contract as the Float variant.
   ['=='](other: number): ComparisonConditionNode
   ['=='](other: Integer): ComparisonConditionNode
-  ['=='](other: Integer | number): ComparisonConditionNode {
+  ['=='](other: IntegerOperand): ComparisonConditionNode {
     return this.equals(other)
   }
 
   ['!='](other: number): ComparisonConditionNode
   ['!='](other: Integer): ComparisonConditionNode
-  ['!='](other: Integer | number): ComparisonConditionNode {
-    return compare(this.node.sandstoneCore, '!=', this, other as Integer)
+  ['!='](other: IntegerOperand): ComparisonConditionNode {
+    return compare(this.node.sandstoneCore, '!=', this, other)
   }
 
   ['<'](other: number): ComparisonConditionNode
   ['<'](other: Integer): ComparisonConditionNode
-  ['<'](other: Integer | number): ComparisonConditionNode {
-    return compare(this.node.sandstoneCore, '<', this, other as Integer)
+  ['<'](other: IntegerOperand): ComparisonConditionNode {
+    return compare(this.node.sandstoneCore, '<', this, other)
   }
 
   ['<='](other: number): ComparisonConditionNode
   ['<='](other: Integer): ComparisonConditionNode
-  ['<='](other: Integer | number): ComparisonConditionNode {
-    return compare(this.node.sandstoneCore, '<=', this, other as Integer)
+  ['<='](other: IntegerOperand): ComparisonConditionNode {
+    return compare(this.node.sandstoneCore, '<=', this, other)
   }
 
   ['>'](other: number): ComparisonConditionNode
   ['>'](other: Integer): ComparisonConditionNode
-  ['>'](other: Integer | number): ComparisonConditionNode {
-    return compare(this.node.sandstoneCore, '>', this, other as Integer)
+  ['>'](other: IntegerOperand): ComparisonConditionNode {
+    return compare(this.node.sandstoneCore, '>', this, other)
   }
 
   ['>='](other: number): ComparisonConditionNode
   ['>='](other: Integer): ComparisonConditionNode
-  ['>='](other: Integer | number): ComparisonConditionNode {
-    return compare(this.node.sandstoneCore, '>=', this, other as Integer)
+  ['>='](other: IntegerOperand): ComparisonConditionNode {
+    return compare(this.node.sandstoneCore, '>=', this, other)
   }
 
-  /** `equals(value)` — primary comparison entry point. `['==']` delegates here. */
-  equals(other: number | Float | Integer): ComparisonConditionNode {
-    if (typeof other === 'number') {
-      throw new Error('IntegerHandle["=="]: wrap literals via _.integer(...) first')
-    }
+  /**
+   * `equals(value)` — primary comparison entry point. `['==']`
+   * delegates here. A bare number is an integer literal of this
+   * chain's kind — a fractional number is rejected, since an
+   * integer chain has no fractional value to compare against.
+   */
+  equals(other: IntegerOperand): ComparisonConditionNode {
     return compare(this.node.sandstoneCore, '==', this, other)
   }
 
@@ -603,23 +626,48 @@ export class _RawIntegerHandle extends BaseHandle implements IntegerBranded {
     if (!this._isOutput) {
       throw new Error('IntegerHandle.data() can only be called on output handles (use _.Math(...) output).')
     }
+    if (!StorageRefNode.is(this.node)) {
+      throw new Error(`IntegerHandle.data(): expected output node to be StorageRefNode, got ${this.node.constructor.name}`)
+    }
     return new IntegerDataPointClass(
       this.node.sandstoneCore.pack,
       'storage',
-      (this.node as unknown as StorageRefNode).dataPoint.currentTarget,
-      (this.node as unknown as StorageRefNode).dataPoint.path,
+      this.node.dataPoint.currentTarget,
+      this.node.dataPoint.path,
     )
   }
 
   /**
-   * `score()` — convert this output handle into a `Score`. Only valid
-   * on output handles. Throws otherwise.
+   * `score()` — convert this output handle into a `Score`.
+   *
+   * Only valid on output handles. The score is populated from the
+   * math block's result path with
+   * `execute store result score <score> run data get storage <path>` —
+   * MC's `data get` yields the stored number as the command's result,
+   * so the score ends up holding the integer the math computed.
+   *
+   * The command is emitted at the call site, which places it AFTER the
+   * math block's own commands (the bridge's body is spliced in at the
+   * `_.Math(...)` call) — so the score is read after the math has run.
+   *
+   * Only integer outputs have this: a float result can't be held by a
+   * score (scores hold integers).
    */
   score(): Score {
     if (!this._isOutput) {
-      throw new Error('IntegerHandle.score() can only be called on output handles.')
+      throw new Error('IntegerHandle.score() can only be called on output handles (use _.Math(...) output).')
     }
-    throw new Error('IntegerHandle.score() not yet implemented.')
+    if (!StorageRefNode.is(this.node)) {
+      throw new Error(`IntegerHandle.score(): expected output node to be StorageRefNode, got ${this.node.constructor.name}`)
+    }
+    const pack = this.node.sandstoneCore.pack
+    // The score is filled from the math block's result path —
+    // `execute store result score <score> run data get storage <path>`.
+    // MC's `data get` yields the stored number as the command's
+    // result, so the score ends up holding the computed integer.
+    const score = pack.Variable(undefined, this.node.dataPoint.path)
+    score.set(this.node.dataPoint)
+    return score
   }
 
   /**
@@ -630,7 +678,7 @@ export class _RawIntegerHandle extends BaseHandle implements IntegerBranded {
   }
 }
 
-function handleToExpr(core: SandstoneCore, h: Float | Integer | number): MathExpressionNode {
+function handleToExpr(core: SandstoneCore, h: FloatOperand, kind: MathKind): MathExpressionNode {
   if (typeof h === 'number') {
     // Wrap a raw number as a `LiteralNode` at use site. This lets
     // `rx['*='](-1)` work without requiring the user to wrap literals
@@ -649,30 +697,54 @@ function handleToExpr(core: SandstoneCore, h: Float | Integer | number): MathExp
     // `(...).mathStack is undefined` TypeError once `MathNode`'s
     // constructor started reading from `sandstoneCore.mathStack` to
     // register every node with the enclosing function's audit trail.
-    const lit = new LiteralNode(core, h)
+    //
+    // `kind` is the RECEIVING chain's kind — the literal is an operand
+    // of that chain, so it takes the chain's kind. An integer chain
+    // folding to a literal therefore keeps the integer kind (emitted
+    // as `2`, not `2.0f`).
+    const lit = new LiteralNode(core, h, kind)
     lit.internal = true
     return lit
   }
   return h.node
 }
 
+/**
+ * The numeric tower's rule for an operator's RESULT kind: the
+ * RECEIVER's kind wins.
+ *
+ * A chain therefore stays in one numeric context — an integer handle's
+ * chain computes integers, a float handle's chain computes floats —
+ * and a mixed operand is bridged rather than widening the whole
+ * chain. The bridge is MC's `from_int` / `from_float` provider,
+ * inserted by `NumericCoalescingVisitor` at the point where the
+ * operand is consumed.
+ *
+ * Widening instead (integer chain + float operand → a float chain)
+ * would force every integer in the chain through a float and back,
+ * losing precision on large integers for no benefit.
+ */
+
 // ---------------------------------------------------------------------------
 // Constructors — produce handles from raw inputs.
 // ---------------------------------------------------------------------------
 
 /**
- * `_.float(5)` — raw literal. Uses `LiteralNode` (no kind at
- * construction). The compiler picks the NBT tag based on the owning
- * handle's kind — for `FloatHandle` it's a float tag (`5.0d`); for
- * `IntegerHandle` it's an int tag (`5b`/`5s`/`5`/`5L`). Width selection
- * (byte/short/int/long vs float/double) is the lowerer's call too.
+ * `_.float(5)` — raw literal. The `LiteralNode` carries the `float`
+ * kind, so it lowers to an `NBTFloat` (`5.0f`) inside MC's
+ * `context_float_provider`.
  */
 export function floatFromLiteral(core: SandstoneCore, value: number): Float {
-  return new _RawFloatHandle(new LiteralNode(core, value))
+  return new _RawFloatHandle(new LiteralNode(core, value, 'float'))
 }
 
+/**
+ * `_.integer(5)` — raw literal. The `LiteralNode` carries the
+ * `integer` kind, so it lowers to an `NBTInt` (`5`) inside MC's
+ * `context_int_provider`.
+ */
 export function integerFromLiteral(core: SandstoneCore, value: number): Integer {
-  return new _RawIntegerHandle(new LiteralNode(core, value))
+  return new _RawIntegerHandle(new LiteralNode(core, value, 'integer'))
 }
 
 /**

@@ -290,7 +290,7 @@
     "definition": "src/variables/nbt/NBTs.ts"
   },
   "NBTAllNumbers": {
-    "signature": "(alias) type NBTAllNumbers<Range extends NBTRange = {}> = {\n    new (value: number): NBTLong<Range>;\n} | {\n    new (value: number): NBTShort<Range>;\n} | {\n    new (value: number): NBTByte<Range>;\n} | {\n    new (value: number): NBTFloat<Range>;\n} | {\n    new (value: number): NBTDouble<Range>;\n} | {\n    new (value: number): NBTInt<Range>;\n}",
+    "signature": "(alias) type NBTAllNumbers<Range extends NBTRange = {}> = {\n    new (value: number | bigint): NBTLong<Range>;\n} | {\n    new (value: number): NBTShort<Range>;\n} | {\n    new (value: number): NBTByte<Range>;\n} | {\n    new (value: number): NBTFloat<Range>;\n} | {\n    new (value: number): NBTDouble<Range>;\n} | {\n    new (value: number): NBTInt<Range>;\n}",
     "definition": "src/variables/nbt/NBTs.ts"
   },
   "NBTAllPrimitives": {
@@ -346,7 +346,7 @@
     "definition": "src/variables/nbt/NBTs.ts"
   },
   "NBTPrimitive": {
-    "signature": "(alias) class NBTPrimitive<Unit extends string>",
+    "signature": "(alias) class NBTPrimitive<Unit extends string, V extends number | bigint = number>",
     "definition": "src/variables/nbt/NBTs.ts"
   },
   "NBTRange": {
@@ -775,7 +775,7 @@
     "definition": "src/commands/implementations/server/gamerule.ts"
   },
   "getExistingResource": {
-    "signature": "(alias) const getExistingResource: {\n    (relativePath: `${string}.json`): Promise<unknown>;\n    (relativePath: string & {}, encoding?: 'ascii' | 'utf8' | 'utf-8' | 'utf16le' | 'utf-16le'): Promise<string>;\n    (relativePath: string & {}, encoding: false | NonNullable<Exclude<EncodingOption, 'ascii' | 'utf8' | 'utf-8' | 'utf16le' | 'utf-16le'>>): Promise<ArrayBuffer | Buffer>;\n    <Resource extends JsonResource>(resource: Resource): Promise<JsonResource['json']>;\n    (resource: TextResource): Promise<string>;\n    (resource: BinaryResource): Promise<ArrayBuffer | Buffer>;\n    (resource: ResourceClass): Promise<ArrayBuffer | Buffer | string | unknown>;\n}",
+    "signature": "(alias) const getExistingResource: {\n    (relativePath: `${string}.${BinaryExtension}`): Promise<ArrayBuffer | Buffer>;\n    (relativePath: `${string}.${'json' | 'mcmeta'}`): Promise<unknown>;\n    (relativePath: string & {}, encoding?: 'ascii' | 'utf8' | 'utf-8' | 'utf16le' | 'utf-16le'): Promise<string>;\n    (relativePath: string & {}, encoding: false | NonNullable<Exclude<EncodingOption, 'ascii' | 'utf8' | 'utf-8' | 'utf16le' | 'utf-16le'>>): Promise<ArrayBuffer | Buffer>;\n    <Resource extends JsonResource>(resource: Resource): Promise<JsonResource['json']>;\n    (resource: TextResource): Promise<string>;\n    (resource: BinaryResource): Promise<ArrayBuffer | Buffer>;\n    (resource: ResourceClass): Promise<ArrayBuffer | Buffer | string | unknown>;\n}",
     "definition": "src/sandstone.ts"
   },
   "getSandstoneContext": {

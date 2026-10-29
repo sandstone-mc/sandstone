@@ -14,6 +14,7 @@ import {
   MathSwitchNode,
 } from '../ast/nodes/control'
 import { AggregateNode, ArcCosineNode, ArcSineNode, BinaryOpNode, UnaryOpNode } from '../ast/nodes/operators'
+import { ConversionNode } from '../ast/nodes/conversion'
 import {
   AndConditionNode,
   ComparisonConditionNode,
@@ -141,6 +142,7 @@ export abstract class MathVisitor {
     if (BinaryOpNode.is(node)) return this.visitBinaryOpNode(node)
     if (AggregateNode.is(node)) return this.visitAggregateNode(node)
     if (UnaryOpNode.is(node)) return this.visitUnaryOpNode(node)
+    if (ConversionNode.is(node)) return this.visitConversionNode(node)
     if (ArcSineNode.is(node)) return this.visitArcSineNode(node)
     if (ArcCosineNode.is(node)) return this.visitArcCosineNode(node)
     if (ComparisonConditionNode.is(node)) return this.visitComparisonConditionNode(node)
@@ -280,6 +282,10 @@ export abstract class MathVisitor {
     return node
   }
   visitArcCosineNode(node: ArcCosineNode): MathNode {
+    void node
+    return node
+  }
+  visitConversionNode(node: ConversionNode): MathNode {
     void node
     return node
   }

@@ -2,6 +2,8 @@ import type { DataPointClass } from '../../../variables/Data'
 import type { MathExpressionNode } from '../ast/MathExpressionNode'
 import { MathExpressionNode as MathExpressionNodeClass } from '../ast/MathExpressionNode'
 import { AggregateNode, BinaryOpNode } from '../ast/nodes/operators'
+import { ConversionNode } from '../ast/nodes/conversion'
+import { RandomNode } from '../ast/nodes/leaves'
 import type { MathFunctionNode } from '../ast/MathFunctionNode'
 import type { MathNode } from '../ast/MathNode'
 import { MathAnalysisVisitor } from './MathVisitor'
@@ -117,6 +119,15 @@ export class MathChainAnalysisVisitor extends MathAnalysisVisitor<MathChainAnaly
           transients.add(node.inputs[i])
         }
       }
+      if (ConversionNode.is(node)) {
+        // A conversion wraps the value it converts. The wrapped value
+        // is consumed by the conversion (and through it, by the
+        // operator the conversion feeds) — exactly the position an
+        // operand at index ≥ 1 occupies. Marking it transient keeps
+        // its data inside the enclosing operator's provider instead
+        // of materialising it in its own handle storage.
+        transients.add(node.source)
+      }
     }
 
     // `inputRoots` — "no predecessor" leaves (CopyNode /
@@ -229,6 +240,25 @@ export class MathChainAnalysisVisitor extends MathAnalysisVisitor<MathChainAnaly
       } else if (AggregateNode.is(node)) {
         if (transients.has(node)) continue
         const root = chainRootOf(node.inputs[0])
+        if (!root) continue
+        if (!rootToId.has(root)) {
+          rootToId.set(root, `h_${handleCounter++}`)
+        }
+        const isFirst = firstPerRoot.has(root)
+        firstPerRoot.delete(root)
+        updates.push({
+          handleName: rootToId.get(root)!,
+          expression: node,
+          statesBefore: new Map(chainState),
+          isFirst,
+        })
+        chainState.set(root, node)
+      } else if (RandomNode.is(node)) {
+        // A random value is a leaf — it has no operands to walk back
+        // through, so its own node is the chain root (it is the
+        // startNode of the handle that wraps it).
+        if (transients.has(node)) continue
+        const root = chainRootOf(node)
         if (!root) continue
         if (!rootToId.has(root)) {
           rootToId.set(root, `h_${handleCounter++}`)

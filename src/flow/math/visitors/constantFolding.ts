@@ -1,10 +1,12 @@
 import type { SandstoneCore } from '../../../core/sandstoneCore'
 import type { MathNode } from '../ast/MathNode'
 import { MathExpressionNode } from '../ast/MathExpressionNode'
+import type { MathKind } from '../ast/MathExpressionNode'
 import type { MathFunctionNode } from '../ast/MathFunctionNode'
 import { LiteralNode, CopyNode } from '../ast/nodes/leaves'
 import { MathFlowClauseNode, MathIfNode } from '../ast/nodes/control'
 import { AggregateNode, BinaryOpNode, UnaryOpNode } from '../ast/nodes/operators'
+import { ConversionNode } from '../ast/nodes/conversion'
 import { MathReturnNode } from '../ast/nodes/control'
 import { MathVisitor } from './MathVisitor'
 
@@ -75,7 +77,7 @@ export class ConstantFoldingVisitor extends MathVisitor {
   private _fn: MathFunctionNode | null = null
 
   /** Wrapping nodes absorbed during this pass — drained by the runner. */
-  readonly orphans: Array<BinaryOpNode | AggregateNode | UnaryOpNode> = []
+  readonly orphans: Array<BinaryOpNode | AggregateNode | UnaryOpNode | ConversionNode> = []
   /**
    * Fresh `LiteralNode`s whose source operator was a root in
    * `allNodes` (had no parent to mutate). Pushed onto `fn.allNodes`
@@ -176,6 +178,25 @@ export class ConstantFoldingVisitor extends MathVisitor {
     const folded = this.tryFoldUnary(node)
     if (folded === undefined) return node
     this.orphans.push(node)
+    return folded
+  }
+
+  override visitConversionNode(node: ConversionNode): MathNode {
+    // Recurse into the source first so a folded source is picked up.
+    const oldSource = node.source
+    const newSource = this.visit(oldSource) as MathExpressionNode
+    if (newSource !== oldSource) {
+      node.source = newSource
+    }
+
+    // A conversion of a constant source folds to a constant of the
+    // conversion's OWN kind: `from_float(2.5)` is the integer `2`,
+    // `from_int(7)` is the float `7.0`.
+    const value = node.evaluateAsConstant()
+    if (value === undefined) return node
+    this.orphans.push(node)
+    const folded = this.literal(node.sandstoneCore, value, node.kind)
+    this._newRootLiterals.push(folded)
     return folded
   }
 
@@ -345,7 +366,7 @@ export class ConstantFoldingVisitor extends MathVisitor {
         case 'add': return b // 0 + x = x
         case 'mul': return a // 0 * x = 0
         case 'div': return a // 0 / x = 0
-        case 'pow': return this.literal(node.sandstoneCore, 1) // 0^x = 1 for x > 0
+        case 'pow': return this.literal(node.sandstoneCore, 1, node.kind) // 0^x = 1 for x > 0
         // sub(0, x) → negate(x) lives in AlgebraicSimplificationVisitor
         // (changes op shape, doesn't fold to a constant).
         default: break
@@ -355,8 +376,8 @@ export class ConstantFoldingVisitor extends MathVisitor {
       switch (node.op) {
         case 'add': return a // x + 0 = x
         case 'sub': return a // x - 0 = x
-        case 'mul': return this.literal(node.sandstoneCore, 0) // x * 0 = 0
-        case 'pow': return this.literal(node.sandstoneCore, 1) // x^0 = 1
+        case 'mul': return this.literal(node.sandstoneCore, 0, node.kind) // x * 0 = 0
+        case 'pow': return this.literal(node.sandstoneCore, 1, node.kind) // x^0 = 1
         default: break
       }
     }
@@ -373,7 +394,7 @@ export class ConstantFoldingVisitor extends MathVisitor {
     // Both operands literal: evaluate to a constant.
     const value = node.evaluateAsConstant()
     if (value === undefined) return undefined
-    const folded = this.literal(node.sandstoneCore, value)
+    const folded = this.literal(node.sandstoneCore, value, node.kind)
     this._newRootLiterals.push(folded)
     return folded
   }
@@ -404,7 +425,7 @@ export class ConstantFoldingVisitor extends MathVisitor {
       const hasAbsorber = node.inputs.some(
         (n) => LiteralNode.is(n) && n.value === absorbing,
       )
-      if (hasAbsorber) return this.literal(node.sandstoneCore, absorbing)
+      if (hasAbsorber) return this.literal(node.sandstoneCore, absorbing, node.kind)
     }
 
     // Filter identity literals.
@@ -419,7 +440,7 @@ export class ConstantFoldingVisitor extends MathVisitor {
     if (filtered.length === 0) {
       // All inputs were identity literals (e.g. add([0, 0]) or
       // mul([1, 1])). The aggregate reduces to the identity value.
-      return this.literal(node.sandstoneCore, identity)
+      return this.literal(node.sandstoneCore, identity, node.kind)
     }
     if (filtered.length === 1) {
       // Only one input left — drop the aggregate entirely.
@@ -445,7 +466,13 @@ export class ConstantFoldingVisitor extends MathVisitor {
     // one (a copy that wraps a known-constant input).
     const values = node.inputs.map((i) => i.evaluateAsConstant())
     if (values.some((v) => v === undefined)) return undefined
-    const folded = this.literal(node.sandstoneCore, node.evaluateAsConstant()!)
+    // The aggregate's OWN evaluation decides the folded value — an
+    // aggregate whose inputs are constant can still refuse to fold
+    // (integer `avg` leaves the rounding to MC's runtime), and
+    // folding it anyway would produce `NaN`.
+    const value = node.evaluateAsConstant()
+    if (value === undefined) return undefined
+    const folded = this.literal(node.sandstoneCore, value, node.kind)
     // Track as a fresh replacement — the orphan drain removes
     // `node` from `fn.allNodes`, so without this push the chain
     // analysis would have nothing to inspect for the now-folded
@@ -458,16 +485,32 @@ export class ConstantFoldingVisitor extends MathVisitor {
     if (!LiteralNode.is(node.operand)) return undefined
     const value = node.evaluateAsConstant()
     if (value === undefined) return undefined
-    const folded = this.literal(node.sandstoneCore, value)
+    const folded = this.literal(node.sandstoneCore, value, node.kind)
     this._newRootLiterals.push(folded)
     return folded
   }
 
   /**
-   * Build a `LiteralNode` carrying `value`, rounded to single-
-   * precision float to match MC's runtime math semantics.
+   * Build a `LiteralNode` carrying `value`, rounded to match MC's
+   * runtime math semantics for the expression's kind.
+   *
+   * Float: MC runs all math in single precision (`float`); JS uses
+   * double. `0.1 + 0.2` is `0.30000000000000004` in JS, `0.3f` in
+   * Java. Every folded constant rounds through `Math.fround` to match
+   * MC's runtime value. The serialized SNBT may have extra digits (JS
+   * formats doubles more verbosely than Java formats floats), but
+   * the parsed value is identical to what MC would compute.
+   *
+   * Integer: no rounding at all — `Math.fround` would silently lose
+   * precision above 2^24 (`fround(16777217)` is `16777216`). The
+   * value is truncated to an integer instead, matching MC's int
+   * provider semantics.
    */
-  private literal(core: SandstoneCore, value: number): LiteralNode {
-    return new LiteralNode(core, Math.fround(value))
+  private literal(core: SandstoneCore, value: number, kind: MathKind): LiteralNode {
+    return new LiteralNode(
+      core,
+      kind === 'integer' ? Math.trunc(value) : Math.fround(value),
+      kind,
+    )
   }
 }

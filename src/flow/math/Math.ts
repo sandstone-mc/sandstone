@@ -266,16 +266,22 @@ export class SandstoneMath<R = MathOutputsSchema> {
     return binaryOp(this.sandstoneCore, op, a, b, 'float')
   }
 
-  add(...values: (Float | Integer)[]): Float
-  add(values: (Float | Integer)[]): Float
+  add(values: Float[]): Float
+  add(...values: Float[]): Float
   add(values: Integer[]): Integer
+  add(...values: Integer[]): Integer
+  add(values: (Float | Integer)[]): Float
+  add(...values: (Float | Integer)[]): Float
   add(...args: ((Float | Integer)[] | Float | Integer)[]): Float | Integer {
     return aggregate(this.sandstoneCore, 'add', args, 'float', 'add')
   }
 
-  multiply(...values: (Float | Integer)[]): Float
-  multiply(values: (Float | Integer)[]): Float
+  multiply(values: Float[]): Float
+  multiply(...values: Float[]): Float
   multiply(values: Integer[]): Integer
+  multiply(...values: Integer[]): Integer
+  multiply(values: (Float | Integer)[]): Float
+  multiply(...values: (Float | Integer)[]): Float
   multiply(...args: ((Float | Integer)[] | Float | Integer)[]): Float | Integer {
     return aggregate(this.sandstoneCore, 'mul', args, 'float', 'mul')
   }
@@ -345,6 +351,15 @@ export class SandstoneMath<R = MathOutputsSchema> {
   // Utility ops.
   // -------------------------------------------------------------------------
 
+  /**
+   * `_.random(range, result)` — a uniform random value.
+   *
+   * The `result` argument picks the numeric kind, and the return type
+   * follows it: an integer random yields an `Integer` handle (which
+   * lowers to MC's `uniform` INT provider), a float one a `Float`.
+   */
+  random(range: { min?: Float | Integer; max?: Float | Integer }, result: 'integer'): Integer
+  random(range?: { min?: Float | Integer; max?: Float | Integer }, result?: 'float'): Float
   random(
     range: { min?: Float | Integer; max?: Float | Integer } = {},
     result: 'float' | 'integer' = 'float',
@@ -355,6 +370,13 @@ export class SandstoneMath<R = MathOutputsSchema> {
     return handleFromKind(this.sandstoneCore, node, node.kind)
   }
 
+  /**
+   * `_.pick(values)` — a weighted random pick. The picked values'
+   * kind decides the result: integer values yield an `Integer` handle
+   * (MC's `weighted_list` INT provider), float ones a `Float`.
+   */
+  pick(values: { value: Integer; weight: number | Float }[]): Integer
+  pick(values: { value: Float; weight: number | Float }[]): Float
   pick(values: { value: Float; weight: number | Float }[] | { value: Integer; weight: number | Float }[]) {
     const entries = values.map((entry) => {
       const value = (entry.value as Float | Integer).node
@@ -542,6 +564,18 @@ export class SandstoneMath<R = MathOutputsSchema> {
 // Internal helpers.
 // ---------------------------------------------------------------------------
 
+/**
+ * Aggregate helper behind `_.add` / `_.sum` / `_.product` / `_.average`.
+ *
+ * Result kind — the numeric tower:
+ *   - An explicit `'float'` / `'integer'` argument wins outright.
+ *   - Otherwise, all-integer operands → `integer`; any float operand
+ *     → `defaultKind` (the mixed-operand result kind, always `float`).
+ *
+ * The kind travels onto the `AggregateNode`, which is what the
+ * provider compiler reads to pick MC's `context_int_provider` vs
+ * `context_float_provider`.
+ */
 function aggregate(
   core: SandstoneCore,
   op: AggregateOp,
@@ -572,7 +606,7 @@ function aggregate(
     throw new Error(`SandstoneMath.aggregate(${op}): no inputs provided.`)
   }
   const allInt = flat.every((v) => v.kind === 'integer')
-  const kind: MathKind = explicitKind ?? (allInt && defaultKind === 'integer' ? 'integer' : 'float')
+  const kind: MathKind = explicitKind ?? (allInt ? 'integer' : defaultKind)
   const inputs = flat.map((v) => v.node)
   return handleFromKind(core, new AggregateNode(core, op, inputs, kind), kind)
 }

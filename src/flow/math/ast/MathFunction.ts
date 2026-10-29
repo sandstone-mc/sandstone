@@ -3,14 +3,21 @@ import { Float as _FloatClass, Integer as _IntegerClass, _RawFloatHandle, _RawIn
 import { DataPointClass, IntegerDataPointClass } from '../../../variables/Data'
 import { Score } from '../../../variables/Score'
 import type { MathFunctionOutputs } from './MathFunctionNode'
-import { MathFunctionNode } from './MathFunctionNode'
+import { MathFunctionNode, assertValidOutputFieldNames } from './MathFunctionNode'
 import { LiteralNode, ScoreboardRefNode } from './nodes/leaves'
+import { MathReturnNode } from './nodes/control'
+import type { MathNode } from './MathNode'
+import type { FloatNumberProviderClass, IntegerNumberProviderClass } from 'sandstone/core'
+import { runDefaultMathVisitors } from '../visitors'
+import { compileFloatProvider, compileIntProvider } from '../compile/mathProviderCompiler'
 import type { SandstoneCore } from '../../../core/sandstoneCore'
 import type { MCFunctionNode } from 'sandstone/core'
-import type { MathKind, MathExpressionNode } from './MathExpressionNode'
+import { MathExpressionNode } from './MathExpressionNode'
+import type { MathKind } from './MathExpressionNode'
 import { makeClassCallable } from '../../../utils'
 import type { MakeInstanceCallable } from '../../../utils'
 import type { NBTSerializable } from '../../../arguments'
+import { NBTByte, NBTDouble, NBTFloat, NBTInt, NBTShort } from '../../../variables/nbt/NBTs'
 import type { MathSchemaValue } from '../../math/Math'
 import { SandstoneMath } from '../../math/Math'
 import { StorageRefNode } from './nodes/leaves'
@@ -20,16 +27,31 @@ import { computeInputShapeKey } from '../compile/groupBridges'
 
 /**
  * Input types accepted by `Math.__call__(...inputs: P)`. Each non-handle
- * input (DataPointClass, DataPointPickClass, Score) gets rebound to the
- * matching Float/Integer handle at call time — TS narrows the parameter
- * type, runtime rebinds the value.
+ * input (DataPointClass, DataPointPickClass, Score, NBT number) gets
+ * rebound to the matching Float/Integer handle at call time — TS narrows
+ * the parameter type, runtime rebinds the value.
  *
  * `number` is intentionally NOT here — literal numbers must be wrapped
  * via `_.float()` / `_.integer()` first (runtime `rebindInput` throws).
  * Use the `MathInputs` array type at the call site for a tighter
  * signature.
  */
-type MathInput = number | Float | Integer | DataPointClass | DataPointPickClass | Score
+type MathInput = number | Float | Integer | DataPointClass | DataPointPickClass | Score | NBTNumber
+
+/**
+ * Numeric NBT values accepted as math-block inputs. `NBT.int(69)` is
+ * the constant form — it lowers to MC's `constant` int provider.
+ *
+ * `NBTLong` is deliberately absent: a long is a `bigint`, which the
+ * math AST's `number`-valued literals can't represent exactly.
+ */
+type NBTNumber = NBTInt | NBTByte | NBTShort | NBTFloat | NBTDouble
+
+/**
+ * The integer-valued subset of {@link NBTNumber} — the constants an
+ * integer math block accepts.
+ */
+type NBTIntNumber = NBTInt | NBTByte | NBTShort
 
 /**
  * Runtime shape of the input tuple `_.Math` accepts. An array of
@@ -46,12 +68,20 @@ type MathInputs = readonly (Float | Integer)[]
  *
  * Used by `Math.__call__`'s parameter type so callers can pass NBT or
  * score references where the cb declares plain `Float` / `Integer`.
+ *
+ * An `Integer` position does NOT accept a bare `number` — integer math
+ * inputs are `NBT.int(69)`, an integer-typed DataPoint, or a `Score`.
+ * A bare number is a float literal, and silently feeding one into an
+ * integer block is exactly the float-into-integer leak the integer
+ * path is designed to avoid. Automatic conversion of bare numbers
+ * (int → float widening, float → int narrowing) is a future change;
+ * until then the explicit forms are required.
  */
 type ExpandInputs<T> = {
   [K in keyof T]: T[K] extends Float
-    ? Float | number | DataPointClass | DataPointPickClass | Score
+    ? Float | number | DataPointClass | DataPointPickClass | Score | NBTNumber
     : T[K] extends Integer
-      ? Integer | number | IntegerDataPointClass | Score
+      ? Integer | IntegerDataPointClass | DataPointClass | DataPointPickClass | Score | NBTIntNumber
       : T[K]
 }
 
@@ -155,6 +185,12 @@ class _RawMathFunction<P extends readonly MathInput[], R>
   private _sharedStorageInputs: DataPointClass<'storage'>[] = []
 
   /**
+   * Counter for the provider resources `toProvider` creates — each
+   * call needs its own resource name.
+   */
+  private _providerCount = 0
+
+  /**
    * Unique per-instance number used to disambiguate deferred storage
    * paths. Stored via parameter-property declaration so it's assigned
    * before the body of the constructor runs.
@@ -166,7 +202,25 @@ class _RawMathFunction<P extends readonly MathInput[], R>
     public readonly options?: MathOptions,
     private readonly _resourceKey: string = String(_instanceCounter++),
     private _lastReboundStarts?: ReadonlyArray<MathExpressionNode>,
-  ) {}
+  ) {
+    // The output schema's field names end up in the provider resource
+    // names, and MC's resource ids only allow lowercase. Reject a
+    // camelCase field name HERE — at the declaration — rather than
+    // letting it produce an unloadable provider file later.
+    assertValidOutputFieldNames(Object.keys(this.outputs as Record<string, unknown>))
+
+    // `toProvider` is typed only for a SINGLETON output schema (see
+    // `SingletonProviderMethod`), so it can't be a public class
+    // member — a public member would show up in `keyof` for record
+    // schemas too. Define it at runtime instead, and let the type
+    // decide who is allowed to call it.
+    Object.defineProperty(this, 'toProvider', {
+      value: (...args: ExpandInputs<P>) => this._toProvider(...args),
+      enumerable: false,
+      configurable: true,
+      writable: false,
+    })
+  }
 
   /**
    * Convert `this.outputs` (class-based schema) to the runtime
@@ -189,6 +243,24 @@ class _RawMathFunction<P extends readonly MathInput[], R>
       fields[k] = v === _RawFloatHandle ? 'float' : 'integer'
     }
     return { kind: 'record', fields }
+  }
+
+  /**
+   * The math block's numeric kind, derived from its declared output
+   * schema. `Integer` → integer; `Float` → float; a record schema →
+   * integer only when EVERY field is integer.
+   *
+   * Used to decide how a plain `DataPointClass` input is read: an
+   * integer block assumes its DataPoint holds an integer, a float
+   * block assumes a float.
+   */
+  private get blockKind(): MathKind {
+    if (this.outputs === _IntegerClass) return 'integer'
+    if (this.outputs === _FloatClass) return 'float'
+    const fields = Object.values(this.outputs as Record<string, unknown>)
+    return fields.length > 0 && fields.every((v) => v === _IntegerClass)
+      ? 'integer'
+      : 'float'
   }
 
   /**
@@ -255,12 +327,49 @@ class _RawMathFunction<P extends readonly MathInput[], R>
     try {
       const helper = new SandstoneMath<unknown>(this.sandstoneCore)
       this.callback(helper, ...inputs)
+      this.assertOutputKind(node)
       this.options?.onInitialAST?.(node)
     } finally {
       node.dispose()
     }
     this._nodesByShape.set(shapeKey, node)
     return node
+  }
+
+  /**
+   * Verify the returned value's numeric kind matches the math block's
+   * declared output schema.
+   *
+   * A kind MISMATCH is no longer an error: MC's `from_int` /
+   * `from_float` providers bridge the two numeric contexts, so a
+   * float value returned from an integer block is truncated by
+   * `from_float` and an integer value returned from a float block is
+   * widened by `from_int`. The bridge is inserted by the lowering
+   * pass (`coerceToBlockKind` in `multiStatementEmit.ts`).
+   *
+   * What's left to check is that the returned value is a value at
+   * all — a handle or a record of handles.
+   */
+  private assertOutputKind(node: MathFunctionNode): void {
+    const outputs = node.outputs
+    const returns = findReturnNodes(node)
+    if (returns.length === 0) return
+
+    if (outputs.kind === 'scalar') {
+      for (const ret of returns) {
+        if (!MathExpressionNode.is(ret.value)) continue
+      }
+      return
+    }
+
+    for (const ret of returns) {
+      const value = ret.value
+      if (!value || typeof value !== 'object' || Array.isArray(value)) continue
+      for (const [field] of Object.entries(outputs.fields)) {
+        const fieldValue = (value as Record<string, unknown>)[field]
+        if (!MathExpressionNode.is(fieldValue)) continue
+      }
+    }
   }
 
   /**
@@ -395,28 +504,123 @@ class _RawMathFunction<P extends readonly MathInput[], R>
   }
 
   /**
+   * Convert this math function into a SINGLE MC number provider.
+   *
+   * A math block normally runs as a sequence of `data modify … set
+   * compute` commands, with the chain's intermediate values
+   * materialised through storage. A provider is the other shape: one
+   * nested provider tree that MC evaluates on demand, with no
+   * intermediate storage at all.
+   *
+   * ```ts
+   * const damage = _.Math(Integer, (math, x: Integer) => {
+   *   math.return(x.multiply(math.integer(2)))
+   * })
+   *
+   * // → data/<ns>/context_int_provider/<name>.json
+   * const provider = damage.toProvider(dp)
+   * ```
+   *
+   * The args are the math block's inputs — the same ones a call would
+   * take. A math block with no inputs takes none here either.
+   *
+   * Only a SINGLETON output can become a provider: a provider holds
+   * one value, so a record output has no equivalent.
+   *
+   * This is the implementation behind the public `toProvider` — the
+   * method itself is installed by the constructor and typed by
+   * `SingletonProviderMethod`, so it only exists for a singleton
+   * schema.
+   */
+  private _toProvider(...args: ExpandInputs<P>): FloatNumberProviderClass | IntegerNumberProviderClass {
+    const outputs = this.computeOutputsRecord()
+    if (outputs.kind !== 'scalar') {
+      throw new Error(
+        'Math.toProvider: a math block with a record output can\'t become a '
+        + 'single number provider — a provider holds one value.',
+      )
+    }
+
+    // Rebind the args exactly like a call does, so the AST is built
+    // from the same input handles.
+    const rebound = args.map((i) => this.rebindInput(i as MathInput))
+    this._lastReboundStarts = rebound.map((h) => h.startNode)
+    const node = this.buildAst(rebound as unknown as P)
+
+    // Run the visitor pipeline + chain analysis — the same pass the
+    // imperative compile path uses.
+    runDefaultMathVisitors(node)
+    const analysis = node.chainAnalysisResult
+    const returnHandle = node.returnHandleNameResult
+    // The returned expression: the LAST update on the return handle's
+    // chain. The handle's node is already the full nested tree
+    // (`mul(add(x, 2), 3)`), so it compiles into one provider
+    // without any storage round-trip.
+    let expression: MathExpressionNode | undefined
+    for (const update of analysis.updates) {
+      if (returnHandle !== null && update.handleName === returnHandle) {
+        expression = update.expression
+      }
+    }
+    if (expression === undefined) {
+      throw new Error(
+        'Math.toProvider: the math block has no returned expression to convert.',
+      )
+    }
+
+    const pack = this.sandstoneCore.pack
+    const name = `math_${this._resourceKey}_provider_${this._providerCount++}`
+    if (outputs.value === 'integer') {
+      return pack.NumberProvider('integer', name, compileIntProvider(expression))
+    }
+    return pack.NumberProvider('float', name, compileFloatProvider(expression))
+  }
+
+  /**
    * Rebind a single input value to its matching Float/Integer handle.
    * Float/Integer pass through unchanged; DataPointClass/PickClass/Score
-   * are wrapped as Float/Integer pointing at the same NBT path / score.
+   * / NBT numbers are wrapped as Float/Integer pointing at the same NBT
+   * path / score / constant.
    *
    * Kind is determined by the runtime class of the input:
-   *   - `IntegerDataPointClass` → Integer handle
-   *   - everything else (DataPointClass, StringDataPointClass, Score) →
-   *     Float handle
-   *
-   * `number` literals are rejected — they must be wrapped via
-   * `_.float()` / `_.integer()` first.
+   *   - `NBTInt` / `NBTByte` / `NBTShort` → Integer handle (constant).
+   *   - `NBTFloat` / `NBTDouble` → Float handle (constant).
+   *   - `IntegerDataPointClass` → Integer handle (storage read).
+   *   - `DataPointClass` / pick variant → the math block's own kind —
+   *     an integer block assumes its DataPoint holds an integer, a
+   *     float block assumes a float.
+   *   - `Score` → Integer handle (MC scores are always integers).
+   *   - a bare `number` → Float handle. (A bare number is not
+   *     accepted for an integer block; `_.Math(Integer, …)` inputs are
+   *     `NBT.int(69)`, an integer DataPoint, or a Score.)
    */
   private rebindInput(input: MathInput): Float | Integer {
     if (typeof input === 'number') {
       // Raw number literal — wrap as a Float literal handle. Lowerer
       // substitutes the literal's value into the provider tree.
-      const lit = new LiteralNode(this.sandstoneCore, input)
+      const lit = new LiteralNode(this.sandstoneCore, input, 'float')
       return new _RawFloatHandle(lit)
     }
     if ('node' in input && 'binding' in input) {
       // Already a Float/Integer handle — pass through.
       return input as Float | Integer
+    }
+    if (
+      input instanceof NBTInt
+      || input instanceof NBTByte
+      || input instanceof NBTShort
+    ) {
+      // Integer constant — `NBT.int(69)`. Lowers to MC's `constant`
+      // int provider.
+      return new _RawIntegerHandle(
+        new LiteralNode(this.sandstoneCore, input.value, 'integer'),
+      )
+    }
+    if (input instanceof NBTFloat || input instanceof NBTDouble) {
+      // Float constant — `NBT.float(1.5)`.
+      return new _RawFloatHandle(
+        new LiteralNode(this.sandstoneCore, input.value, 'float'),
+      )
     }
     if (input instanceof IntegerDataPointClass) {
       // Integer-typed NBT (or pick variant thereof) — wrap as Integer.
@@ -425,10 +629,17 @@ class _RawMathFunction<P extends readonly MathInput[], R>
       )
     }
     if (input instanceof DataPointClass || '_toDataPoint' in input) {
-      // Float-typed NBT (or pick variant) — wrap as Float.
-      return new _RawFloatHandle(
-        new StorageRefNode(this.sandstoneCore, input as DataPointClass, 'float'),
-      )
+      // Plain NBT (or pick variant) — the math block's declared kind
+      // decides: an integer block reads it as an integer, a float
+      // block as a float.
+      const kind = this.blockKind
+      return kind === 'integer'
+        ? new _RawIntegerHandle(
+            new StorageRefNode(this.sandstoneCore, input as DataPointClass, 'integer'),
+          )
+        : new _RawFloatHandle(
+            new StorageRefNode(this.sandstoneCore, input as DataPointClass, 'float'),
+          )
     }
     if (input instanceof Score) {
       return new _RawIntegerHandle(new ScoreboardRefNode(this.sandstoneCore, input))
@@ -510,6 +721,30 @@ class _RawMathFunction<P extends readonly MathInput[], R>
 }
 
 /**
+ * Collect every `_.return(...)` statement in a math function's body.
+ *
+ * Returns can sit at the top level or nested inside an `if` / `switch`
+ * clause, so the walk descends into every container's body.
+ */
+function findReturnNodes(node: MathFunctionNode): MathReturnNode[] {
+  const found: MathReturnNode[] = []
+  const walk = (body: MathNode[]) => {
+    for (const child of body) {
+      if (MathReturnNode.is(child)) {
+        found.push(child)
+        continue
+      }
+      const container = child as { body?: MathNode[] }
+      if (Array.isArray(container.body)) {
+        walk(container.body)
+      }
+    }
+  }
+  walk(node.body)
+  return found
+}
+
+/**
  * `MathFunction<P, R>` — user-facing callable + type for a math function.
  *
  * Renamed from `Math` (which collides with the JS built-in `Math`).
@@ -521,5 +756,29 @@ class _RawMathFunction<P extends readonly MathInput[], R>
  * pattern like `MCFunctionClass` / `ObjectiveClass`.
  */
 export const MathFunction = makeClassCallable(_RawMathFunction)
+
+/**
+ * The `toProvider` method, exposed only for a SINGLETON output
+ * schema — a number provider holds one value, so a record output has
+ * no provider equivalent.
+ *
+ * The provider class follows the schema's kind: an integer math block
+ * yields an `IntegerNumberProviderClass` (MC's `context_int_provider`),
+ * a float one a `FloatNumberProviderClass`.
+ */
+type SingletonProviderMethod<P extends MathInputs, R> = R extends
+  | Float
+  | typeof Float
+  | Integer
+  | typeof Integer
+  ? {
+    toProvider: (
+      ...args: ExpandInputs<P>
+    ) => R extends Float | typeof Float
+      ? FloatNumberProviderClass
+      : IntegerNumberProviderClass
+  }
+  : unknown
+
 export type MathFunction<P extends MathInputs, R> =
-  MakeInstanceCallable<_RawMathFunction<P, R>> & NBTSerializable
+  MakeInstanceCallable<_RawMathFunction<P, R>> & NBTSerializable & SingletonProviderMethod<P, R>

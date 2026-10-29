@@ -14,6 +14,7 @@ import {
   type TestsManifest,
 } from 'sandstone-cli/test'
 import chalk from 'chalk-template'
+import { INTEGRATED_HOST_CONFIG } from './host-config'
 
 const PROJECT_ROOT = path.resolve(import.meta.dir, '.server')
 const DATA_PACK_DIR_NAME = 'integrated_tests'
@@ -216,14 +217,7 @@ async function startDaemon() {
   // — integrated host with packtest disabled + the additionalMods jar.
   // Passed via CLI args instead of a `sandstone.config.ts` so the
   // test project doesn't need its own config file.
-  const hostConfig = JSON.stringify({
-    mods: {
-      packtest: false,
-      additionalMods: [{
-        url: 'https://github.com/sandstone-mc/packtest-mod/releases/download/2.7.0/packtest-2.7.0.jar',
-      }],
-    },
-  })
+  const hostConfig = JSON.stringify(INTEGRATED_HOST_CONFIG)
 
   const proc = Bun.spawn([
     CLI_BIN,

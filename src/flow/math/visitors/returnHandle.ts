@@ -1,5 +1,6 @@
 import type { MathExpressionNode } from '../ast/MathExpressionNode'
 import type { MathFunctionNode } from '../ast/MathFunctionNode'
+import { MathReturnNode } from '../ast/nodes/control'
 import { MathAnalysisVisitor } from './MathVisitor'
 
 /**
@@ -33,7 +34,8 @@ export class ReturnHandleVisitor extends MathAnalysisVisitor<string | null> {
     // The body's first (and usually only) entry is `MathReturnNode`.
     // For now the math layer only supports a single return at the
     // top level — multi-return is out of scope for v1.
-    const ret = fn.body[0] as unknown as { value?: unknown } | undefined
+    const first = fn.body[0]
+    const ret = MathReturnNode.is(first) ? first : undefined
     return this.walkReturn(ret?.value, chainAnalysis.rootToId)
   }
 
@@ -76,7 +78,12 @@ export class ReturnHandleVisitor extends MathAnalysisVisitor<string | null> {
         if (id) return id
         continue
       }
-      return null
+      // Leaf — the returned value may itself BE a chain root (a
+      // random, a storage read, a literal). There are no operands to
+      // walk back through, so match it directly. Without this, a
+      // returned leaf never folds into the result storage and the
+      // math's result stays at its default.
+      return rootToId.get(current as MathExpressionNode) ?? null
     }
     return null
   }

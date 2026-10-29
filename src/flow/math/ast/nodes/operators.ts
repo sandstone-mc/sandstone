@@ -109,7 +109,7 @@ export class BinaryOpNode extends MathExpressionNode {
     if (left === undefined) return undefined
     const right = this.operands[1].evaluateAsConstant()
     if (right === undefined) return undefined
-    return applyBinary(this.op, left, right)
+    return applyBinary(this.op, left, right, this.kind)
   }
 
   /** @internal */
@@ -141,21 +141,82 @@ export class BinaryOpNode extends MathExpressionNode {
  * @internal — apply a binary op to two constant values. Returns
  * `undefined` for ops that can't fold (`pow` with non-integer exponent
  * yields a non-constant, etc.) or for divide-by-zero.
+ *
+ * `kind` selects the numeric semantics:
+ *
+ *   - Integer: MC's int providers do INTEGER arithmetic. `div` and
+ *     `mod` truncate toward zero (Java's `/` and `%`), `floor_div` and
+ *     `floor_mod` round toward negative infinity (`Math.floorDiv` /
+ *     `Math.floorMod`).
+ *   - Float: MC's float providers do single-precision arithmetic.
+ *     JS's `/` and `%` match Java's float semantics.
  */
-function applyBinary(op: BinaryOp, a: number, b: number): number | undefined {
+function applyBinary(op: BinaryOp, a: number, b: number, kind: MathKind): number | undefined {
+  const isInt = kind === 'integer'
   switch (op) {
     case 'add': return a + b
     case 'sub': return a - b
     case 'mul': return a * b
-    case 'div': return b === 0 ? undefined : a / b
-    case 'mod': return b === 0 ? undefined : a % b
-    case 'floor_div': return b === 0 ? undefined : Math.floor(a / b)
-    case 'floor_mod': return b === 0 ? undefined : a - Math.floor(a / b) * b
+    case 'div': return b === 0 ? undefined : (isInt ? intDiv(a, b) : a / b)
+    case 'mod': return b === 0 ? undefined : (isInt ? intMod(a, b) : a % b)
+    case 'floor_div': return b === 0 ? undefined : (isInt ? intFloorDiv(a, b) : Math.floor(a / b))
+    case 'floor_mod': return b === 0 ? undefined : (isInt ? intFloorMod(a, b) : a - Math.floor(a / b) * b)
     case 'pow': return Math.pow(a, b)
     case 'min': return Math.min(a, b)
     case 'max': return Math.max(a, b)
     default: return undefined
   }
+}
+
+/**
+ * @internal — truncating integer division (Java's `/`): rounds
+ * toward zero.
+ *
+ * `Math.trunc(a / b)` alone isn't exact — the double division of two
+ * exact integers can round the quotient across the truncation
+ * boundary, so the result is corrected against the exact product.
+ */
+function intDiv(a: number, b: number): number {
+  const negative = (a < 0) !== (b < 0)
+  const absA = Math.abs(a)
+  const absB = Math.abs(b)
+  let q = Math.floor(absA / absB)
+  if (q * absB > absA) {
+    q -= 1
+  } else if ((q + 1) * absB <= absA) {
+    q += 1
+  }
+  return negative ? -q : q
+}
+
+/**
+ * @internal — floored integer division (`Math.floorDiv`): rounds
+ * toward negative infinity.
+ */
+function intFloorDiv(a: number, b: number): number {
+  let q = Math.floor(a / b)
+  if (q * b > a) {
+    q -= 1
+  } else if ((q + 1) * b <= a) {
+    q += 1
+  }
+  return q
+}
+
+/**
+ * @internal — truncated integer remainder (Java's `%`): solves
+ * `(div(left, right) * right) + x = left`.
+ */
+function intMod(a: number, b: number): number {
+  return a - intDiv(a, b) * b
+}
+
+/**
+ * @internal — floored integer remainder (`Math.floorMod`): solves
+ * `(floor_div(left, right) * right) + x = left`.
+ */
+function intFloorMod(a: number, b: number): number {
+  return a - intFloorDiv(a, b) * b
 }
 
 /** @internal — identity value for an op (the value `v` such that `a op v = a`). */
@@ -244,7 +305,14 @@ export class AggregateNode extends MathExpressionNode {
     switch (this.op) {
       case 'add': return nums.reduce((a, b) => a + b, 0)
       case 'mul': return nums.reduce((a, b) => a * b, 1)
-      case 'avg': return nums.reduce((a, b) => a + b, 0) / nums.length
+      case 'avg': {
+        const sum = nums.reduce((a, b) => a + b, 0)
+        // MC's INTEGER `avg` provider truncates the sum by the count
+        // (rounds towards 0) — see the mcdoc: "Average. Division
+        // result is truncated (rounded towards `0`)."
+        if (this.kind === 'integer') return intDiv(sum, nums.length)
+        return sum / nums.length
+      }
       case 'min': return Math.min(...nums)
       case 'max': return Math.max(...nums)
       case 'length': return nums.length

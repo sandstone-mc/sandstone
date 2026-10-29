@@ -241,8 +241,8 @@ export class AlgebraicSimplificationVisitor extends MathVisitor {
     // lifecycle depends on the wrapper node's identity.
     if (a.getStructuralKey() === b.getStructuralKey()) {
       switch (node.op) {
-        case 'sub': return new LiteralNode(core, 0)
-        case 'div': return new LiteralNode(core, 1)
+        case 'sub': return new LiteralNode(core, 0, node.kind)
+        case 'div': return new LiteralNode(core, 1, node.kind)
         default: break
       }
     }
@@ -255,14 +255,14 @@ export class AlgebraicSimplificationVisitor extends MathVisitor {
         b.op === 'negate' &&
         a.getStructuralKey() === b.operand.getStructuralKey()
       ) {
-        return new LiteralNode(core, 0)
+        return new LiteralNode(core, 0, node.kind)
       }
       if (
         UnaryOpNode.is(a) &&
         a.op === 'negate' &&
         a.operand.getStructuralKey() === b.getStructuralKey()
       ) {
-        return new LiteralNode(core, 0)
+        return new LiteralNode(core, 0, node.kind)
       }
     }
 
@@ -328,7 +328,7 @@ export class AlgebraicSimplificationVisitor extends MathVisitor {
     node.inputs = inputs.filter((n) => !toRemove.has(n))
     if (node.inputs.length === 0) {
       // All inputs cancelled — `add([])` = 0.
-      return new LiteralNode(node.sandstoneCore, 0)
+      return new LiteralNode(node.sandstoneCore, 0, node.kind)
     }
     // Some inputs remain — the parent keeps the aggregate node; the
     // in-place mutation above ensures the chain sees the filtered

@@ -10,6 +10,8 @@ import {
   MATH_INDENT,
 } from './inspectHelpers'
 import type { DataPointClass } from '../../../variables/Data'
+import type { JsonContextFloatProvider } from '../../../arguments/generated/_json/data/number_provider/context_float.ts'
+import type { JsonContextIntProvider } from '../../../arguments/generated/_json/data/number_provider/context_int.ts'
 import { StorageRefNode } from './nodes/leaves'
 import type { MathExpressionNode } from './MathExpressionNode'
 import type { MathNode } from './MathNode'
@@ -40,6 +42,43 @@ import type { MathChainAnalysis } from '../visitors/mathChainAnalysis'
 export type MathFunctionOutputs =
   | { kind: 'scalar'; value: 'float' | 'integer' }
   | { kind: 'record'; fields: Record<string, 'float' | 'integer'> }
+
+/**
+ * A provider JSON queued for registration at save time. The `kind`
+ * discriminates the two MC provider families, so the registration
+ * pass picks the right resource type without casting.
+ */
+export type QueuedProvider =
+  | { name: string; kind: 'float'; json: JsonContextFloatProvider }
+  | { name: string; kind: 'integer'; json: JsonContextIntProvider }
+
+/**
+ * MC's resource id path charset. A record output's field names end
+ * up in the provider resource names, and MC only allows
+ * `[a-z0-9._-]` in a resource id — a capital letter makes the
+ * provider file unloadable (*"Invalid path in pack"*) and the
+ * registry lookup for it then fails at runtime.
+ */
+const MC_RESOURCE_ID_PATH = /^[a-z0-9._-]+$/
+
+/**
+ * Reject an output schema whose field names can't be part of a
+ * resource id.
+ *
+ * Checked as soon as the schema is declared, so the user hears about
+ * it at the call site rather than as an unloadable provider file
+ * much later.
+ */
+export function assertValidOutputFieldNames(fieldNames: readonly string[]): void {
+  for (const field of fieldNames) {
+    if (MC_RESOURCE_ID_PATH.test(field)) continue
+    throw new Error(
+      `Math: the output field '${field}' is not a valid Minecraft resource `
+      + `id. Resource ids may only contain lowercase letters, digits, '_', `
+      + `'.', and '-' — name the output fields in snake_case.`,
+    )
+  }
+}
 
 export class MathFunctionNode extends MathContainerNode {
   /** Type guard. */
@@ -209,15 +248,20 @@ export class MathFunctionNode extends MathContainerNode {
 
   /**
    * Provider JSONs deferred to a save-time pass. Each call to
-   * `queueProvider(name, json)` records an entry; the core visitor
+   * `queueProvider(entry)` records an entry; the core visitor
    * in `defaultVisitors` iterates these once at save time (after
    * every `__call__` for this math fn has happened) and registers
    * the providers exactly once total. The last registration wins,
    * which is the desired multi-call behaviour: the second call's
    * provider (with the user's input path rewritten to the shared
    * input path) replaces the first call's user-path provider.
+   *
+   * The entry is a discriminated union on the provider's numeric
+   * kind, so the registration pass picks the matching MC provider
+   * resource family (`context_float_provider` vs
+   * `context_int_provider`) without any casting.
    */
-  providersToRegister: Array<{ name: string; json: unknown }> = []
+  providersToRegister: QueuedProvider[] = []
 
   /**
    * Append a provider to the deferred-registration queue. Called by
@@ -225,13 +269,13 @@ export class MathFunctionNode extends MathContainerNode {
    * computed; the save-time visitor reads `providersToRegister`
    * to materialize the resource files.
    */
-  queueProvider(name: string, json: unknown): void {
+  queueProvider(entry: QueuedProvider): void {
     // Replace earlier entries with the same name so the queue holds
     // at most one entry per provider; the final emit's content wins.
     this.providersToRegister = this.providersToRegister.filter(
-      (p) => p.name !== name,
+      (p) => p.name !== entry.name,
     )
-    this.providersToRegister.push({ name, json })
+    this.providersToRegister.push(entry)
   }
 
   /**
@@ -275,6 +319,7 @@ export class MathFunctionNode extends MathContainerNode {
     super(sandstoneCore)
     this.inputs = inputs
     this.outputs = outputs
+    assertValidOutputFieldNames(outputs.kind === 'record' ? Object.keys(outputs.fields) : [])
     sandstoneCore.mathStack.push(this)
   }
 

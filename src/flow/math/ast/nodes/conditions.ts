@@ -398,9 +398,14 @@ export function compare(
   // positional number (`scale['=='](1)`), not a standalone variable.
   // They should not duplicate at the top of the audit trail;
   // logging them only inside the condition is correct.
+  //
+  // The literal takes the LEFT handle's kind — a comparison inside an
+  // integer chain compares against an integer literal, and a
+  // fractional number is rejected there (an integer chain has no
+  // fractional value).
   const leftNode = left.node
   const rightNode: MathExpressionNode =
-    typeof right === 'number' ? new LiteralNode(core, right) : right.node
+    typeof right === 'number' ? new LiteralNode(core, right, left.kind) : right.node
   if (typeof right === 'number') rightNode.internal = true
   return new ComparisonConditionNode(core, op, leftNode, rightNode)
 }

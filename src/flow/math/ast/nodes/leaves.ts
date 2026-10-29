@@ -7,16 +7,23 @@ import type { MathKind } from '../MathExpressionNode'
 import { MathExpressionNode } from '../MathExpressionNode'
 
 /**
- * Raw numeric literal. Context-sensitive: the same `5` may need to
- * lower as an integer NBT tag (`5b`/`5s`/`5`/`5L`) in one context and
- * a float NBT tag (`5.0d`/`5.0f`) in another — the compiler picks
- * based on the surrounding handle's kind, not on a hard-coded
- * constructor arg.
+ * Minecraft's integer number providers use Java's 32-bit `int`. An
+ * out-of-range integer doesn't error at runtime — the provider
+ * silently evaluates to 0 — so Sandstone rejects it at compile time
+ * instead of folding a value that disagrees with the runtime.
+ */
+export function isInt32(value: number): boolean {
+  return Number.isInteger(value) && value >= -2147483648 && value <= 2147483647
+}
+
+/**
+ * Raw numeric literal. The kind is fixed at construction: `_.integer(5)`
+ * produces an integer literal (`5`), `_.float(5)` a float one (`5.0f`).
  *
- * Used by the user-facing `_.float(x)` / `_.integer(x)` constructors
- * when `x` is a primitive `number`. The compiler inspects the
- * handle that owns the literal (or any other context signal) to
- * decide the NBT tag at serialization time.
+ * A literal created as an operand inside an operator adopts the
+ * receiving chain's kind — see `handleToExpr` in `handles.ts` — so an
+ * integer chain that constant-folds to a literal keeps its integer
+ * kind all the way down to the emitted NBT tag.
  */
 export class LiteralNode extends MathExpressionNode {
   /** Type guard. */
@@ -26,16 +33,39 @@ export class LiteralNode extends MathExpressionNode {
   constructor(
     sandstoneCore: SandstoneCore,
     readonly value: number,
+    /**
+     * Numeric kind of the literal. `integer` literals lower to an
+     * `NBTInt` in an MC `context_int_provider`; `float` literals lower
+     * to an `NBTFloat` in a `context_float_provider`.
+     *
+     * The kind is decided where the literal is CREATED, not by the
+     * compiler: `_.integer(5)` produces an integer literal,
+     * `_.float(5)` a float one. A literal used as an operand inside
+     * a chain adopts the receiving chain's kind — an integer chain
+     * that folds to a literal keeps the integer kind, so the folded
+     * result is emitted as `5` (int) rather than `5.0f` (float).
+     */
+    readonly kind: MathKind = 'float',
   ) {
     super(sandstoneCore)
+    if (kind === 'integer') {
+      if (!Number.isInteger(value)) {
+        throw new Error(
+          `Math: ${value} is not a whole number. An integer chain can't use `
+          + `a fractional literal — Minecraft's integer number providers `
+          + `have no fractional value.`,
+        )
+      }
+      if (!isInt32(value)) {
+        throw new Error(
+          `Math: the integer value ${value} is out of range. Minecraft's `
+          + `integer number providers use 32-bit integers (-2147483648 to `
+          + `2147483647) — an out-of-range integer silently evaluates to 0 `
+          + `at runtime, so Sandstone rejects it at compile time.`,
+        )
+      }
+    }
   }
-
-  /**
-   * Defer kind to the compiler. `getValue()` returns just the value;
-   * the lowerer wraps it in the right NBT tag based on the owning
-   * handle's kind.
-   */
-  readonly kind: MathKind = 'float'
 
   getValue() {
     return {
@@ -189,11 +219,7 @@ export class StorageRefNode extends MathExpressionNode {
     // Strings get quoted once by `formatArgValue`; non-string targets
     // (entity selector objects, block positions) round-trip through
     // JSON for a stable representation.
-    const dp = this.dataPoint as unknown as {
-      type?: string
-      currentTarget?: unknown
-      path?: unknown
-    }
+    const dp = this.dataPoint
     const target = typeof dp.currentTarget === 'string'
       ? dp.currentTarget
       : JSON.stringify(dp.currentTarget)

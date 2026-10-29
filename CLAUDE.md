@@ -904,6 +904,150 @@ Context bugs manifest as commands appearing in wrong functions or being orphaned
 - **Context Management**: Stack-based context for nested structures
 - **Type Safety**: Generated registry types + TypeScript generics
 
+### Math DSL — Numeric Kinds
+
+`src/flow/math/` implements the `_.Math(...)` DSL. Every expression node
+carries a `kind` (`'float'` | `'integer'`, see `MathExpressionNode.ts`), and
+that kind picks **which MC provider family the expression compiles into**:
+
+| kind | provider family | resource | command |
+|---|---|---|---|
+| `float` | `minecraft:context_float_provider` | `data/<ns>/context_float_provider/*.json` | `data modify … set compute default float <provider>` |
+| `integer` | `minecraft:context_int_provider` | `data/<ns>/context_int_provider/*.json` | `data modify … set compute default integer <provider>` |
+
+**A chain computes in ONE numeric context.** An operator's result kind is
+the **receiver's** kind — an integer handle's chain computes integers, a
+float handle's chain computes floats. The block's declared output schema
+(`_.Math(Integer, …)` vs `_.Math(Float, …)`) fixes the kind of the RESULT;
+a result of the other kind is bridged on the way out.
+
+**The two contexts are bridged by MC's `from_int` / `from_float`.** MC's
+provider families are separate, and these are the only bridges:
+
+| bridge | direction | semantics |
+|---|---|---|
+| `from_int` | int → float | widens exactly (an int always fits a float) |
+| `from_float` | float → int | **truncates toward zero** — `from_float(-2.5)` is `-2`, not `-3` (verified live against the server) |
+
+A mismatched operand is bridged **where it's consumed**, not by widening
+the whole chain: `NumericCoalescingVisitor` wraps it in a `ConversionNode`
+(`src/flow/math/ast/nodes/conversion.ts`), which the lowering pass compiles
+into the matching provider. An integer chain therefore keeps its integers
+exact — a widened chain would round-trip every integer through a float and
+lose precision above 2²⁴.
+
+```ts
+// An integer chain: the float operand is truncated in place.
+_.Math(Integer, (math, x: Integer) => {
+  const y = math.float(floatDp)
+  math.return(x.add(y))
+})
+// → add(integer_x, from_float(float_dp))   →  x + trunc(y)
+```
+
+`NumericCoalescingVisitor` runs after the algebraic pass (which can change
+an operator's kind) and before the constant folder (which folds a
+conversion of a constant source — `from_float(2.5)` folds to `2`).
+
+**Inputs.** An integer math block's inputs are `NBT.int(69)` (a constant),
+an integer-typed DataPoint (`dp.integer()`, or a plain DataPoint — an
+integer block assumes its DataPoint holds an integer), or a `Score`. A
+float block additionally accepts a `Float` handle or a bare `number`
+(a bare number is a float literal; `ExpandInputs` rejects it for `Integer`
+parameters).
+
+**The two families have different operator sets.** MC's int context has no
+`sqrt` / `sin` / `cos` / `ceil` / `floor` / `round` / `truncate` /
+`length` provider. The int context does have `floor_div` / `floor_mod`,
+which the float context lacks. `src/flow/math/compile/mathProviderCompiler.ts`
+holds one op table per family; an op missing from a family's table raises.
+A float-only op used inside an integer chain is fine — the whole float
+sub-expression is wrapped in `from_float` at the block boundary.
+
+**Division and modulo have two modes**, matching MC's int providers:
+
+| op | MC provider | rounds |
+|---|---|---|
+| `divide(a, b)` / `x.divide(b)` | `floor_div` | toward −∞ |
+| `divide(a, b, false)` / `x.divide(b, false)` | `div` | toward 0 |
+| `modulo(a, b)` / `x.modulo(b)` | `floor_mod` | toward −∞ |
+| `modulo(a, b, false)` / `x.modulo(b, false)` | `mod` | toward 0 |
+
+The floored mode is the default. `floor_mod` solves
+`(floor_div(l, r) * r) + x = l`; `mod` solves `(div(l, r) * r) + x = l`
+(so `mod(-5, 2)` is `-1`, `floor_mod(-5, 2)` is `1`).
+
+**Constant folding is kind-aware.** `ConstantFoldingVisitor` rounds float
+folds through `Math.fround` (MC's single precision) but leaves integer
+folds exact — `Math.fround(16777217)` is `16777216`, which would silently
+corrupt an integer. Integer `div` / `mod` fold with Java's truncating
+semantics; `floor_div` / `floor_mod` fold toward negative infinity; the
+integer `avg` truncates the sum by the count (MC's documented behaviour).
+The integer division helpers correct the quotient against the exact
+product — `Math.trunc(a / b)` alone can round the quotient across the
+truncation boundary.
+
+**Integer values are 32-bit.** MC's integer number providers use Java's
+`int`, so an out-of-range integer silently evaluates to **0** at runtime
+(verified in-game: `add [1, 2147483647]` → `0`). A constant fold can't
+reproduce that, so `LiteralNode` rejects any integer outside
+`-2147483648 … 2147483647` at construction — a compile-time error beats
+a pack that quietly computes the wrong number.
+
+**Output field names must be snake_case.** A record output's field names
+end up in the provider resource names, and MC's resource ids only allow
+`[a-z0-9._-]` — a capital letter makes the provider file unloadable
+(*"Invalid path in pack"*) and the registry lookup for it fails at
+runtime. `_.Math({ floorDiv: Integer }, …)` therefore throws at the
+`_.Math` call, before anything is generated.
+
+**`.score()` is integer-only.** A math output is normally read with
+`.data()` (an NBT storage path). An integer output can also be read as
+a `Score` with `.score()` — a score holds integers, so the float handle
+doesn't offer the method at all (neither in the types nor at runtime).
+
+The score is filled from the result path with
+`execute store result score <score> run data get storage <path>` — MC's
+`data get` yields the stored number as the command's result. The command
+is emitted at the call site, which lands it AFTER the math block's own
+commands (the bridge's body is spliced in at the `_.Math(...)` call), so
+the score is read after the math has run.
+
+**`toProvider()` collapses a math block into a single number provider.**
+A math block normally runs as a sequence of `data modify … set compute`
+commands, with the chain's intermediate values materialised through
+storage. `toProvider()` produces the other shape — one nested provider tree
+that MC evaluates on demand, with no intermediate storage at all:
+
+```ts
+const damage = _.Math(Integer, (math, x: Integer) => {
+  math.return(x.multiply(math.integer(2)))
+})
+
+// → data/<ns>/context_int_provider/<name>.json
+const provider = damage.toProvider(dp)
+```
+
+The args are the math block's own inputs (`ExpandInputs<P>`) — the same
+ones a call would take; a math block with no inputs takes none here
+either. The provider class follows the schema's kind: an integer math
+block yields an `IntegerNumberProviderClass`, a float one a
+`FloatNumberProviderClass`.
+
+**`toProvider()` is typed only for a SINGLETON schema.** A provider holds
+one value, so a record output has no provider equivalent. The method is
+therefore added to the type by the `SingletonProviderMethod` conditional
+type, not declared as a class member — a public member would show up in
+`keyof` for record schemas too. At runtime the property is installed with
+`Object.defineProperty` in the constructor and the record case throws
+(*"a math block with a record output can't become a single number
+provider"*).
+
+**Gotcha — the int handle's `add`/`multiply` used to be no-ops.** They built
+the aggregate node but never swapped it into the handle, so `x.add(1)` left
+the handle pointing at its old value. Fixed: both now `setNode(...)` and
+chain from `this.node` (not `this.startNode`), matching the float handle.
+
 ### Generated Types System
 
 The `src/arguments/generated/` directory contains auto-generated TypeScript definitions from [vanilla-mcdoc](https://github.com/SpyglassMC/vanilla-mcdoc) & [mcmeta](https://github.com/misode/mcmeta).
@@ -954,6 +1098,27 @@ type BlockStatic = NamespacedLiteralUnion<Exclude<keyof SymbolMcdocBlockStates, 
 ```
 
 This prevents TypeScript from evaluating the entire setblock module (with its complex block state generics) when type-checking Flow.ts.
+
+### SNBT Numeric Suffixes
+
+MC's SNBT accepts an optional explicit type suffix on every numeric literal. Sandstone emits **all** of them — the NBT wrapper you pick is byte-visible in the generated command:
+
+| Value | Emits | Notes |
+|-------|-------|-------|
+| raw number | `11d` | double |
+| `NBT.int(11)` | `11i` | **`i` suffix for int — valid MC SNBT** |
+| `NBT.float(11)` | `11f` | float |
+| `NBT.double(11)` | `11d` | double |
+| `NBT.byte(11)` | `11b` | byte |
+| `NBT.short(11)` | `11s` | short |
+| `NBT.long(11)` | `11l` | long |
+
+The `i` suffix for ints was added to MC a while back — it is **not** a Sandstone invention and **not** a bug. Don't "fix" `11i` back to a bare `11`, and don't assume MC rejects it.
+
+Two consequences to keep in mind:
+
+- **Sandstone's own SNBT parser must accept every suffix it emits.** `src/variables/nbt/grammar.ts` is a hand-maintained nearley grammar (there is no `.ne` source in the repo — edit the checked-in `grammar.ts` directly). It has a `typedInt` rule for the `i` / `I` suffix, alongside `typedByte` (`b`), `typedShort` (`s`), `typedLong` (`l`), `typedFloat` (`f` / `d`). If you add a new NBT primitive, add the matching grammar rule AND the `parseExpression` case in `src/variables/nbt/parser.ts` — otherwise `NBT.parse` can't read back what Sandstone wrote.
+- **A suffix-less number gets its type from its value, like MC's parser.** `NBT.parse('11')` yields an int (`11i`), `NBT.parse('2.5')` a float (`2.5f`). The rules live in `inferNumericType` (`src/variables/nbt/parser.ts`): a whole number is an `int` when it fits in int32, else a `long`; a fractional number is a `float` while its magnitude stays within `±16 777 216` (2²⁴ — the range a float32 holds without losing integer precision), else a `double`. An explicit suffix always wins over the inferred type.
 
 ### Command Implementation
 

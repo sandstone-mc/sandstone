@@ -5,8 +5,8 @@ import { LiteralNode, StorageRefNode } from '../ast/nodes/leaves'
 import { MathExpressionNode } from '../ast/MathExpressionNode'
 import { MathReturnNode } from '../ast/nodes/control'
 import { NBTFloat, NBTInt } from '../../../variables/nbt/NBTs'
-import { buildSharedPlanContent, buildProviderName } from './multiStatementEmit'
-import { compileMathExpressionToProvider } from './mathProviderCompiler'
+import { buildSharedPlanContent, buildProviderName, coerceToBlockKind } from './multiStatementEmit'
+import { compileFloatProvider, compileIntProvider } from './mathProviderCompiler'
 import { runDefaultMathVisitors } from '../visitors'
 import type { BridgeGroup } from './groupBridges'
 import type { MathInvocationNode } from './MathInvocationNode'
@@ -34,8 +34,16 @@ export function registerQueuedProviders(core: SandstoneCore): void {
   const pack = core.pack
   for (const fn of core.mathFunctions) {
     if (fn.providersToRegister.length === 0) continue
-    for (const { name, json } of fn.providersToRegister) {
-      ;(pack.NumberProvider as any)('float', name, json)
+    for (const entry of fn.providersToRegister) {
+      // The queue entry is discriminated on the provider's numeric
+      // kind — a float provider registers under MC's
+      // `context_float_provider`, an integer one under
+      // `context_int_provider`.
+      if (entry.kind === 'integer') {
+        pack.NumberProvider('integer', entry.name, entry.json)
+      } else {
+        pack.NumberProvider('float', entry.name, entry.json)
+      }
     }
     fn.providersToRegister = []
   }
@@ -239,6 +247,18 @@ export function compileMathInvocationGroup(
           core.pack.commands.data.modify(dataPoint).set.value(nbt as never)
           continue
         }
+        // The provider's numeric kind picks the `compute` flavour: an
+        // integer provider is read through `compute default integer`,
+        // a float one through `compute default float`.
+        if (cmd.kind === 'integer') {
+          core.pack.commands.data
+            .modify(dataPoint)
+            .set
+            .compute
+            .default()
+            .integer(cmd.providerName)
+          continue
+        }
         core.pack.commands.data
           .modify(dataPoint)
           .set
@@ -323,10 +343,13 @@ export function compileMathInvocationGroup(
           )
         const constantValue = bridgeFn.recordConstantResult?.[fieldName]
         if (constantValue !== undefined) {
-          // Folded field — emit `set value` directly.
+          // Folded field — emit `set value` directly. The field's
+          // declared kind picks the NBT primitive AND the value's
+          // context: a float folded into an integer field truncates
+          // toward zero, exactly like MC's `from_float`.
           const nbt = fieldKind === 'integer'
-            ? new NBTInt(constantValue)
-            : new NBTFloat(constantValue)
+            ? new NBTInt(Math.trunc(constantValue))
+            : new NBTFloat(Math.fround(constantValue))
           core.pack.commands.data.modify(fieldDp).set.value(nbt as never)
           continue
         }
@@ -352,13 +375,38 @@ export function compileMathInvocationGroup(
             `field_${fieldName}_${bridge.callIdx}`,
             `${bridge.callIdx}_${fieldName}`,
           )
+          // The field's declared kind picks the provider family — an
+          // integer field compiles to MC's `context_int_provider` and
+          // is read through `compute default integer`.
+          // The field's declared kind is the context the field is
+          // written in — a field whose expression has the other kind
+          // is bridged by MC's `from_int` / `from_float` provider.
+          const fieldExpression = coerceToBlockKind(fieldExpr, fieldKind)
+          if (fieldKind === 'integer') {
+            core.pack.commands.data
+              .modify(fieldDp)
+              .set
+              .compute
+              .default()
+              .integer(providerName)
+            bridgeFn.queueProvider({
+              name: providerName,
+              kind: 'integer',
+              json: compileIntProvider(fieldExpression),
+            })
+            continue
+          }
           core.pack.commands.data
             .modify(fieldDp)
             .set
             .compute
             .default()
-            .float(providerName as unknown as FloatNumberProviderClass)
-          bridgeFn.queueProvider(providerName, compileMathExpressionToProvider(fieldExpr))
+            .float(providerName)
+          bridgeFn.queueProvider({
+            name: providerName,
+            kind: 'float',
+            json: compileFloatProvider(fieldExpression),
+          })
           continue
         }
       }
@@ -372,7 +420,7 @@ export function compileMathInvocationGroup(
   // Cache provider JSONs for the function-level register pass.
   // Done ONCE per group — subsequent bridges in the same group
   // share the same provider JSONs, so they don't re-emit here.
-  for (const [providerName, providerJson] of content.providers) {
-    fn.queueProvider(providerName, providerJson)
+  for (const entry of content.providers.values()) {
+    fn.queueProvider(entry)
   }
 }

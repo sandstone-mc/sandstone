@@ -2,11 +2,19 @@ import type { SandstoneCore } from '../../../core/sandstoneCore'
 import type { DataPointClass } from '../../../variables/Data'
 import type { MathFunctionNode } from '../ast/MathFunctionNode'
 import type { MathExpressionNode } from '../ast/MathExpressionNode'
-import type { JsonContextFloatProvider } from '../../../arguments/generated/_json/data/number_provider/context_float.ts'
-import type { NamespacedString, NonEmptyString } from '../../../utils'
+import type { MathKind } from '../ast/MathExpressionNode'
+import type { NamespacedString } from '../../../utils'
 import { BinaryOpNode, AggregateNode, UnaryOpNode } from '../ast/nodes/operators'
+import { ConversionNode } from '../ast/nodes/conversion'
 import { LiteralNode, StorageRefNode } from '../ast/nodes/leaves'
-import { compileMathExpressionToProvider } from './mathProviderCompiler'
+import type { QueuedProvider } from '../ast/MathFunctionNode'
+import type { ChainStorageMap } from './mathProviderCompiler'
+import {
+  compileFloatProvider,
+  compileFloatWithChainReads,
+  compileIntProvider,
+  compileIntWithChainReads,
+} from './mathProviderCompiler'
 import type { ChainUpdate, MathChainAnalysis } from '../visitors/mathChainAnalysis'
 import { runDefaultMathVisitors } from '../visitors'
 
@@ -51,6 +59,13 @@ export interface MultiStatementEmit {
     dataPoint: DataPointClass<'storage'>
     providerName: NamespacedString
     /**
+     * Numeric kind of this op's provider. Decides whether the
+     * emitter writes `compute default float <provider>` or
+     * `compute default integer <provider>`, and which provider
+     * resource family the JSON is registered under.
+     */
+    kind: MathKind
+    /**
      * True when this command writes to its bridge's per-call
      * `resultDataPoint` (final-fold path).
      */
@@ -63,7 +78,7 @@ export interface MultiStatementEmit {
      */
     isConstant?: MathExpressionNode
   }>
-  providers: Map<string, JsonContextFloatProvider>
+  providers: Map<string, QueuedProvider>
   /**
    * DataPoint for the per-call result storage. Used by
    * `compileMathInvocation`'s trailing `set from` (only when folding
@@ -150,6 +165,8 @@ export interface SharedPlanContent {
   commands: Array<{
     handleName: string
     providerName: NamespacedString
+    /** Numeric kind of this op's provider — see `MultiStatementEmit`. */
+    kind: MathKind
     isFinalFold: boolean
     /**
      * When the chain analysis produced a synthetic update for a
@@ -163,7 +180,7 @@ export interface SharedPlanContent {
      */
     isConstant?: MathExpressionNode
   }>
-  providers: Map<string, JsonContextFloatProvider>
+  providers: Map<string, QueuedProvider>
   handleStorageByHandle: Map<string, DataPointClass<'storage'>>
   returnHandleName: string | null
   /**
@@ -299,6 +316,11 @@ function buildPlan(
     returnHandleName: returnHandle,
   }
 
+  // The block's numeric context — the kind its RESULT has. A chain
+  // whose final expression has the other kind is bridged on the way
+  // out (see `coerceToBlockKind`).
+  const blockKind = blockKindOf(fn)
+
   analysis.updates.forEach((u, i) => {
     const isFinalOnReturn = i === finalIndex
     // Folding into result: the FINAL op on the return handle's chain
@@ -317,31 +339,58 @@ function buildPlan(
     // skip the provider resource — no separate JSON file is
     // needed, the literal IS the value.
     if (u.handleName === 'const_result' && LiteralNode.is(u.expression)) {
+      const literal = coerceLiteralToBlockKind(u.expression, blockKind)
       plan.commands.push({
         handleName: u.handleName,
         dataPoint,
         providerName,
+        kind: literal.kind,
         isFinalFold: true,
-        isConstant: u.expression,
+        isConstant: literal,
       })
       return
     }
-    const providerJson: JsonContextFloatProvider = u.isFirst
-      ? compileMathExpressionToProvider(
-          substituteRoots(u.expression, analysis.rootToId, u.statesBefore),
-        )
-      : compileIncrementalProvider(
-          u,
-          analysis,
-          handleStorageByHandle,
-          chainReachability,
-        )
+    // The final op on the return handle's chain writes the block's
+    // RESULT — coerce it into the block's numeric context.
+    const expression = isFinalOnReturn && foldResultIntoFinal
+      ? coerceToBlockKind(u.expression, blockKind)
+      : u.expression
+    // The provider family follows the op's numeric kind: an integer
+    // op compiles to MC's `context_int_provider`, a float op to
+    // `context_float_provider`.
+    const chainStorage = compileIncrementalProvider(
+      u,
+      analysis,
+      handleStorageByHandle,
+      chainReachability,
+    )
+    if (expression.kind === 'integer') {
+      const json = u.isFirst
+        ? compileIntProvider(
+            substituteRoots(expression, analysis.rootToId, u.statesBefore),
+          )
+        : compileIntWithChainReads(expression, chainStorage)
+      plan.commands.push({
+        handleName: u.handleName,
+        dataPoint,
+        providerName,
+        kind: 'integer',
+      })
+      plan.providers.set(providerName, { name: providerName, kind: 'integer', json })
+      return
+    }
+    const json = u.isFirst
+      ? compileFloatProvider(
+          substituteRoots(expression, analysis.rootToId, u.statesBefore),
+      )
+      : compileFloatWithChainReads(expression, chainStorage)
     plan.commands.push({
       handleName: u.handleName,
       dataPoint,
       providerName,
+      kind: 'float',
     })
-    plan.providers.set(providerName, providerJson)
+    plan.providers.set(providerName, { name: providerName, kind: 'float', json })
   })
 
   return plan
@@ -433,6 +482,9 @@ export function buildSharedPlanContent(
     chainReachability: chainReachability ?? new Map(),
   }
 
+  // The block's numeric context — see `buildPlan`.
+  const blockKind = blockKindOf(fn)
+
   analysis.updates.forEach((u, i) => {
     const isFinalOnReturn = i === finalIndex && foldResultIntoFinal
     const providerName = buildProviderName(fn, `op_${i}`, options.inputShapeKey)
@@ -442,30 +494,56 @@ export function buildSharedPlanContent(
     // float <provider>`. No provider JSON is queued — the
     // literal IS the value.
     if (u.handleName === 'const_result' && LiteralNode.is(u.expression)) {
+      const literal = coerceLiteralToBlockKind(u.expression, blockKind)
       content.commands.push({
         handleName: u.handleName,
         providerName,
+        kind: literal.kind,
         isFinalFold: true,
-        isConstant: u.expression,
+        isConstant: literal,
       })
       return
     }
-    const providerJson: JsonContextFloatProvider = u.isFirst
-      ? compileMathExpressionToProvider(
-          substituteRoots(u.expression, analysis.rootToId, u.statesBefore),
-        )
-      : compileIncrementalProvider(
-          u,
-          analysis,
-          handleStorageByHandle,
-          chainReachability,
-        )
+    // The final op on the return handle's chain writes the block's
+    // RESULT — coerce it into the block's numeric context.
+    const expression = isFinalOnReturn
+      ? coerceToBlockKind(u.expression, blockKind)
+      : u.expression
+    // The provider family follows the op's numeric kind — see the
+    // same branch in `buildPlan`.
+    const chainStorage = compileIncrementalProvider(
+      u,
+      analysis,
+      handleStorageByHandle,
+      chainReachability,
+    )
+    if (expression.kind === 'integer') {
+      const json = u.isFirst
+        ? compileIntProvider(
+            substituteRoots(expression, analysis.rootToId, u.statesBefore),
+          )
+        : compileIntWithChainReads(expression, chainStorage)
+      content.commands.push({
+        handleName: u.handleName,
+        providerName,
+        kind: 'integer',
+        isFinalFold: isFinalOnReturn,
+      })
+      content.providers.set(providerName, { name: providerName, kind: 'integer', json })
+      return
+    }
+    const json = u.isFirst
+      ? compileFloatProvider(
+          substituteRoots(expression, analysis.rootToId, u.statesBefore),
+      )
+      : compileFloatWithChainReads(expression, chainStorage)
     content.commands.push({
       handleName: u.handleName,
       providerName,
+      kind: 'float',
       isFinalFold: isFinalOnReturn,
     })
-    content.providers.set(providerName, providerJson)
+    content.providers.set(providerName, { name: providerName, kind: 'float', json })
   })
 
   return content
@@ -503,7 +581,7 @@ export function compileIncrementalProvider(
   analysis: MathChainAnalysis,
   handleStorageByHandle: Map<string, DataPointClass<'storage'>>,
   chainNodesByRoot: Map<MathExpressionNode, Set<MathExpressionNode>>,
-): JsonContextFloatProvider {
+): ChainStorageMap {
   const expression = update.expression
   // Compute each chain node's "owning root" — the FIRST root
   // reachable by walking backward through operands[0]/inputs[0],
@@ -522,7 +600,7 @@ export function compileIncrementalProvider(
     }
   }
 
-  const nodeToStorageRef = new Map<MathExpressionNode, JsonContextFloatProvider>()
+  const nodeToStorage = new Map<MathExpressionNode, DataPointClass<'storage'>>()
   for (const [node, root] of owningRoot) {
     if (analysis.transients.has(node)) continue
     if (node === expression) continue
@@ -540,13 +618,9 @@ export function compileIncrementalProvider(
     if (!handle) continue
     const dp = handleStorageByHandle.get(handle)
     if (!dp) continue
-    nodeToStorageRef.set(node, {
-      type: 'storage',
-      storage: dp.currentTarget as unknown as NamespacedString,
-      path: dp.path as unknown as NonEmptyString,
-    } as JsonContextFloatProvider)
+    nodeToStorage.set(node, dp)
   }
-  return compileWithChainReads(expression, nodeToStorageRef)
+  return nodeToStorage
 }
 
 /**
@@ -567,6 +641,11 @@ function owningRootOf(
   if (AggregateNode.is(node) && node.inputs[0]) {
     return owningRootOf(node.inputs[0], roots)
   }
+  if (ConversionNode.is(node)) {
+    // A conversion sits in front of the value it converts — the
+    // chain continues through it.
+    return owningRootOf(node.source, roots)
+  }
   return undefined
 }
 
@@ -575,34 +654,12 @@ function owningRootOf(
  * node present in `chainRefMap` with the corresponding storage-ref
  * provider. Non-chain expressions recurse; literals compile
  * normally via the canonical compiler.
+ *
+ * Lives in `mathProviderCompiler.ts` — the chain-read recursion is
+ * family-specific (a float chain reads float storage refs, an int
+ * chain reads int ones), so it belongs next to the two provider
+ * families it compiles into.
  */
-function compileWithChainReads(
-  expression: MathExpressionNode,
-  chainRefMap: Map<MathExpressionNode, JsonContextFloatProvider>,
-): JsonContextFloatProvider {
-  const ref = chainRefMap.get(expression)
-  if (ref) return ref
-  if (BinaryOpNode.is(expression)) {
-    return {
-      type: expression.op,
-      left: compileWithChainReads(expression.operands[0], chainRefMap),
-      right: compileMathExpressionToProvider(expression.operands[1]),
-    } as unknown as JsonContextFloatProvider
-  }
-  if (AggregateNode.is(expression)) {
-    return {
-      type: expression.op,
-      inputs: expression.inputs.map((n) => compileWithChainReads(n, chainRefMap)),
-    } as unknown as JsonContextFloatProvider
-  }
-  if (UnaryOpNode.is(expression)) {
-    return {
-      type: expression.op,
-      input: compileMathExpressionToProvider(expression.operand),
-    } as unknown as JsonContextFloatProvider
-  }
-  return compileMathExpressionToProvider(expression)
-}
 
 /**
  * Replace each root reference in `expression` with the root's
@@ -646,7 +703,62 @@ function substituteRoots(
     if (newOperand === expression.operand) return expression
     return new UnaryOpNode(expression.sandstoneCore, expression.op, newOperand)
   }
+  if (ConversionNode.is(expression)) {
+    // The conversion wraps the value it converts — substitute INSIDE
+    // it, keeping the conversion's target kind.
+    const newSource = substituteRoots(expression.source, rootToId, stateSnapshot)
+    if (newSource === expression.source) return expression
+    return new ConversionNode(expression.sandstoneCore, newSource, expression.targetKind)
+  }
   return expression
+}
+
+/**
+ * The math block's numeric context — the kind its RESULT has. `nil`
+ * for a record output (each field carries its own kind).
+ */
+function blockKindOf(fn: MathFunctionNode): MathKind | undefined {
+  return fn.outputs.kind === 'scalar' ? fn.outputs.value : undefined
+}
+
+/**
+ * Coerce an expression to the math block's numeric context.
+ *
+ * The block's output schema fixes the kind of the RESULT: an integer
+ * block's result is an integer, a float block's a float. A chain
+ * whose final expression has the other kind is bridged by MC's
+ * `from_int` / `from_float` provider — the same bridge the coalescing
+ * visitor inserts for operands.
+ *
+ * This is the block BOUNDARY: inside the block, operands are
+ * converted where they're consumed; here the whole result is
+ * converted on the way out.
+ */
+export function coerceToBlockKind(
+  expression: MathExpressionNode,
+  blockKind: MathKind | undefined,
+): MathExpressionNode {
+  if (!blockKind || expression.kind === blockKind) return expression
+  return new ConversionNode(expression.sandstoneCore, expression, blockKind)
+}
+
+/**
+ * Coerce a constant result to the block's numeric context.
+ *
+ * The value is converted the same way MC's bridge provider converts
+ * it — `from_float` truncates toward zero, `from_int` widens to
+ * single precision — so the constant written to the result storage
+ * matches what the provider path would have produced.
+ */
+function coerceLiteralToBlockKind(
+  literal: LiteralNode,
+  blockKind: MathKind | undefined,
+): LiteralNode {
+  if (!blockKind || literal.kind === blockKind) return literal
+  const value = blockKind === 'integer'
+    ? Math.trunc(literal.value)
+    : Math.fround(literal.value)
+  return new LiteralNode(literal.sandstoneCore, value, blockKind)
 }
 
 /**
@@ -661,6 +773,12 @@ function substituteRoots(
  * The input shape key (see `compile/groupBridges.ts`) is a stable
  * string derived from each input position's type + identity. It's
  * opaque — only used to namespace the provider name.
+ *
+ * The name itself is snake_case by construction: MC's resource id
+ * paths allow `[a-z0-9._-]` only, and a capital letter makes the
+ * file unloadable (*"Invalid path in pack"*) — so the suffix must
+ * never carry a user-supplied name verbatim (a record output's field
+ * name, say). Callers pass positional identifiers instead.
  */
 export function buildProviderName(
   fn: MathFunctionNode,
