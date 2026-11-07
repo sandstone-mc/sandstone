@@ -7,6 +7,7 @@ import {
   MathDefaultCaseNode,
   MathSwitchNode,
 } from './nodes/control'
+import type { MathCaseValue } from './nodes/control'
 
 /**
  * Builder for `_.switch(value, cases)` math flow.
@@ -63,9 +64,7 @@ export class MathSwitchStatement {
    */
   case(
     valueOrCallback:
-      | Float
-      | Integer
-      | number
+      | MathCaseValue
       | ((v: Float | Integer) => MathConditionNode),
     callback: () => void,
   ): this {
@@ -129,7 +128,7 @@ export class MathSwitchStatement {
  *   - `['default', callback]` — terminal branch (optional, at most one)
  */
 export type MathSwitchCaseTuple =
-  | readonly ['case', Float | Integer | number, () => void]
+  | readonly ['case', MathCaseValue, () => void]
   | readonly ['case', (v: Float | Integer) => MathConditionNode, () => void]
   | readonly ['default', () => void]
 
@@ -155,7 +154,7 @@ export function executeMathSwitchTuple(
     }
     const [, conditionOrValue, callback] = entry
     stmt.case(
-      conditionOrValue as Float | Integer | number | ((v: Float | Integer) => MathConditionNode),
+      conditionOrValue as MathCaseValue | ((v: Float | Integer) => MathConditionNode),
       callback as () => void,
     )
   }

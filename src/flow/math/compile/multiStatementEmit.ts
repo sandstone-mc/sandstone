@@ -5,10 +5,13 @@ import type { MathExpressionNode } from '../ast/MathExpressionNode'
 import type { MathKind } from '../ast/MathExpressionNode'
 import type { NamespacedString } from '../../../utils'
 import { BinaryOpNode, AggregateNode, UnaryOpNode } from '../ast/nodes/operators'
+import { compileBranchResult } from './branchCompiler'
 import { ConversionNode } from '../ast/nodes/conversion'
 import { LiteralNode, StorageRefNode } from '../ast/nodes/leaves'
 import type { QueuedProvider } from '../ast/MathFunctionNode'
 import type { ChainStorageMap } from './mathProviderCompiler'
+import type { JsonContextFloatProvider } from '../../../arguments/generated/_json/data/number_provider/context_float.ts'
+import type { JsonContextIntProvider } from '../../../arguments/generated/_json/data/number_provider/context_int.ts'
 import {
   compileFloatProvider,
   compileFloatWithChainReads,
@@ -159,6 +162,25 @@ export function planMultiStatementEmit(
  * the result storage per call).
  */
 export interface SharedPlanContent {
+  /**
+   * The provider that computes the block's RESULT when the result
+   * comes from the block's control flow — the `if` / `elseIf` /
+   * `else` chain or the `switch` / `case` compiled into a single
+   * provider (`conditional` / `number_dispatcher`).
+   *
+   * The branch structure is ONE provider: MC evaluates the predicate
+   * and the matching branch lazily, at read time. It's written to the
+   * result storage after the plan's commands, so the straight-line
+   * updates run first.
+   *
+   * `undefined` for a block with no control flow — the result comes
+   * from the chain's final update (the fold) as usual.
+   */
+  resultProvider?: {
+    name: NamespacedString
+    kind: MathKind
+    json: JsonContextFloatProvider | JsonContextIntProvider
+  }
   /** Per-update command metadata. The actual `dataPoint` is
    *  computed at emit time (handle storage for non-final, the
    *  bridge's `resultDataPoint` for the final fold). */
@@ -485,8 +507,84 @@ export function buildSharedPlanContent(
   // The block's numeric context — see `buildPlan`.
   const blockKind = blockKindOf(fn)
 
+  // The block's control flow. A branch structure IS the block's
+  // result: it compiles to a single provider (`conditional` for an
+  // if-chain, `number_dispatcher` for a switch) that MC evaluates
+  // lazily.
+  //
+  // Several structures can live in one block — they fold into ONE
+  // provider, first match wins, and a path that reaches no return
+  // falls back to zero.
+  //
+  // A RECORD output is different: each output field gets its own
+  // provider (the field's expression out of the branch's returned
+  // record), so the per-field path compiles the branch itself — see
+  // `mathInvocationCompiler.ts`.
+  const kind = blockKind ?? 'float'
+  const branchJson = fn.outputs.kind === 'record'
+    ? undefined
+    : compileBranchResult(fn, kind)
+  if (branchJson) {
+    const providerName = buildProviderName(fn, 'branch', options.inputShapeKey)
+    if (kind === 'integer') {
+      const json = branchJson as JsonContextIntProvider
+      content.resultProvider = { name: providerName, kind, json }
+      content.providers.set(providerName, { name: providerName, kind: 'integer', json })
+    } else {
+      const json = branchJson as JsonContextFloatProvider
+      content.resultProvider = { name: providerName, kind, json }
+      content.providers.set(providerName, { name: providerName, kind: 'float', json })
+    }
+  }
+
+  // Each update's provider READS the storage of the chain state it
+  // continues from — the incremental compiler substitutes that node
+  // with a `storage` read of the previous update's target. A storage
+  // that no provider reads is a DEAD STORE: the command would write a
+  // value nobody ever looks at, and the provider file behind it would
+  // ship in the pack for nothing.
+  //
+  // The branch provider never reads a handle storage — it inlines the
+  // whole chain from its root, so it is self-contained (that is what
+  // makes a branch's value a snapshot). So in a block whose result
+  // comes from the control flow, the chain's storage writes are dead
+  // unless another update reads them.
+  const chainStorages = new Map<ChainUpdate, ChainStorageMap>()
+  for (const u of analysis.updates) {
+    chainStorages.set(u, compileIncrementalProvider(
+      u,
+      analysis,
+      handleStorageByHandle,
+      chainReachability,
+    ))
+  }
+  const readStorages = new Set<DataPointClass<'storage'>>()
+  for (const map of chainStorages.values()) {
+    for (const dp of map.values()) readStorages.add(dp)
+  }
+  // The trailing `set from <last handle storage> → result` copy (see
+  // `compileMathInvocationGroup`) reads the LAST command's storage, so
+  // that one is live too — as long as there is a trailing copy at all.
+  const trailingCopyReadsLast = returnHandle !== null && !foldResultIntoFinal
+  const lastUpdateIndex = analysis.updates.length - 1
+
   analysis.updates.forEach((u, i) => {
     const isFinalOnReturn = i === finalIndex && foldResultIntoFinal
+    // The update's target. The final fold writes the RESULT storage
+    // (the emitter resolves it per bridge); every other update writes
+    // its handle's intermediate storage.
+    const dataPoint: DataPointClass<'storage'> = handleStorageByHandle.get(u.handleName)!
+    // Dead store — drop the command and the provider behind it.
+    // The `const_result` update IS the block's result (the emitter
+    // writes it straight to the result storage), so it is never dead.
+    if (
+      !isFinalOnReturn
+      && u.handleName !== 'const_result'
+      && !readStorages.has(dataPoint)
+      && !(trailingCopyReadsLast && i === lastUpdateIndex)
+    ) {
+      return
+    }
     const providerName = buildProviderName(fn, `op_${i}`, options.inputShapeKey)
     // Constant-result short-circuit: when the chain analysis
     // promoted a folded-literal return into a synthetic update,
@@ -511,12 +609,7 @@ export function buildSharedPlanContent(
       : u.expression
     // The provider family follows the op's numeric kind — see the
     // same branch in `buildPlan`.
-    const chainStorage = compileIncrementalProvider(
-      u,
-      analysis,
-      handleStorageByHandle,
-      chainReachability,
-    )
+    const chainStorage = chainStorages.get(u)!
     if (expression.kind === 'integer') {
       const json = u.isFirst
         ? compileIntProvider(
@@ -750,7 +843,7 @@ export function coerceToBlockKind(
  * single precision — so the constant written to the result storage
  * matches what the provider path would have produced.
  */
-function coerceLiteralToBlockKind(
+export function coerceLiteralToBlockKind(
   literal: LiteralNode,
   blockKind: MathKind | undefined,
 ): LiteralNode {

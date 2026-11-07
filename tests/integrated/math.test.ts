@@ -3,7 +3,7 @@ import { test } from './__setup'
 import { DataVariable, Float, Integer, NBT } from '../../dist/exports/index.js'
 import chalk from 'chalk-template'
 
-console.log(chalk`{blue [test]} Registered 32 Tests`)
+console.log(chalk`{blue [test]} Registered 72 Tests`)
 
 export function registerMathTests() {
   /**
@@ -87,6 +87,47 @@ export function registerMathTests() {
     async (r) => {
       expect(r.passed).toBe(true)
       assertNoCompute(r, 'math_main_basic')
+    }
+  )
+
+  test('ScalarPassThrough', 'math_scalar_pass_through',
+    (create, { Test, _ }) => create(() => {
+      // A block that returns its input WITHOUT mutating a chain —
+      // there is no chain update to fold into the result storage, so
+      // the returned expression IS the result.
+      const dp = DataVariable(undefined, 'math_pass_through_input')
+      dp.set(NBT.float(42))
+
+      const out = _.Math(Float, (math, v: Float) => {
+        math.return(v)
+      })(dp).data()
+
+      _.if(out.equals(NBT.float(42)), () => Test.succeed())
+      .else(() => Test.fail(out))
+    }),
+    async (r) => {
+      expect(r.passed).toBe(true)
+      assertHasCompute(r, 'math_scalar_pass_through')
+    }
+  )
+
+  test('ScalarPassThroughInteger', 'math_scalar_pass_through_integer',
+    (create, { Test, _ }) => create(() => {
+      // The same, in the integer context — an integer-typed input is
+      // read natively, with no `from_int` bridge.
+      const dp = DataVariable(undefined, 'math_pass_through_int_input')
+      dp.set(NBT.int(42))
+
+      const out = _.Math(Integer, (math, v: Integer) => {
+        math.return(v)
+      })(dp.integer()).data()
+
+      _.if(out.equals(NBT.int(42)), () => Test.succeed())
+      .else(() => Test.fail(out))
+    }),
+    async (r) => {
+      expect(r.passed).toBe(true)
+      assertHasCompute(r, 'math_scalar_pass_through_integer')
     }
   )
 
@@ -277,7 +318,9 @@ export function registerMathTests() {
     }),
     async (r) => {
       expect(r.passed).toBe(true)
-      assertNoCompute(r, 'math_comparison_ops')
+      // The branch structure is a provider now — MC evaluates the
+      // condition and the matching branch.
+      assertHasCompute(r, 'math_comparison_ops')
     }
   )
 
@@ -298,7 +341,9 @@ export function registerMathTests() {
     }),
     async (r) => {
       expect(r.passed).toBe(true)
-      assertNoCompute(r, 'math_condition_combinators')
+      // The branch structure is a provider now — MC evaluates the
+      // condition and the matching branch.
+      assertHasCompute(r, 'math_condition_combinators')
     }
   )
 
@@ -314,7 +359,718 @@ export function registerMathTests() {
     }),
     async (r) => {
       expect(r.passed).toBe(true)
-      assertNoCompute(r, 'math_not_condition')
+      // The branch structure is a provider now — MC evaluates the
+      // condition and the matching branch.
+      assertHasCompute(r, 'math_not_condition')
+    }
+  )
+
+  test('IfReturnOnly', 'math_if_return_only',
+    (create, { Test, _ }) => create(() => {
+      const out = _.Math(Float, (_, x: Float) => {
+        _.if(x['=='](2)).return(_.float(7))
+      })(NBT.float(2)).data()
+
+      _.if(out.equals(NBT.float(7)), () => Test.succeed())
+      .else(() => Test.fail(out))
+    }),
+    async (r) => {
+      expect(r.passed).toBe(true)
+      assertHasCompute(r, 'math_if_return_only')
+    }
+  )
+
+  test('BranchElseValue', 'math_branch_else_value',
+    (create, { Test, _ }) => create(() => {
+      // The `else` supplies the value for the path where the
+      // condition doesn't hold — every path through the block
+      // produces one.
+      const out = _.Math(Integer, (_, x: Integer) => {
+        _.if(x['=='](1), () => { _.return(_.integer(5)) })
+          .else(() => { _.return(_.integer(0)) })
+      })(NBT.int(2)).data()
+
+      _.if(out.equals(NBT.int(0)), () => Test.succeed())
+      .else(() => Test.fail(out))
+    }),
+    async (r) => {
+      expect(r.passed).toBe(true)
+      assertHasCompute(r, 'math_branch_else_value')
+    }
+  )
+
+  test('SwitchCase', 'math_switch_case',
+    (create, { Test, _ }) => create(() => {
+      const out = _.Math(Integer, (_, x: Integer) => {
+        _.switch(x, [
+          ['case', 1, () => { _.return(_.integer(10)) }],
+          ['case', 2, () => { _.return(_.integer(20)) }],
+          ['default', () => { _.return(_.integer(30)) }],
+        ])
+      })(NBT.int(2)).data()
+
+      _.if(out.equals(NBT.int(20)), () => Test.succeed())
+      .else(() => Test.fail(out))
+    }),
+    async (r) => {
+      expect(r.passed).toBe(true)
+      assertHasCompute(r, 'math_switch_case')
+    }
+  )
+
+  test('SwitchDefault', 'math_switch_default',
+    (create, { Test, _ }) => create(() => {
+      const out = _.Math(Integer, (_, x: Integer) => {
+        _.switch(x, [
+          ['case', 1, () => { _.return(_.integer(10)) }],
+          ['default', () => { _.return(_.integer(30)) }],
+        ])
+      })(NBT.int(9)).data()
+
+      _.if(out.equals(NBT.int(30)), () => Test.succeed())
+      .else(() => Test.fail(out))
+    }),
+    async (r) => {
+      expect(r.passed).toBe(true)
+      assertHasCompute(r, 'math_switch_default')
+    }
+  )
+
+  test('FloatComparisonIsExact', 'math_float_comparison_exact',
+    (create, { Test, _ }) => create(() => {
+      // A strict float comparison — the range's upper bound is the
+      // float just below the target, so 4.9 is NOT less than 4.9.
+      const out = _.Math(Float, (_, x: Float) => {
+        _.if(x['<'](4.9), () => { _.return(_.float(1)) })
+          .else(() => { _.return(_.float(0)) })
+      })(NBT.float(4.9)).data()
+
+      _.if(out.equals(NBT.float(0)), () => Test.succeed())
+      .else(() => Test.fail(out))
+    }),
+    async (r) => {
+      expect(r.passed).toBe(true)
+      assertHasCompute(r, 'math_float_comparison_exact')
+    }
+  )
+
+  // ---------------------------------------------------------------------------
+  // Control flow — the branch structures.
+  //
+  // A branch structure IS the math block's result: it compiles to ONE
+  // number provider (`conditional` for an if-chain, `number_dispatcher`
+  // for a switch) that MC evaluates lazily, at read time. The rules:
+  //
+  //   - A branch WITH a `_.return(...)` is terminal — the flow after
+  //     it isn't evaluated.
+  //   - A branch WITHOUT a return contributes nothing: the condition
+  //     is dropped and the flow continues.
+  //   - Several structures can live in one block — the first one whose
+  //     condition holds wins, and a path that reaches no return is
+  //     ZERO.
+  // ---------------------------------------------------------------------------
+
+  test('MultipleRootIfs', 'math_multiple_root_ifs',
+    (create, { Test, _ }) => create(() => {
+      // Three independent `if`s at the root of one math block. The
+      // first condition that holds wins — the same semantics as a
+      // straight-line sequence of early returns.
+      const dp = DataVariable(undefined, 'math_multi_root_input')
+      dp.set(NBT.float(2))
+
+      const out = _.Math(Float, (_, x: Float) => {
+        _.if(x['=='](1), () => { _.return(_.float(10)) })
+        _.if(x['=='](2), () => { _.return(_.float(20)) })
+        _.if(x['=='](3), () => { _.return(_.float(30)) })
+          .else(() => { _.return(_.float(-1)) })
+      })(dp).data()
+
+      _.if(out.equals(NBT.float(20)), () => Test.succeed())
+      .else(() => Test.fail(out))
+    }),
+    async (r) => {
+      expect(r.passed).toBe(true)
+      assertHasCompute(r, 'math_multiple_root_ifs')
+    }
+  )
+
+  test('MultipleRootIfsNoMatch', 'math_multiple_root_ifs_no_match',
+    (create, { Test, _ }) => create(() => {
+      // No condition holds — the last chain's `else` supplies the
+      // value for the path that reaches the end.
+      const dp = DataVariable(undefined, 'math_multi_root_nomatch_input')
+      dp.set(NBT.float(9))
+
+      const out = _.Math(Float, (_, x: Float) => {
+        _.if(x['=='](1), () => { _.return(_.float(10)) })
+        _.if(x['=='](2), () => { _.return(_.float(20)) })
+          .else(() => { _.return(_.float(-1)) })
+      })(dp).data()
+
+      _.if(out.equals(NBT.float(-1)), () => Test.succeed())
+      .else(() => Test.fail(out))
+    }),
+    async (r) => {
+      expect(r.passed).toBe(true)
+      assertHasCompute(r, 'math_multiple_root_ifs_no_match')
+    }
+  )
+
+  test('NestedIf', 'math_nested_if',
+    (create, { Test, _ }) => create(() => {
+      // A branch inside a branch — the inner chain's false path falls
+      // back to the outer chain's `else`.
+      const dp = DataVariable(undefined, 'math_nested_if_input')
+      dp.set(NBT.float(0))
+
+      const out = _.Math(Float, (_, x: Float) => {
+        _.if(x['=='](1), () => {
+          _.if(x['=='](2), () => { _.return(_.float(111)) })
+        }).else(() => {
+          _.return(_.float(222))
+        })
+      })(dp).data()
+
+      _.if(out.equals(NBT.float(222)), () => Test.succeed())
+      .else(() => Test.fail(out))
+    }),
+    async (r) => {
+      expect(r.passed).toBe(true)
+      assertHasCompute(r, 'math_nested_if')
+    }
+  )
+
+  test('NestedIfInnerMatches', 'math_nested_if_inner_matches',
+    (create, { Test, _ }) => create(() => {
+      const dp = DataVariable(undefined, 'math_nested_if_inner_input')
+      dp.set(NBT.float(2))
+
+      const out = _.Math(Float, (_, x: Float) => {
+        _.if(x['>='](1), () => {
+          _.if(x['=='](2), () => { _.return(_.float(111)) })
+        }).else(() => {
+          _.return(_.float(222))
+        })
+      })(dp).data()
+
+      _.if(out.equals(NBT.float(111)), () => Test.succeed())
+      .else(() => Test.fail(out))
+    }),
+    async (r) => {
+      expect(r.passed).toBe(true)
+      assertHasCompute(r, 'math_nested_if_inner_matches')
+    }
+  )
+
+  test('BranchReturnsComputedValue', 'math_branch_computed_value',
+    (create, { Test, _ }) => create(() => {
+      // The branch's value is an EXPRESSION, not a literal — the
+      // branch's provider is self-contained, so the chain is inlined
+      // into it.
+      const dp = DataVariable(undefined, 'math_branch_computed_input')
+      dp.set(NBT.float(4))
+
+      const out = _.Math(Float, (_, x: Float) => {
+        _.if(x['=='](4), () => { _.return(x.multiply(_.float(3))) })
+          .else(() => { _.return(_.float(0)) })
+      })(dp).data()
+
+      _.if(out.equals(NBT.float(12)), () => Test.succeed())
+      .else(() => Test.fail(out))
+    }),
+    async (r) => {
+      expect(r.passed).toBe(true)
+      assertHasCompute(r, 'math_branch_computed_value')
+    }
+  )
+
+  test('BranchMutatesThenReturns', 'math_branch_mutates_then_returns',
+    (create, { Test, _ }) => create(() => {
+      // The branch mutates the chain and THEN returns it — the return
+      // captures the chain as of that moment.
+      const dp = DataVariable(undefined, 'math_branch_mutates_input')
+      dp.set(NBT.float(4))
+
+      const out = _.Math(Float, (_, x: Float) => {
+        _.if(x['=='](4), () => {
+          x.add(_.float(5))
+          _.return(x)
+        }).else(() => {
+          _.return(_.float(0))
+        })
+      })(dp).data()
+
+      _.if(out.equals(NBT.float(9)), () => Test.succeed())
+      .else(() => Test.fail(out))
+    }),
+    async (r) => {
+      expect(r.passed).toBe(true)
+      assertHasCompute(r, 'math_branch_mutates_then_returns')
+    }
+  )
+
+  test('ElseValue', 'math_else_value',
+    (create, { Test, _ }) => create(() => {
+      // The `else` supplies the value for the path where the
+      // condition doesn't hold.
+      const dp = DataVariable(undefined, 'math_else_value_input')
+      dp.set(NBT.float(2))
+
+      const out = _.Math(Float, (_, x: Float) => {
+        _.if(x['=='](1), () => { _.return(_.float(10)) })
+          .else(() => { _.return(_.float(-1)) })
+      })(dp).data()
+
+      _.if(out.equals(NBT.float(-1)), () => Test.succeed())
+      .else(() => Test.fail(out))
+    }),
+    async (r) => {
+      expect(r.passed).toBe(true)
+      assertHasCompute(r, 'math_else_value')
+    }
+  )
+
+  test('ElseIfWithElse', 'math_elseif_with_else',
+    (create, { Test, _ }) => create(() => {
+      // An `elseIf` chain with a final `else` — the chain's false
+      // path ends at the `else`.
+      const dp = DataVariable(undefined, 'math_elseif_with_else_input')
+      dp.set(NBT.float(2))
+
+      const out = _.Math(Float, (_, x: Float) => {
+        _.if(x['=='](1), () => { _.return(_.float(10)) })
+          .elseIf(x['=='](2), () => { _.return(_.float(20)) })
+          .else(() => { _.return(_.float(-1)) })
+      })(dp).data()
+
+      _.if(out.equals(NBT.float(20)), () => Test.succeed())
+      .else(() => Test.fail(out))
+    }),
+    async (r) => {
+      expect(r.passed).toBe(true)
+      assertHasCompute(r, 'math_elseif_with_else')
+    }
+  )
+
+  test('ElseIfWithElseNoMatch', 'math_elseif_with_else_no_match',
+    (create, { Test, _ }) => create(() => {
+      const dp = DataVariable(undefined, 'math_elseif_no_match_input')
+      dp.set(NBT.float(9))
+
+      const out = _.Math(Float, (_, x: Float) => {
+        _.if(x['=='](1), () => { _.return(_.float(10)) })
+          .elseIf(x['=='](2), () => { _.return(_.float(20)) })
+          .else(() => { _.return(_.float(-1)) })
+      })(dp).data()
+
+      _.if(out.equals(NBT.float(-1)), () => Test.succeed())
+      .else(() => Test.fail(out))
+    }),
+    async (r) => {
+      expect(r.passed).toBe(true)
+      assertHasCompute(r, 'math_elseif_with_else_no_match')
+    }
+  )
+
+  test('SwitchConditionCase', 'math_switch_condition_case',
+    (create, { Test, _ }) => create(() => {
+      // A switch case whose condition is a CALLBACK — the case's
+      // condition becomes the dispatcher's inline condition.
+      const dp = DataVariable(undefined, 'math_switch_condition_input')
+      dp.set(NBT.int(2))
+
+      const out = _.Math(Integer, (_, x: Integer) => {
+        _.switch(x, [
+          ['case', (v: Float | Integer) => v['<'](3), () => { _.return(_.integer(100)) }],
+          ['default', () => { _.return(_.integer(999)) }],
+        ])
+      })(dp.integer()).data()
+
+      _.if(out.equals(NBT.int(100)), () => Test.succeed())
+      .else(() => Test.fail(out))
+    }),
+    async (r) => {
+      expect(r.passed).toBe(true)
+      assertHasCompute(r, 'math_switch_condition_case')
+    }
+  )
+
+  test('SwitchNbtCaseValue', 'math_switch_nbt_case_value',
+    (create, { Test, _ }) => create(() => {
+      // A static case whose value is an NBT primitive — `NBT.int(3)`
+      // is the integer 3.
+      const dp = DataVariable(undefined, 'math_switch_nbt_case_input')
+      dp.set(NBT.int(3))
+
+      const out = _.Math(Integer, (_, x: Integer) => {
+        _.switch(x, [
+          ['case', NBT.int(3), () => { _.return(_.integer(100)) }],
+          ['default', () => { _.return(_.integer(999)) }],
+        ])
+      })(dp.integer()).data()
+
+      _.if(out.equals(NBT.int(100)), () => Test.succeed())
+      .else(() => Test.fail(out))
+    }),
+    async (r) => {
+      expect(r.passed).toBe(true)
+      assertHasCompute(r, 'math_switch_nbt_case_value')
+    }
+  )
+
+  test('MixedKindBranch', 'math_mixed_kind_branch',
+    (create, { Test, _ }) => create(() => {
+      // A float operand inside an INTEGER branch — the branch's value
+      // is computed in the float context and truncated at the
+      // integer boundary (MC's `from_float`).
+      const dp = DataVariable(undefined, 'math_mixed_kind_input')
+      dp.set(NBT.int(2))
+
+      const out = _.Math(Integer, (_, x: Integer) => {
+        _.if(x['=='](2), () => { _.return(_.integer(_.add(x, _.float(2.5)))) })
+          .else(() => { _.return(_.integer(0)) })
+      })(dp.integer()).data()
+
+      _.if(out.equals(NBT.int(4)), () => Test.succeed())
+      .else(() => Test.fail(out))
+    }),
+    async (r) => {
+      expect(r.passed).toBe(true)
+      assertHasCompute(r, 'math_mixed_kind_branch')
+    }
+  )
+
+  test('MixedKindTruncatesTheSum', 'math_mixed_kind_truncates_sum',
+    (create, { Test, _ }) => create(() => {
+      // TWO float operands in an integer chain. The sum is 2 + 2.5 +
+      // 2.5 = 7.0, and the integer boundary truncates the SUM.
+      //
+      // One float operand can't tell the two rules apart — truncating
+      // 2 + 2.5 and truncating 2 + 2 both give 4. Two of them can:
+      // truncating each operand first would give 2 + 2 + 2 = 6.
+      const dp = DataVariable(undefined, 'math_mixed_sum_input')
+      dp.set(NBT.int(2))
+
+      const out = _.Math(Integer, (math, x: Integer) => {
+        math.if(x.equals(NBT.int(2)), () => {
+          x.add(math.float(2.5)).add(math.float(2.5))
+          math.return(x)
+        }).else(() => {
+          math.return(math.integer(0))
+        })
+      })(dp.integer()).data()
+
+      _.if(out.equals(NBT.int(7)), () => Test.succeed())
+      .else(() => Test.fail(out))
+    }),
+    async (r) => {
+      expect(r.passed).toBe(true)
+      assertHasCompute(r, 'math_mixed_kind_truncates_sum')
+    }
+  )
+
+  test('MixedKindTruncatesTowardZero', 'math_mixed_kind_truncates_toward_zero',
+    (create, { Test, _ }) => create(() => {
+      // MC's `from_float` truncates TOWARD ZERO — the sum 0 + 0.5 - 2
+      // = -1.5 becomes -1, not -2 (MC's int providers do not floor).
+      //
+      // Truncating each operand first would give 0 + 0 - 2 = -2, so
+      // this pins both the truncation POINT and the direction.
+      const dp = DataVariable(undefined, 'math_mixed_neg_input')
+      dp.set(NBT.int(0))
+
+      const out = _.Math(Integer, (math, x: Integer) => {
+        math.if(x.equals(NBT.int(0)), () => {
+          x.add(math.float(0.5)).add(math.float(-2))
+          math.return(x)
+        }).else(() => {
+          math.return(math.integer(0))
+        })
+      })(dp.integer()).data()
+
+      _.if(out.equals(NBT.int(-1)), () => Test.succeed())
+      .else(() => Test.fail(out))
+    }),
+    async (r) => {
+      expect(r.passed).toBe(true)
+      assertHasCompute(r, 'math_mixed_kind_truncates_toward_zero')
+    }
+  )
+
+  test('IntegerComputedBound', 'math_integer_computed_bound',
+    (create, { Test, _ }) => create(() => {
+      // A comparison against a COMPUTED bound in the INTEGER context.
+      // The bound is a provider, and the strict `<` is rewritten to an
+      // inclusive range `(-inf, bound - 1]` — exactly, not off by one.
+      const x = DataVariable(undefined, 'math_int_bound_x')
+      x.set(NBT.int(3))
+      const y = DataVariable(undefined, 'math_int_bound_y')
+      y.set(NBT.int(5))
+
+      const out = _.Math(Integer, (math, v: Integer) => {
+        const bound = math.integer(y)
+        math.if(v['<'](bound), () => { math.return(math.integer(1)) })
+          .else(() => { math.return(math.integer(0)) })
+      })(x.integer()).data()
+
+      _.if(out.equals(NBT.int(1)), () => Test.succeed())
+      .else(() => Test.fail(out))
+    }),
+    async (r) => {
+      expect(r.passed).toBe(true)
+      assertHasCompute(r, 'math_integer_computed_bound')
+    }
+  )
+
+  test('IntegerComputedBoundGreater', 'math_integer_computed_bound_greater',
+    (create, { Test, _ }) => create(() => {
+      // The `>` direction: the strict comparison is rewritten to the
+      // inclusive range `[bound + 1, +inf)`.
+      const x = DataVariable(undefined, 'math_int_bound_gt_x')
+      x.set(NBT.int(7))
+      const y = DataVariable(undefined, 'math_int_bound_gt_y')
+      y.set(NBT.int(5))
+
+      const out = _.Math(Integer, (math, v: Integer) => {
+        const bound = math.integer(y)
+        math.if(v['>'](bound), () => { math.return(math.integer(1)) })
+          .else(() => { math.return(math.integer(0)) })
+      })(x.integer()).data()
+
+      _.if(out.equals(NBT.int(1)), () => Test.succeed())
+      .else(() => Test.fail(out))
+    }),
+    async (r) => {
+      expect(r.passed).toBe(true)
+      assertHasCompute(r, 'math_integer_computed_bound_greater')
+    }
+  )
+
+  test('IntegerComputedBoundFalse', 'math_integer_computed_bound_false',
+    (create, { Test, _ }) => create(() => {
+      // The same comparison, with the value ABOVE the bound — the
+      // strict `<` must not match.
+      const x = DataVariable(undefined, 'math_int_bound_false_x')
+      x.set(NBT.int(7))
+      const y = DataVariable(undefined, 'math_int_bound_false_y')
+      y.set(NBT.int(5))
+
+      const out = _.Math(Integer, (math, v: Integer) => {
+        const bound = math.integer(y)
+        math.if(v['<'](bound), () => { math.return(math.integer(1)) })
+          .else(() => { math.return(math.integer(0)) })
+      })(x.integer()).data()
+
+      _.if(out.equals(NBT.int(0)), () => Test.succeed())
+      .else(() => Test.fail(out))
+    }),
+    async (r) => {
+      expect(r.passed).toBe(true)
+      assertHasCompute(r, 'math_integer_computed_bound_false')
+    }
+  )
+
+  test('FloatComputedBoundGreater', 'math_float_computed_bound_greater',
+    (create, { Test, _ }) => create(() => {
+      // The float `>` direction — MC's float ranges have no exclusive
+      // bound, so the VALUE side is rewritten instead:
+      // `x > y` ⟺ `floor(y - x) <= -1`.
+      const x = DataVariable(undefined, 'math_float_bound_gt_x')
+      x.set(NBT.float(7))
+      const y = DataVariable(undefined, 'math_float_bound_gt_y')
+      y.set(NBT.float(5))
+
+      const out = _.Math(Float, (math, v: Float) => {
+        const bound = math.float(y)
+        math.if(v['>'](bound), () => { math.return(math.float(1)) })
+          .else(() => { math.return(math.float(0)) })
+      })(x).data()
+
+      _.if(out.equals(NBT.float(1)), () => Test.succeed())
+      .else(() => Test.fail(out))
+    }),
+    async (r) => {
+      expect(r.passed).toBe(true)
+      assertHasCompute(r, 'math_float_computed_bound_greater')
+    }
+  )
+
+  test('IntegerWidenedToFloat', 'math_integer_widened_to_float',
+    (create, { Test, _ }) => create(() => {
+      // An integer read in the FLOAT context is widened by `from_int`,
+      // which goes through single precision — so 16777217 (2^24 + 1)
+      // becomes 16777216.0. The value is exact BELOW 2^24 and rounds
+      // above it.
+      const dp = DataVariable(undefined, 'math_widen_input')
+      dp.set(NBT.int(16777217))
+
+      const out = _.Math(Float, (math, v: Float) => {
+        math.return(math.multiply(v, math.float(2)))
+      })(dp.integer()).data()
+
+      // 16777216.0 * 2 — NOT 16777217 * 2, which is what an exact
+      // widening would give.
+      _.if(out.equals(NBT.float(33554432)), () => Test.succeed())
+      .else(() => Test.fail(out))
+    }),
+    async (r) => {
+      expect(r.passed).toBe(true)
+      assertHasCompute(r, 'math_integer_widened_to_float')
+    }
+  )
+
+  test('NbtOperand', 'math_nbt_operand',
+    (create, { Test, _ }) => create(() => {
+      // An NBT primitive is a TYPED numeric operand — `NBT.int(3)` is
+      // an integer, `NBT.float(2.5)` a float. The numeric tower
+      // bridges it where the contexts meet.
+      const dp = DataVariable(undefined, 'math_nbt_operand_input')
+      dp.set(NBT.int(4))
+
+      const out = _.Math(Integer, (math, x: Integer) => {
+        math.if(x.equals(NBT.int(4)), () => {
+          x.add(NBT.int(3))
+          math.return(x)
+        }).else(() => {
+          math.return(math.integer(0))
+        })
+      })(dp.integer()).data()
+
+      _.if(out.equals(NBT.int(7)), () => Test.succeed())
+      .else(() => Test.fail(out))
+    }),
+    async (r) => {
+      expect(r.passed).toBe(true)
+      assertHasCompute(r, 'math_nbt_operand')
+    }
+  )
+
+  test('NbtOperandMixedKind', 'math_nbt_operand_mixed_kind',
+    (create, { Test, _ }) => create(() => {
+      // An NBT FLOAT compared against an integer handle — the
+      // comparison's kind is the widest of its operands, so it runs
+      // in the float context with the integer side bridged by
+      // `from_int`.
+      const dp = DataVariable(undefined, 'math_nbt_operand_mixed_input')
+      dp.set(NBT.int(2))
+
+      const out = _.Math(Integer, (math, x: Integer) => {
+        math.if(x.equals(NBT.float(2)), () => {
+          math.return(math.integer(100))
+        }).else(() => {
+          math.return(math.integer(999))
+        })
+      })(dp.integer()).data()
+
+      _.if(out.equals(NBT.int(100)), () => Test.succeed())
+      .else(() => Test.fail(out))
+    }),
+    async (r) => {
+      expect(r.passed).toBe(true)
+      assertHasCompute(r, 'math_nbt_operand_mixed_kind')
+    }
+  )
+
+  test('StraightLineBeforeBranch', 'math_straight_line_before_branch',
+    (create, { Test, _ }) => create(() => {
+      // A straight-line chain BEFORE a branch — the branch's snapshot
+      // includes it, so the branch's value is the chain's value.
+      const dp = DataVariable(undefined, 'math_sl_before_input')
+      dp.set(NBT.float(4))
+
+      const out = _.Math(Float, (math, x: Float) => {
+        x.add(NBT.float(5))
+        math.if(x.equals(NBT.float(9)), () => {
+          math.return(x)
+        }).else(() => {
+          math.return(math.float(0))
+        })
+      })(dp).data()
+
+      _.if(out.equals(NBT.float(9)), () => Test.succeed())
+      .else(() => Test.fail(out))
+    }),
+    async (r) => {
+      expect(r.passed).toBe(true)
+      assertHasCompute(r, 'math_straight_line_before_branch')
+    }
+  )
+
+  test('ComputedComparisonBound', 'math_computed_comparison_bound',
+    (create, { Test, _ }) => create(() => {
+      // A comparison against a COMPUTED bound — the bound is a
+      // provider, so MC evaluates the comparison itself.
+      const x = DataVariable(undefined, 'math_computed_bound_x')
+      x.set(NBT.float(3))
+      const y = DataVariable(undefined, 'math_computed_bound_y')
+      y.set(NBT.float(5))
+
+      const out = _.Math(Float, (math, v: Float) => {
+        const bound = math.float(y)
+        math.if(v['<'](bound), () => { math.return(math.float(1)) })
+          .else(() => { math.return(math.float(0)) })
+      })(x).data()
+
+      _.if(out.equals(NBT.float(1)), () => Test.succeed())
+      .else(() => Test.fail(out))
+    }),
+    async (r) => {
+      expect(r.passed).toBe(true)
+      assertHasCompute(r, 'math_computed_comparison_bound')
+    }
+  )
+
+  test('ComputedComparisonBoundFalse', 'math_computed_comparison_bound_false',
+    (create, { Test, _ }) => create(() => {
+      // The same comparison, with the bound BELOW the value — the
+      // strict `<` must not match.
+      const x = DataVariable(undefined, 'math_computed_bound_false_x')
+      x.set(NBT.float(7))
+      const y = DataVariable(undefined, 'math_computed_bound_false_y')
+      y.set(NBT.float(5))
+
+      const out = _.Math(Float, (math, v: Float) => {
+        const bound = math.float(y)
+        math.if(v['<'](bound), () => { math.return(math.float(1)) })
+          .else(() => { math.return(math.float(0)) })
+      })(x).data()
+
+      _.if(out.equals(NBT.float(0)), () => Test.succeed())
+      .else(() => Test.fail(out))
+    }),
+    async (r) => {
+      expect(r.passed).toBe(true)
+      assertHasCompute(r, 'math_computed_comparison_bound_false')
+    }
+  )
+
+  test('RecordOutputWithBranch', 'math_record_output_with_branch',
+    (create, { Test, _ }) => create(() => {
+      // A record output with a branch — each output field gets its
+      // own provider, built from that field's expression.
+      const dp = DataVariable(undefined, 'math_record_branch_input')
+      dp.set(NBT.float(2))
+
+      const m = _.Math({ a: Float, b: Float }, (math, x: Float) => {
+        math.if(x['=='](2), () => {
+          math.return({ a: math.multiply(x, math.float(2)), b: math.add(x, math.float(1)) })
+        }).else(() => {
+          math.return({ a: x, b: x })
+        })
+      })
+
+      const out = m(dp)
+      const a = out.a.data()
+      const b = out.b.data()
+
+      _.if(
+        _.and(a.equals(NBT.float(4)), b.equals(NBT.float(3))),
+        () => Test.succeed(),
+      ).else(() => Test.fail(a))
+    }),
+    async (r) => {
+      expect(r.passed).toBe(true)
+      assertHasCompute(r, 'math_record_output_with_branch')
     }
   )
 
@@ -482,7 +1238,9 @@ export function registerMathTests() {
     }),
     async (r) => {
       expect(r.passed).toBe(true)
-      assertNoCompute(r, 'math_if_elseif_else')
+      // The branch structure is a provider now — MC evaluates the
+      // condition and the matching branch.
+      assertHasCompute(r, 'math_if_elseif_else')
     }
   )
 
@@ -498,7 +1256,9 @@ export function registerMathTests() {
     }),
     async (r) => {
       expect(r.passed).toBe(true)
-      assertNoCompute(r, 'math_if_early_return')
+      // The branch structure is a provider now — MC evaluates the
+      // condition and the matching branch.
+      assertHasCompute(r, 'math_if_early_return')
     }
   )
 

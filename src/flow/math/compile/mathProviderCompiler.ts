@@ -410,7 +410,7 @@ function intBinaryProvider(
  * AST before lowering; this is the defensive path for an expression
  * compiled outside the visitor pipeline.
  */
-function compileFloatOperand(node: MathExpressionNode): JsonFloatRef {
+export function compileFloatOperand(node: MathExpressionNode): JsonContextFloatProvider {
   if (node.kind === 'integer') {
     return { type: 'from_int', input: compileIntProvider(node) }
   }
@@ -494,7 +494,7 @@ export function compileIntProvider(node: MathExpressionNode): JsonContextIntProv
  * AST before lowering; this is the defensive path for an expression
  * compiled outside the visitor pipeline.
  */
-function compileIntOperand(node: MathExpressionNode): JsonIntRef {
+export function compileIntOperand(node: MathExpressionNode): JsonContextIntProvider {
   if (node.kind === 'float') {
     return { type: 'from_float', input: compileFloatProvider(node) }
   }

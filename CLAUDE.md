@@ -976,6 +976,24 @@ integer-typed DataPoints, scores and integer NBT constants. Want the
 other context? Build it explicitly — `_.float(score)` reads a score as a
 float (`from_int`), `_.integer(dp)` reads a path as an integer.
 
+**NBT numerics are operands everywhere.** An NBT numeric primitive
+(`NBT.int(3)`, `NBT.byte(1)`, `NBT.short(2)`, `NBT.float(2.5)`,
+`NBT.double(1.5)`) is a *typed* numeric value, so it is accepted
+anywhere the math DSL takes an operand — the handle operators
+(`x.add(NBT.int(3))`), the comparisons (`x.equals(NBT.int(4))`), the
+`math.float` / `math.integer` constructors, the aggregate and binary
+helpers (`math.sum`, `math.subtract`, …), the unary helpers
+(`math.sqrt`), `math.random`'s bounds, `math.pick`'s values, the
+switch's case values, and the `for` loop's bounds.
+
+Unlike a bare number — whose kind comes from the receiving chain — an
+NBT primitive carries its **own** kind, exactly like a block input:
+`NBT.int(3)` is an integer operand, `NBT.float(2.5)` a float one. The
+numeric tower bridges it where the contexts meet, so
+`x.add(NBT.float(2.5))` in an integer chain widens the chain (the
+tower's "widest kind wins"), and `x.equals(NBT.float(2))` compares in
+the float context with the integer side bridged by `from_int`.
+
 **The two families have different operator sets.** MC's int context has no
 `sqrt` / `sin` / `cos` / `ceil` / `floor` / `round` / `truncate` /
 `length` provider. The int context does have `floor_div` / `floor_mod`,
@@ -1067,6 +1085,100 @@ provider"*).
 the aggregate node but never swapped it into the handle, so `x.add(1)` left
 the handle pointing at its old value. Fixed: both now `setNode(...)` and
 chain from `this.node` (not `this.startNode`), matching the float handle.
+
+### Math DSL — Control Flow
+
+`src/flow/math/` implements the math block's branches. A branch
+structure IS the block's result: it compiles to ONE number provider
+that MC evaluates lazily, at read time.
+
+| structure | provider |
+|---|---|
+| `if` / `elseIf` / `else` chain | nested `conditional` (`{condition, on_true, on_false}`) |
+| `switch` / `case` | `number_dispatcher` (`{cases: [{condition, value}], default}`) |
+
+The conditions are MC's `minecraft:int_value_check` /
+`minecraft:float_value_check` predicates — their `value` is a provider
+and their `test` bounds are providers too, so MC evaluates the
+comparison itself (no score round-trip, no precision loss).
+
+**The model.** A math block's body is a sequence of statements, and the
+result is "the value of the first branch whose condition holds" — the
+semantics of a straight-line sequence of early returns:
+
+- A branch **with** a `_.return(...)` is **terminal** — the flow after
+  it isn't evaluated.
+- A branch **without** a return but **with** a nested branch
+  contributes the nested branch's value (the nested branch's own false
+  path continues past the enclosing branch).
+- A branch with **neither** contributes nothing: its body doesn't
+  affect the result, so the condition is dropped and the flow
+  continues. (A branch that only mutates a handle is such a branch —
+  the mutation is a chain node, not a body statement.)
+- An `if` chain's false path moves to the next clause; an `else` is
+  the chain's fallback; a chain without an `else` continues into
+  whatever follows the chain — the next branch structure, or the end
+  of the block.
+- **Every path must produce a value.** The end of the block is *not* a
+  value: an `if` with no `else`, an `elseIf` chain with no final
+  `else`, or a `switch` with no `default` is a **compile error**, not
+  a silent zero. A zero would hand the caller a number nobody chose,
+  and the block's result would quietly differ from what the source
+  says.
+
+So several root-level `if`s are fine (they fold into one provider,
+first match wins) as long as the last one is covered, and branches
+nest freely — an inner chain inherits the enclosing chain's `else` as
+its fallback.
+
+**Dead stores.** Straight-line code that follows a branch can never
+affect the result (the branch's `else` already covers the path that
+reaches the end), so its chain update is a dead store. The plan
+builder drops it: the branch provider inlines the whole chain from
+its root, so it never reads a handle's intermediate storage, and an
+update whose storage nobody reads emits neither a command nor a
+provider file.
+
+**Branch values are snapshots.** A branch's value is the expression
+captured by its `_.return(...)` — the handle's node AT THAT MOMENT.
+Compiling it directly (not through the chain-read substitution)
+inlines the whole chain from its root, so the branch's provider is
+self-contained: it doesn't depend on a chain update having run
+first.
+
+**Comparisons against a computed bound.** MC's value-check ranges take
+providers as their bounds, so `==` / `!=` / `<=` / `>=` against a
+computed value are exact. A STRICT comparison needs an exclusive
+bound and MC's ranges have no exclusivity flag, so it is rewritten:
+
+- Integers: the bound becomes a provider expression — `y - 1` / `y + 1`
+  — so `x < y` is the range `(-inf, y-1]`.
+- Floats: there's no "the float just below y" provider, so the VALUE
+  side is rewritten instead — `x < y` ⟺ `floor(x - y) <= -1`.
+
+**A record output with a branch** compiles per field: each output
+field gets its own provider, picking that field's expression out of
+the branch's returned record.
+
+**The constant folder must not touch the chain.** `ConstantFoldingVisitor`
+used to DROP an `elseIf`/`else` chain whose condition folded to a
+constant. That's wrong under the provider model — the chain's value is
+resolved by the branch compiler (which owns the "first match wins"
+semantics), which resolves a statically-known condition itself: a
+clause whose condition is always false is skipped, one whose condition
+is always true takes the chain (the rest is dead code).
+
+**Gotcha — a nested branch's `parentMathFunction`.** `MathFlowClauseNode`
+resolves its parent by scanning DOWN the math stack to the container
+that carries the node trail (`allNodes`). The stack top is the
+enclosing CLAUSE when a branch is nested — a clause has no
+`balanceContext`, so taking the stack top as the parent crashes on the
+first nested branch.
+
+**Not implemented: `_.while` / `_.for`.** `MathLoopNode` exists in the
+AST, but the lowering (static unroll vs. an mcfunction-backed
+recursion) hasn't been built — the strategy depends on a performance
+benchmark that hasn't been run yet.
 
 ### Generated Types System
 

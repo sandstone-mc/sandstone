@@ -27,6 +27,35 @@ export abstract class MathContainerNode extends MathNode {
 
   _body: MathNode[] = []
 
+  /**
+   * The chronological trail of the nodes created while this container
+   * was the active math context.
+   *
+   * Only the math function keeps a trail of its own — `allNodes` is
+   * its historical name for it. A branch has no trail of its own: its
+   * statements live in the function's trail (or, for a mutation, in
+   * the chain the branch returns).
+   */
+  allNodes?: MathNode[]
+
+  /**
+   * The per-class node counters behind the `ClassName<n>` identity
+   * suffix. Only the math function keeps them — a branch's nodes
+   * aren't part of the function's numbering.
+   */
+  perClassCounters?: Map<string, number>
+
+  /**
+   * How many nodes were created while this container was the active
+   * math context.
+   *
+   * A branch uses this to tell whether its body had any statement at
+   * all: a body that only MUTATES a handle (`x.add(1)`) leaves the
+   * clause's own `body` empty — the mutation is a chain node, not a
+   * statement in the body.
+   */
+  createdNodeCount = 0
+
   constructor(sandstoneCore: SandstoneCore) {
     super(sandstoneCore)
   }

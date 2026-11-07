@@ -9,7 +9,10 @@ import { MathExpressionNode } from './MathExpressionNode'
 import { MathFunctionNode } from './MathFunctionNode'
 import { BinaryOpNode, AggregateNode, UnaryOpNode, ArcSineNode, ArcCosineNode } from './nodes/operators'
 import { LiteralNode } from './nodes/leaves'
+import { isNBTNumericOperand, nbtOperandToLiteral } from './nodes/leaves'
+import type { NBTNumericOperand } from './nodes/leaves'
 import { CopyNode } from './nodes/leaves'
+import { ConversionNode } from './nodes/conversion'
 import { StorageRefNode } from './nodes/leaves'
 import { ScoreboardRefNode } from './nodes/leaves'
 import { compare } from './nodes/conditions'
@@ -55,28 +58,36 @@ interface IntegerBranded {
 }
 
 /**
- * An operand of a FLOAT chain: a float handle, an integer handle, or a
- * bare number literal.
+ * An operand of a FLOAT chain: a float handle, an integer handle, a
+ * bare number literal, or an NBT numeric primitive.
  *
  * A bare number is turned into a `LiteralNode` of the receiving chain's
  * kind at use site (`handleToExpr`) — it is a real literal in the AST,
  * not a cast. In a float chain it is a float literal; in an integer
  * chain it must be a whole number (MC's integer providers have no
  * fractional value).
+ *
+ * An NBT primitive (`NBT.int(3)`, `NBT.float(2.5)`) keeps its OWN
+ * kind — it is a typed value, not an untyped number — so the numeric
+ * tower bridges it when the receiving chain is in the other context.
  */
-export type FloatOperand = Float | Integer | number
+export type FloatOperand = Float | Integer | number | NBTNumericOperand
 
 /**
  * An operand of an INTEGER chain: an integer handle, a float handle,
- * or a bare number literal.
+ * a bare number literal, or an NBT numeric primitive.
  *
  * A float handle is bridged by MC's `from_float` at the point of use
  * — the conversion truncates it toward zero, so the integer chain
  * stays in the integer context. A bare number must be a whole number
  * within the 32-bit range — `LiteralNode` rejects both at
  * construction.
+ *
+ * An NBT primitive carries its own kind: `NBT.int(3)` is an integer
+ * operand, `NBT.float(2.5)` a float one (which widens the chain, per
+ * the numeric tower).
  */
-export type IntegerOperand = Integer | Float | number
+export type IntegerOperand = Integer | Float | number | NBTNumericOperand
 
 export abstract class BaseHandle {
   /** Mutable: operator methods replace this on each mutation. */
@@ -187,7 +198,7 @@ export class _RawFloatHandle extends BaseHandle implements FloatBranded {
   override node: MathExpressionNode
   override startNode: MathExpressionNode
 
-  readonly kind: MathKind = 'float'
+  readonly kind: 'float' = 'float'
 
   /**
    * Set by the math block's output visitor when this handle is one of
@@ -445,7 +456,7 @@ export class _RawIntegerHandle extends BaseHandle implements IntegerBranded {
   override node: MathExpressionNode
   override startNode: MathExpressionNode
 
-  readonly kind: MathKind = 'integer'
+  readonly kind: 'integer' = 'integer'
 
   /**
    * Set by the math block's output visitor when this handle is one of
@@ -678,7 +689,13 @@ export class _RawIntegerHandle extends BaseHandle implements IntegerBranded {
   }
 }
 
-function handleToExpr(core: SandstoneCore, h: FloatOperand, kind: MathKind): MathExpressionNode {
+/**
+ * Turn an operand into an expression node — a handle's own node, or
+ * a literal for a bare number.
+ *
+ * @internal
+ */
+export function handleToExpr(core: SandstoneCore, h: FloatOperand, kind: MathKind): MathExpressionNode {
   if (typeof h === 'number') {
     // Wrap a raw number as a `LiteralNode` at use site. This lets
     // `rx['*='](-1)` work without requiring the user to wrap literals
@@ -703,6 +720,15 @@ function handleToExpr(core: SandstoneCore, h: FloatOperand, kind: MathKind): Mat
     // folding to a literal therefore keeps the integer kind (emitted
     // as `2`, not `2.0f`).
     const lit = new LiteralNode(core, h, kind)
+    lit.internal = true
+    return lit
+  }
+  if (isNBTNumericOperand(h)) {
+    // An NBT primitive is a TYPED value — `NBT.int(3)` is an integer,
+    // `NBT.float(2.5)` a float — so it keeps its own kind instead of
+    // adopting the receiving chain's. The numeric tower bridges it
+    // where the contexts meet.
+    const lit = nbtOperandToLiteral(core, h)
     lit.internal = true
     return lit
   }
@@ -753,6 +779,39 @@ export function integerFromLiteral(core: SandstoneCore, value: number): Integer 
 }
 
 /**
+ * `_.float(NBT.int(3))` — an integer constant read in the FLOAT
+ * context. The bridge is MC's `from_int`, which widens exactly (an
+ * int always fits a float's range).
+ */
+export function floatFromNBT(core: SandstoneCore, nbt: NBTNumericOperand): Float {
+  const literal = nbtOperandToLiteral(core, nbt)
+  if (literal.kind === 'float') return new _RawFloatHandle(literal)
+  return new _RawFloatHandle(new ConversionNode(core, literal, 'float'))
+}
+
+/**
+ * `_.integer(NBT.float(2.5))` — a float constant read in the INTEGER
+ * context. The bridge is MC's `from_float`, which TRUNCATES toward
+ * zero — `from_float(-2.5)` is `-2`, not `-3` (MC's int providers do
+ * not floor).
+ */
+export function integerFromNBT(core: SandstoneCore, nbt: NBTNumericOperand): Integer {
+  const literal = nbtOperandToLiteral(core, nbt)
+  if (literal.kind === 'integer') return new _RawIntegerHandle(literal)
+  return new _RawIntegerHandle(new ConversionNode(core, literal, 'integer'))
+}
+
+/**
+ * A handle for an NBT primitive in its OWN context — the numeric kind
+ * is intrinsic to the value, exactly like the math block's input
+ * rebinding (see `rebindInput`).
+ */
+export function handleFromNBT(core: SandstoneCore, nbt: NBTNumericOperand): Float | Integer {
+  const literal = nbtOperandToLiteral(core, nbt)
+  return handleFromKind(core, literal, literal.kind)
+}
+
+/**
  * `_.float(x)` where `x` is already a `Float` — snapshot copy.
  *
  * Returns a NEW independent `FloatHandle` whose root expression is a
@@ -767,6 +826,15 @@ export function integerFromLiteral(core: SandstoneCore, value: number): Integer 
 export function floatFromFloat(core: SandstoneCore, source: Float): Float {
   void core
   return new _RawFloatHandle(new CopyNode(source.node.sandstoneCore, source.node))
+}
+
+/**
+ * `_.integer(x)` where `x` is a `Float` — the float is TRUNCATED
+ * toward zero, exactly like MC's `from_float` provider (the only
+ * bridge from the float context to the integer one).
+ */
+export function integerFromFloat(core: SandstoneCore, source: Float): Integer {
+  return new _RawIntegerHandle(new ConversionNode(core, source.node, 'integer'))
 }
 
 export function integerFromInteger(core: SandstoneCore, source: Integer): Integer {

@@ -13,10 +13,51 @@ import { MathExpressionNode } from '../MathExpressionNode'
 import type { Float, Integer } from '../handles'
 import type { MathFunctionNode } from '../MathFunctionNode'
 import { MathContainerNode } from '../MathContainerNode'
+import type { NBTByte, NBTDouble, NBTFloat, NBTInt, NBTShort } from '../../../../variables/nbt/NBTs'
 
 // ---------------------------------------------------------------------------
 // Shared base for if/elseIf/else clauses.
 // ---------------------------------------------------------------------------
+
+/**
+ * The math function that owns the current math context.
+ *
+ * The math stack holds the math function at its BOTTOM and the nested
+ * containers (branch bodies, case bodies) on top of it. A nested
+ * container's stack top is therefore NOT the math function — so the
+ * owner is found by scanning DOWN the stack to the container that
+ * carries the node trail (`allNodes`), which only the math function
+ * has.
+ *
+ * Without this, a branch nested inside another branch would take the
+ * enclosing CLAUSE as its parent — and a clause has no
+ * `balanceContext`, so the nested body would crash.
+ */
+function enclosingMathFunction(sandstoneCore: SandstoneCore): MathFunctionNode {
+  const stack = sandstoneCore.mathStack
+  for (let i = stack.length - 1; i >= 0; i--) {
+    const candidate = stack[i] as { allNodes?: unknown }
+    if (Array.isArray(candidate.allNodes)) {
+      return candidate as unknown as MathFunctionNode
+    }
+  }
+  throw new Error(
+    'Math: a branch or a case body must be created inside a `_.Math(...)` block.',
+  )
+}
+
+/**
+ * Whether a clause holds any statement at all.
+ *
+ * A clause's `body` holds the RETURNS and the nested branch
+ * structures — but a statement that only MUTATES a handle (e.g.
+ * `x.add(1)`) is a chain node, not a body statement. So an empty
+ * body doesn't mean an empty clause: the node count is the other
+ * half of the check.
+ */
+function hasStatements(clause: MathFlowClauseNode): boolean {
+  return clause.body.length > 0 || clause.createdNodeCount > 0
+}
 
 /**
  * Shared base for `MathIfNode` / `MathElseIfNode` / `MathElseNode`.
@@ -49,7 +90,7 @@ export abstract class MathFlowClauseNode extends MathContainerNode {
 
   constructor(sandstoneCore: SandstoneCore) {
     super(sandstoneCore)
-    this.parentMathFunction = sandstoneCore.mathStack[sandstoneCore.mathStack.length - 1] as MathFunctionNode
+    this.parentMathFunction = enclosingMathFunction(sandstoneCore)
   }
 
   /**
@@ -102,7 +143,13 @@ export class MathIfNode extends MathFlowClauseNode {
   constructor(
     sandstoneCore: SandstoneCore,
     readonly condition: MathConditionNode,
-    callback: () => void,
+    /**
+     * The body callback. OPTIONAL: `_.if(cond)` with no body is a
+     * valid form — the body arrives with the first `.return(...)` /
+     * `.elseIf(...)` / `.else(...)` call, which is why the clause is
+     * created lazily by `MathIfStatement`.
+     */
+    callback?: () => void,
   ) {
     super(sandstoneCore)
     // Mark the condition as a child of this clause for AST
@@ -111,7 +158,9 @@ export class MathIfNode extends MathFlowClauseNode {
     // the if clause's body (since MathIfNode's render walks
     // `this.condition`).
     this.condition.parent = this
-    this.parentMathFunction.balanceContext(this, callback)
+    if (callback) {
+      this.parentMathFunction.balanceContext(this, callback)
+    }
 
     // Commit self to the enclosing container's body so the AST debug
     // walk surfaces the if-clause. Without this, MathIfNode only ever
@@ -125,7 +174,7 @@ export class MathIfNode extends MathFlowClauseNode {
       outer.append(this)
     }
 
-    if (this.body.length === 0) {
+    if (callback && !hasStatements(this)) {
       throw new Error(
         'Math if body is empty. Add at least one statement, or remove the branch.',
       )
@@ -201,7 +250,7 @@ export class MathElseIfNode extends MathFlowClauseNode {
     this._isElseIf = true
     this.parentMathFunction.balanceContext(this, callback)
 
-    if (this.body.length === 0) {
+    if (!hasStatements(this)) {
       throw new Error(
         'Math elseIf body is empty. Add at least one statement, or remove the branch.',
       )
@@ -246,6 +295,37 @@ export class MathElseNode extends MathFlowClauseNode {
 // ---------------------------------------------------------------------------
 // Return statement.
 // ---------------------------------------------------------------------------
+
+/**
+ * Snapshot a value a `_.return(...)` captures.
+ *
+ * A handle's value is its current expression — the chain state AS OF
+ * the return. Capturing the node (rather than the handle) freezes
+ * that: a later `x.add(1)` must not change what an earlier return
+ * returned.
+ *
+ * A record's entries are snapshotted individually.
+ */
+export function snapshotMathValue(v: unknown): unknown {
+  if (v === null || v === undefined) return v
+  if (Array.isArray(v)) return v.map((x) => snapshotMathValue(x))
+  if (typeof v === 'object') {
+    const handleLike = v as { node?: unknown, [k: string]: unknown }
+    if (
+      handleLike.node !== undefined
+      && typeof handleLike.node === 'object'
+      && handleLike.node !== null
+    ) {
+      return handleLike.node
+    }
+    const result: Record<string, unknown> = {}
+    for (const [k, val] of Object.entries(v as Record<string, unknown>)) {
+      result[k] = snapshotMathValue(val)
+    }
+    return result
+  }
+  return v
+}
 
 /**
  * `_.return(value)` — terminate the current control path with `value`.
@@ -348,6 +428,16 @@ export class MathReturnNode extends MathNode {
  *   - field `z`'s provider case: condition=`<dispatch==0>`, value=`3`
  */
 
+/**
+ * A value a switch case matches against: a math handle, a plain
+ * number, or an NBT numeric primitive (`NBT.int(3)`, `NBT.float(2.5)`).
+ *
+ * An NBT value carries its own numeric kind — `NBT.int(3)` is an
+ * integer, `NBT.float(2.5)` a float. In the other context it's
+ * bridged the same way any other mismatched operand is.
+ */
+export type MathCaseValue = Float | Integer | number | NBTInt | NBTFloat | NBTDouble
+
 /** Static-value case: matches when `dispatch === caseValue`. */
 export class MathCaseNode extends MathContainerNode {
   /** Type guard. */
@@ -359,11 +449,11 @@ export class MathCaseNode extends MathContainerNode {
 
   constructor(
     sandstoneCore: SandstoneCore,
-    readonly caseValue: Float | Integer | number,
+    readonly caseValue: MathCaseValue,
     callback: () => void,
   ) {
     super(sandstoneCore)
-    this.parentMathFunction = sandstoneCore.mathStack[sandstoneCore.mathStack.length - 1] as MathFunctionNode
+    this.parentMathFunction = enclosingMathFunction(sandstoneCore)
     this.parentMathFunction.balanceContext(this, callback)
   }
 
@@ -407,7 +497,7 @@ export class MathConditionCaseNode extends MathContainerNode {
     callback: () => void,
   ) {
     super(sandstoneCore)
-    this.parentMathFunction = sandstoneCore.mathStack[sandstoneCore.mathStack.length - 1] as MathFunctionNode
+    this.parentMathFunction = enclosingMathFunction(sandstoneCore)
     this.parentMathFunction.balanceContext(this, callback)
   }
 
@@ -434,7 +524,7 @@ export class MathDefaultCaseNode extends MathContainerNode {
 
   constructor(sandstoneCore: SandstoneCore, callback: () => void) {
     super(sandstoneCore)
-    this.parentMathFunction = sandstoneCore.mathStack[sandstoneCore.mathStack.length - 1] as MathFunctionNode
+    this.parentMathFunction = enclosingMathFunction(sandstoneCore)
     this.parentMathFunction.balanceContext(this, callback)
   }
 
@@ -543,7 +633,7 @@ export class MathLoopNode extends MathContainerNode {
   readonly iterator?: Float | Integer
 
   /** `for` only — initial iterator value. Captured for lowerer use. */
-  readonly initial?: number | Float | Integer
+  readonly initial?: number | Float | Integer | NBTByte | NBTShort | NBTInt | NBTFloat | NBTDouble
 
   /** `for` only — iterate step callback. Captured for lowerer use. */
   readonly iterate?: (iterator: Float | Integer) => Float | Integer
@@ -558,14 +648,14 @@ export class MathLoopNode extends MathContainerNode {
     sandstoneCore: SandstoneCore,
     params: {
       condition: MathConditionNode
-      initial?: number | Float | Integer
+      initial?: number | Float | Integer | NBTByte | NBTShort | NBTInt | NBTFloat | NBTDouble
       iterate?: (iterator: Float | Integer) => Float | Integer
       iterator?: Float | Integer
     },
     callback: () => void,
   ) {
     super(sandstoneCore)
-    this.parentMathFunction = sandstoneCore.mathStack[sandstoneCore.mathStack.length - 1] as MathFunctionNode
+    this.parentMathFunction = enclosingMathFunction(sandstoneCore)
     this.condition = params.condition
     this.condition.parent = this
     this.initial = params.initial

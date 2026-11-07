@@ -228,6 +228,15 @@ export class MathChainAnalysisVisitor extends MathAnalysisVisitor<MathChainAnaly
     const updates: ChainUpdate[] = []
     const firstPerRoot = new Set<MathExpressionNode>(roots)
     for (const node of fn.allNodes) {
+      // An update that belongs to a BRANCH is not an update of the
+      // straight-line flow: it only happens when the branch is taken,
+      // and its value is compiled INTO the branch's provider (the
+      // branch's `_.return(...)` captured the chain state as of the
+      // branch). Emitting it as a command of its own would run it
+      // unconditionally.
+      if (node.owner !== undefined && node.owner !== fn) {
+        continue
+      }
       if (BinaryOpNode.is(node)) {
         if (transients.has(node)) continue
         const root = chainRootOf(node)

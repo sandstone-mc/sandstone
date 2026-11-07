@@ -234,7 +234,11 @@ export class ConstantFoldingVisitor extends MathVisitor {
       if (CopyNode.is(final) && LiteralNode.is(final.source)) {
         final = final.source
       }
-      if (LiteralNode.is(final)) {
+      // A return INSIDE a branch is the branch's value, not the
+      // block's result — the block's result comes from the branch
+      // structure. Only a top-level return promotes a folded literal
+      // to the block's constant result.
+      if (LiteralNode.is(final) && this.isTopLevelReturn(node)) {
         this._fn!.constantResult = final
       }
       return node
@@ -278,77 +282,35 @@ export class ConstantFoldingVisitor extends MathVisitor {
     return node
   }
 
-  override visitIfNode(node: MathIfNode): MathNode {
-    const condValue = node.condition.evaluateConstant()
-    if (condValue === true) {
-      // If-branch matches — fold it, drop the elseIf/else chain
-      // from `allNodes` AND from the AST so the `run` walk doesn't
-      // visit them and overwrite `fn.constantResult`.
-      const next = node.nextFlowNode
-      if (next) {
-        this.removeChainFromAllNodes(next)
-        node.nextFlowNode = undefined
-      }
-      for (let i = 0; i < node.body.length; i++) {
-        node.body[i] = this.visit(node.body[i]) as typeof node.body[0]
-      }
-      return node
-    }
-    if (condValue === false) {
-      // If-branch doesn't match — skip it, recurse into elseIf/else
-      // as if they were the new head.
-      const next = node.nextFlowNode
-      if (next) {
-        // Remove the dead if-branch from allNodes.
-        for (const child of node.body) {
-          this.removeFromAllNodes(child)
-        }
-        // Replace the if-node with its elseIf/else successor in the
-        // body's chain. Easiest: recurse into the successor — the
-        // visitor will handle it as a new head.
-        this.visit(next)
-      }
-      return node
-    }
-    // Condition unknown — fold all branches (imperative lowering
-    // handles the runtime dispatch).
-    return this.genericVisit(node)
-  }
-
   /**
-   * Walk a clause chain (`MathIfNode` → `nextFlowNode` → ...) and
-   * remove every node from `fn.allNodes`. Used when a condition folds
-   * to a known value and the unselected branches are dead code.
+   * True iff the return belongs to the math function's own body (not
+   * to a branch).
    */
-  private removeChainFromAllNodes(start: MathNode): void {
-    const visited = new Set<MathNode>()
-    const queue: MathNode[] = [start]
-    while (queue.length > 0) {
-      const node = queue.shift()!
-      if (visited.has(node)) continue
-      visited.add(node)
-      this.removeFromAllNodes(node)
-      // Recurse into clause successors + body.
-      if (MathIfNode.is(node) && node.nextFlowNode !== undefined) {
-        queue.push(node.nextFlowNode)
-      }
-      if (MathFlowClauseNode.is(node)) {
-        for (const child of node.body) {
-          queue.push(child)
-        }
-      }
-    }
+  private isTopLevelReturn(node: MathReturnNode): boolean {
+    return node.owner === undefined || node.owner === this._fn
   }
 
-  private removeFromAllNodes(node: MathNode): void {
-    if (this._fn) {
-      // Mutate in place — `run` already captured the array reference
-      // and is iterating over the original indices. Reassigning
-      // `allNodes` to a new array would leave the iterator walking
-      // the stale (now-mutated) copy.
-      const idx = this._fn.allNodes.indexOf(node)
-      if (idx >= 0) this._fn.allNodes.splice(idx, 1)
+  override visitIfNode(node: MathIfNode): MathNode {
+    // The branch structure's VALUE is resolved by the branch compiler
+    // (which owns the "first match wins" semantics), so the folder
+    // must NOT drop the chain here: a statically-known condition is
+    // resolved at compile time, where the taken branch's value
+    // replaces the whole chain.
+    //
+    // What the folder does own is the clause's BODY — fold it, and
+    // the rest of the chain, so a dead branch's expressions are
+    // folded too.
+    for (let i = 0; i < node.body.length; i++) {
+      node.body[i] = this.visit(node.body[i]) as typeof node.body[0]
     }
+    const next = node.nextFlowNode
+    if (next) {
+      const visited = this.visit(next)
+      if (visited !== next) {
+        node.nextFlowNode = visited as MathFlowClauseNode
+      }
+    }
+    return node
   }
 
   // -------------------------------------------------------------------------

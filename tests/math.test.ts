@@ -248,3 +248,375 @@ describe('Math integer range', () => {
     })).not.toThrow()
   })
 })
+
+describe('Math branch coverage', () => {
+  // Every path through the block's control flow must produce a
+  // value — the end of the block is not one. A branch that leaves a
+  // path uncovered is a compile error, not a silent zero.
+  test('an if with no else is rejected', () => {
+    expect(() => compile('coverage_no_else', (pack) => {
+      pack.MCFunction('f', () => {
+        const dp = pack.DataVariable(undefined, 'dp_cov_1')
+        pack._.Math(Integer, (math, x: Integer) => {
+          math.if(x.equals(NBT.int(1)), () => { math.return(math.integer(5)) })
+        })(dp.integer())
+      })
+    })).toThrow(/leaves a path with no value/)
+  })
+
+  test('an elseIf chain with no final else is rejected', () => {
+    expect(() => compile('coverage_no_final_else', (pack) => {
+      pack.MCFunction('f', () => {
+        const dp = pack.DataVariable(undefined, 'dp_cov_2')
+        pack._.Math(Integer, (math, x: Integer) => {
+          math.if(x.equals(NBT.int(1)), () => { math.return(math.integer(5)) })
+            .elseIf(x.equals(NBT.int(2)), () => { math.return(math.integer(6)) })
+        })(dp.integer())
+      })
+    })).toThrow(/leaves a path with no value/)
+  })
+
+  test('a switch with no default is rejected', () => {
+    expect(() => compile('coverage_no_default', (pack) => {
+      pack.MCFunction('f', () => {
+        const dp = pack.DataVariable(undefined, 'dp_cov_3')
+        pack._.Math(Integer, (math, x: Integer) => {
+          math.switch(x, [
+            ['case', 1, () => { math.return(math.integer(5)) }],
+          ])
+        })(dp.integer())
+      })
+    })).toThrow(/leaves a path with no value/)
+  })
+
+  test('a branch with no return and no else is rejected', () => {
+    expect(() => compile('coverage_no_return', (pack) => {
+      pack.MCFunction('f', () => {
+        const dp = pack.DataVariable(undefined, 'dp_cov_4')
+        pack._.Math(Integer, (math, x: Integer) => {
+          math.if(x.equals(NBT.int(1)), () => { x.add(NBT.int(1)) })
+        })(dp.integer())
+      })
+    })).toThrow(/leaves a path with no value/)
+  })
+
+  test('an else with no return is rejected', () => {
+    expect(() => compile('coverage_else_no_return', (pack) => {
+      pack.MCFunction('f', () => {
+        const dp = pack.DataVariable(undefined, 'dp_cov_5')
+        pack._.Math(Integer, (math, x: Integer) => {
+          math.if(x.equals(NBT.int(1)), () => { math.return(math.integer(5)) })
+            .else(() => { x.add(NBT.int(1)) })
+        })(dp.integer())
+      })
+    })).toThrow(/leaves a path with no value/)
+  })
+
+  test('straight-line code after a covered branch is accepted', () => {
+    // The code after a branch can never affect the result — the
+    // branch's `else` already covers the path that reaches the end.
+    // The dead chain update is dropped by the dead-store pass.
+    expect(() => compile('coverage_dead_code', (pack) => {
+      pack.MCFunction('f', () => {
+        const dp = pack.DataVariable(undefined, 'dp_cov_6')
+        pack._.Math(Integer, (math, x: Integer) => {
+          math.if(x.equals(NBT.int(1)), () => { math.return(math.integer(5)) })
+            .else(() => { math.return(math.integer(0)) })
+          x.add(NBT.int(1))
+        })(dp.integer())
+      })
+    })).not.toThrow()
+  })
+
+  test('a fully covered chain is accepted', () => {
+    expect(() => compile('coverage_ok', (pack) => {
+      pack.MCFunction('f', () => {
+        const dp = pack.DataVariable(undefined, 'dp_cov_7')
+        pack._.Math(Integer, (math, x: Integer) => {
+          math.if(x.equals(NBT.int(1)), () => { math.return(math.integer(5)) })
+            .elseIf(x.equals(NBT.int(2)), () => { math.return(math.integer(6)) })
+            .else(() => { math.return(math.integer(7)) })
+        })(dp.integer())
+      })
+    })).not.toThrow()
+  })
+
+  test('a nested chain inherits the enclosing else', () => {
+    // The inner chain's false path continues into the outer chain's
+    // `else`, so it is covered.
+    expect(() => compile('coverage_nested', (pack) => {
+      pack.MCFunction('f', () => {
+        const dp = pack.DataVariable(undefined, 'dp_cov_8')
+        pack._.Math(Integer, (math, x: Integer) => {
+          math.if(x.equals(NBT.int(1)), () => {
+            math.if(x.equals(NBT.int(2)), () => { math.return(math.integer(5)) })
+          }).else(() => { math.return(math.integer(0)) })
+        })(dp.integer())
+      })
+    })).not.toThrow()
+  })
+})
+
+describe('Math dead stores', () => {
+  const providerCount = (out: Map<string, string>): number =>
+    [...out.keys()].filter((p) => p.includes('context_float_provider')).length
+
+  // The branch provider inlines the whole chain from its root, so it
+  // never reads a handle's intermediate storage. A chain update whose
+  // storage nobody reads is a dead store — its command AND its
+  // provider file are dropped.
+  test('a chain update the branch never reads is dropped', () => {
+    const out = compile('dead_store', (pack) => {
+      pack.MCFunction('f', () => {
+        const dp = pack.DataVariable(undefined, 'dp_dead')
+        pack._.Math(Float, (math, x: Float) => {
+          math.if(x.equals(NBT.float(4)), () => { math.return(x) })
+            .else(() => { math.return(math.float(0)) })
+          x.add(NBT.float(100))
+        })(dp)
+      })
+    })
+
+    // Only the branch provider survives — the `add` provider and the
+    // command that writes it are gone.
+    expect(providerCount(out)).toBe(1)
+    expect(mcfunctionBody(out, 'f')).not.toContain('op_0')
+    expect(mcfunctionBody(out, 'f')).not.toContain('h_h_0')
+  })
+
+  test('a chain update the result reads is kept', () => {
+    const out = compile('live_store', (pack) => {
+      pack.MCFunction('f', () => {
+        const dp = pack.DataVariable(undefined, 'dp_live')
+        pack._.Math(Float, (math, x: Float) => {
+          x.add(NBT.float(5))
+          math.return(x)
+        })(dp)
+      })
+    })
+
+    // The fold writes the result storage — it is the block's result.
+    expect(providerCount(out)).toBe(1)
+    expect(mcfunctionBody(out, 'f')).toContain('set compute default float')
+  })
+})
+
+describe('Math scalar pass-through', () => {
+  const providerJson = (out: Map<string, string>, family: string): string => {
+    const entry = [...out.entries()].find(([path]) => path.includes(`${family}/`))
+    return entry?.[1] ?? ''
+  }
+
+  // A block that returns its input without mutating a chain has no
+  // chain update for the plan to fold into the result storage — the
+  // returned expression IS the result, and it has to be emitted on
+  // its own.
+  test('a pass-through writes the result', () => {
+    const out = compile('pass_through', (pack) => {
+      pack.MCFunction('f', () => {
+        const dp = pack.DataVariable(undefined, 'dp_pass_through')
+        pack._.Math(Float, (math, v: Float) => {
+          math.return(v)
+        })(dp)
+      })
+    })
+
+    const body = mcfunctionBody(out, 'f')
+    expect(body).toContain('set compute default float')
+    const json = providerJson(out, 'context_float_provider')
+    expect(json).toContain('"type": "storage"')
+    expect(json).toContain('dp_pass_through')
+  })
+
+  test('an integer pass-through is read in the integer context', () => {
+    const out = compile('pass_through_int', (pack) => {
+      pack.MCFunction('f', () => {
+        const dp = pack.DataVariable(undefined, 'dp_pass_through_int')
+        pack._.Math(Integer, (math, v: Integer) => {
+          math.return(v)
+        })(dp.integer())
+      })
+    })
+
+    const body = mcfunctionBody(out, 'f')
+    expect(body).toContain('set compute default integer')
+    const json = providerJson(out, 'context_int_provider')
+    expect(json).toContain('"type": "storage"')
+    // An integer input read in the integer context needs no bridge.
+    expect(json).not.toContain('from_int')
+  })
+})
+
+describe('Math numeric assumptions', () => {
+  const providerJson = (out: Map<string, string>, family: string): string => {
+    const entry = [...out.entries()].find(([path]) => path.includes(`${family}/`))
+    return entry?.[1] ?? ''
+  }
+
+  // The mixed-kind rules the whole tower rests on:
+  //
+  //   - `from_float` truncates TOWARD ZERO, and it truncates the SUM,
+  //     not each operand.
+  //   - `from_int` widens through single precision, so it is exact
+  //     below 2^24 and rounds above it.
+  //
+  // One float operand can't tell "truncate the sum" from "truncate the
+  // operands" — 2 + 2.5 gives 4 either way. Two of them can.
+  test('a mixed-kind chain keeps the operands exact and truncates the sum', () => {
+    const out = compile('assumption_mixed_sum', (pack) => {
+      pack.MCFunction('f', () => {
+        const dp = pack.DataVariable(undefined, 'dp_assume_sum')
+        pack._.Math(Integer, (math, x: Integer) => {
+          math.if(x.equals(NBT.int(2)), () => {
+            x.add(math.float(2.5)).add(math.float(2.5))
+            math.return(x)
+          }).else(() => {
+            math.return(math.integer(0))
+          })
+        })(dp.integer())
+      })
+    })
+
+    const json = providerJson(out, 'context_int_provider')
+    // The operands keep their fraction — the truncation happens at the
+    // integer boundary, on the sum.
+    expect(json).toContain('2.5')
+    expect(json).toContain('"type": "from_float"')
+    expect(json).not.toContain('"value": 2,')
+  })
+
+  test('an integer computed bound is rewritten to an inclusive range', () => {
+    const out = compile('assumption_int_bound', (pack) => {
+      pack.MCFunction('f', () => {
+        const x = pack.DataVariable(undefined, 'dp_assume_bound')
+        const y = pack.DataVariable(undefined, 'dp_assume_bound_y')
+        pack._.Math(Integer, (math, v: Integer) => {
+          const bound = math.integer(y)
+          math.if(v['<'](bound), () => { math.return(math.integer(1)) })
+            .else(() => { math.return(math.integer(0)) })
+        })(x.integer())
+      })
+    })
+
+    const json = providerJson(out, 'context_int_provider')
+    // `x < y` is `(-inf, y - 1]` — the bound becomes a provider
+    // expression, so the comparison stays exact.
+    expect(json).toContain('minecraft:int_value_check')
+    expect(json).toContain('"type": "sub"')
+  })
+
+  test('an integer widened into the float context goes through from_int', () => {
+    const out = compile('assumption_widen', (pack) => {
+      pack.MCFunction('f', () => {
+        const dp = pack.DataVariable(undefined, 'dp_assume_widen')
+        pack._.Math(Float, (math, v: Float) => {
+          math.return(math.multiply(v, math.float(2)))
+        })(dp.integer())
+      })
+    })
+
+    const json = providerJson(out, 'context_float_provider')
+    expect(json).toContain('"type": "from_int"')
+  })
+})
+
+describe('Math NBT operands', () => {
+  const providerJson = (out: Map<string, string>, family: string): string => {
+    const entry = [...out.entries()].find(([path]) => path.includes(`${family}/`))
+    return entry?.[1] ?? ''
+  }
+
+  // An NBT primitive is a TYPED numeric operand — `NBT.int(3)` is an
+  // integer, `NBT.float(2.5)` a float. Unlike a bare number (whose
+  // kind comes from the receiving chain), it carries its own kind, and
+  // the numeric tower bridges it where the contexts meet.
+  test('an NBT int operand stays in the integer context', () => {
+    const out = compile('nbt_operand_int', (pack) => {
+      pack.MCFunction('f', () => {
+        const dp = pack.DataVariable(undefined, 'dp_nbt_int')
+        pack._.Math(Integer, (math, x: Integer) => {
+          math.return(x.add(NBT.int(3)))
+        })(dp.integer())
+      })
+    })
+
+    const json = providerJson(out, 'context_int_provider')
+    expect(json).toContain('"type": "add"')
+    expect(json).not.toContain('from_float')
+  })
+
+  test('an NBT float operand widens an integer chain', () => {
+    const out = compile('nbt_operand_float', (pack) => {
+      pack.MCFunction('f', () => {
+        const dp = pack.DataVariable(undefined, 'dp_nbt_float')
+        pack._.Math(Integer, (math, x: Integer) => {
+          math.return(x.add(NBT.float(2.5)))
+        })(dp.integer())
+      })
+    })
+
+    // The tower widens the chain to float (the sum is 4.5), and the
+    // integer block's boundary truncates the RESULT.
+    const json = providerJson(out, 'context_int_provider')
+    expect(json).toContain('"type": "from_float"')
+    expect(json).toContain('"type": "add"')
+  })
+
+  test('an NBT operand in a comparison keeps the comparison kind', () => {
+    const out = compile('nbt_operand_compare', (pack) => {
+      pack.MCFunction('f', () => {
+        const dp = pack.DataVariable(undefined, 'dp_nbt_compare')
+        pack._.Math(Integer, (math, x: Integer) => {
+          math.if(x.equals(NBT.int(3)), () => { math.return(math.integer(1)) })
+            .else(() => { math.return(math.integer(0)) })
+        })(dp.integer())
+      })
+    })
+
+    const json = providerJson(out, 'context_int_provider')
+    expect(json).toContain('minecraft:int_value_check')
+  })
+
+  test('an NBT float compared against an integer handle runs in the float context', () => {
+    const out = compile('nbt_operand_compare_mixed', (pack) => {
+      pack.MCFunction('f', () => {
+        const dp = pack.DataVariable(undefined, 'dp_nbt_compare_mixed')
+        pack._.Math(Integer, (math, x: Integer) => {
+          math.if(x.equals(NBT.float(2)), () => { math.return(math.integer(1)) })
+            .else(() => { math.return(math.integer(0)) })
+        })(dp.integer())
+      })
+    })
+
+    // The comparison's kind is the widest of its two operands — float —
+    // so the integer side is bridged with `from_int`.
+    const json = providerJson(out, 'context_int_provider')
+    expect(json).toContain('minecraft:float_value_check')
+    expect(json).toContain('"type": "from_int"')
+  })
+
+  test('math.float / math.integer read an NBT primitive in the target context', () => {
+    const out = compile('nbt_operand_constructors', (pack) => {
+      pack.MCFunction('f', () => {
+        pack._.Math(Float, (math) => {
+          math.return(math.add(math.float(NBT.int(3)), math.integer(NBT.float(2.5))))
+        })(NBT.float(1))
+      })
+    })
+
+    // 3.0 (widened from the int) + 2 (the float truncated toward zero
+    // by `from_float`) = 5.0
+    expect(mcfunctionBody(out, 'f')).toContain('set value 5f')
+  })
+
+  test('an out-of-range NBT int is rejected', () => {
+    expect(() => compile('nbt_operand_overflow', (pack) => {
+      pack.MCFunction('f', () => {
+        const dp = pack.DataVariable(undefined, 'dp_nbt_overflow')
+        pack._.Math(Integer, (math, x: Integer) => {
+          math.return(x.add(NBT.int(3000000000)))
+        })(dp.integer())
+      })
+    })).toThrow(/out of range/)
+  })
+})

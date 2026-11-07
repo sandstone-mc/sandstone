@@ -81,6 +81,26 @@ export abstract class MathNode {
    */
   index?: number
 
+  /**
+   * The flow container this node was created in — the math function's
+   * body, or a branch / case body.
+   *
+   * The math stack (see `MathFunctionNode#balanceContext`) holds the
+   * active container while a body callback runs, so the stack top at
+   * construction time IS the owner.
+   *
+   * The chain analysis uses it to tell an update that belongs to the
+   * straight-line flow from one that belongs to a branch: a branch's
+   * updates are compiled INTO the branch's provider, not emitted as
+   * commands of their own — they only happen when the branch is
+   * taken.
+   *
+   * `undefined` for nodes built outside any math function (an input
+   * rebound before the function's AST exists) — those belong to the
+   * straight-line flow.
+   */
+  owner?: MathNode
+
   constructor(public sandstoneCore: SandstoneCore) {
     // Auto-register every constructed node with the enclosing
     // `MathFunctionNode`'s computed-trail list, so debug inspectors can
@@ -112,20 +132,25 @@ export abstract class MathNode {
     // unrelated classes.
     const stack = sandstoneCore.mathStack
     const top = stack[stack.length - 1]
-    if (
-      top &&
-      typeof top === 'object' &&
-      'allNodes' in top &&
-      Array.isArray((top as { allNodes?: unknown }).allNodes)
-    ) {
-      const allNodes = (top as { allNodes: MathNode[] }).allNodes
-      const counters = (top as { perClassCounters?: Map<string, number> }).perClassCounters
-      if (counters) {
-        const cls = this.constructor.name
-        this.index = counters.get(cls) ?? 0
-        counters.set(cls, this.index + 1)
+    // The stack top is the container whose body callback is running —
+    // the math function itself, or a branch / case body.
+    this.owner = top
+    if (top) {
+      // Every node created in a container's context counts towards
+      // it — a branch uses this to tell whether its body had any
+      // statement (a body that only MUTATES a handle leaves the
+      // clause's own `body` empty).
+      top.createdNodeCount++
+      const allNodes = top.allNodes
+      if (allNodes) {
+        const counters = top.perClassCounters
+        if (counters) {
+          const cls = this.constructor.name
+          this.index = counters.get(cls) ?? 0
+          counters.set(cls, this.index + 1)
+        }
+        allNodes.push(this)
       }
-      allNodes.push(this)
     }
   }
 

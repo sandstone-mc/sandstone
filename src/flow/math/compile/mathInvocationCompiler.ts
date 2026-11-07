@@ -3,10 +3,25 @@ import type { SandstoneCore } from '../../../core/sandstoneCore'
 import type { DataPointClass } from '../../../variables/Data'
 import { LiteralNode, StorageRefNode } from '../ast/nodes/leaves'
 import { MathExpressionNode } from '../ast/MathExpressionNode'
+import type { MathKind } from '../ast/MathExpressionNode'
 import { MathReturnNode } from '../ast/nodes/control'
+import type { MathFunctionNode } from '../ast/MathFunctionNode'
 import { NBTFloat, NBTInt } from '../../../variables/nbt/NBTs'
-import { buildSharedPlanContent, buildProviderName, coerceToBlockKind } from './multiStatementEmit'
-import { compileFloatProvider, compileIntProvider } from './mathProviderCompiler'
+import {
+  buildSharedPlanContent,
+  buildProviderName,
+  coerceLiteralToBlockKind,
+  coerceToBlockKind,
+} from './multiStatementEmit'
+import { compileBranchResult } from './branchCompiler'
+import type { JsonContextFloatProvider } from '../../../arguments/generated/_json/data/number_provider/context_float.ts'
+import type { JsonContextIntProvider } from '../../../arguments/generated/_json/data/number_provider/context_int.ts'
+import {
+  compileFloatOperand,
+  compileFloatProvider,
+  compileIntOperand,
+  compileIntProvider,
+} from './mathProviderCompiler'
 import { runDefaultMathVisitors } from '../visitors'
 import type { BridgeGroup } from './groupBridges'
 import type { MathInvocationNode } from './MathInvocationNode'
@@ -81,6 +96,82 @@ export function compileMathInvocation(
   bridge: MathInvocationNode,
 ): void {
   compileMathInvocationGroup(core, { key: 'single', bridges: [bridge] })
+}
+
+/**
+ * Emit the value a math block returned when nothing else wrote it.
+ *
+ * A block that returns a value WITHOUT mutating a chain — a
+ * pass-through, `_.Math(Float, (math, v) => { _.return(v) })(dp)` —
+ * has no chain update for the plan to fold into the result storage,
+ * and no branch to fold either. The result would simply never be
+ * written, and the caller would read the storage's default.
+ *
+ * So take the returned expression and emit it directly: a constant as
+ * a literal, anything else as a provider read in the block's numeric
+ * context (which is where the kind bridging — `from_int` / `from_float`
+ * — comes from).
+ *
+ * The record path has its own equivalent — it reads each field's
+ * expression straight out of the `MathReturnNode`.
+ */
+function emitScalarResult(
+  core: SandstoneCore,
+  bridge: MathInvocationNode,
+  fn: MathFunctionNode,
+  resultDataPoint: DataPointClass<'storage'>,
+): void {
+  const retNode = fn.body.find((n) => MathReturnNode.is(n))
+  if (!MathReturnNode.is(retNode)) return
+  // The returned value is the handle's node snapshot — a math
+  // expression.
+  const value = retNode.value
+  if (!MathExpressionNode.is(value)) return
+
+  const kind: MathKind = fn.outputs.kind === 'scalar' ? fn.outputs.value : 'float'
+
+  // A constant result — write the literal.
+  if (LiteralNode.is(value)) {
+    const literal = coerceLiteralToBlockKind(value, kind)
+    const nbt = literal.kind === 'integer'
+      ? new NBTInt(literal.value)
+      : new NBTFloat(literal.value)
+    core.pack.commands.data.modify(resultDataPoint).set.value(nbt as never)
+    return
+  }
+
+  // Anything else — compile it into a provider and read it in the
+  // block's numeric context.
+  const providerName = buildProviderName(
+    fn,
+    `result_${bridge.callIdx}`,
+    `${bridge.callIdx}_result`,
+  )
+  if (kind === 'integer') {
+    core.pack.commands.data
+      .modify(resultDataPoint)
+      .set
+      .compute
+      .default()
+      .integer(providerName)
+    fn.queueProvider({
+      name: providerName,
+      kind: 'integer',
+      json: compileIntOperand(value),
+    })
+    return
+  }
+  core.pack.commands.data
+    .modify(resultDataPoint)
+    .set
+    .compute
+    .default()
+    .float(providerName)
+  fn.queueProvider({
+    name: providerName,
+    kind: 'float',
+    json: compileFloatOperand(value),
+  })
 }
 
 /**
@@ -267,6 +358,29 @@ export function compileMathInvocationGroup(
           .float(cmd.providerName)
       }
 
+      // The block's control flow: the branch structure IS the result.
+      // It's one provider (`conditional` / `number_dispatcher`) that
+      // MC evaluates lazily, written to the result storage after the
+      // straight-line updates have run.
+      if (content.resultProvider) {
+        const branchProvider = content.resultProvider
+        if (branchProvider.kind === 'integer') {
+          core.pack.commands.data
+            .modify(resultDataPoint)
+            .set
+            .compute
+            .default()
+            .integer(branchProvider.name)
+        } else {
+          core.pack.commands.data
+            .modify(resultDataPoint)
+            .set
+            .compute
+            .default()
+            .float(branchProvider.name)
+        }
+      }
+
       // Final-return fold: if the last op already wrote to THIS
       // bridge's result storage, skip the trailing `set from`. The
       // shared plan doesn't know the per-bridge resultDataPoint, so
@@ -274,11 +388,10 @@ export function compileMathInvocationGroup(
       // last command is `isFinalFold`, the math result is already at
       // `resultDataPoint` and no copy is needed.
       const lastCmd = content.commands[content.commands.length - 1]
-      if (
-        content.returnHandleName &&
-        lastCmd &&
-        !lastCmd.isFinalFold
-      ) {
+      const hasTrailingCopy = Boolean(
+        content.returnHandleName && lastCmd && !lastCmd.isFinalFold,
+      )
+      if (hasTrailingCopy) {
         // No folding in the shared plan for this group — emit a
         // trailing `set from <lastHandleStorage> → <bridgeResultStorage>`.
         // Source is the last handle's storage (the chain's terminal
@@ -289,6 +402,17 @@ export function compileMathInvocationGroup(
           .set
           .from
           .storage(lastHandleDp.currentTarget as any, lastHandleDp.path as any)
+      }
+
+      // Nothing wrote the result — the block returned a value the
+      // chain analysis never turned into an update (no chain was
+      // mutated), and there is no branch to fold. Emit the returned
+      // expression itself.
+      const resultWritten = content.resultProvider !== undefined
+        || content.commands.some((cmd) => cmd.isFinalFold)
+        || hasTrailingCopy
+      if (!resultWritten) {
+        emitScalarResult(core, bridge, bridgeFn, resultDataPoint)
       }
     } else if (!isRecordOutput) {
       // Non-primary-fn bridge: the shared content describes the
@@ -307,6 +431,10 @@ export function compileMathInvocationGroup(
           .modify(resultDataPoint)
           .set
           .value(nbt as never)
+      } else {
+        // No constant result and no chain update to fold — the
+        // returned expression is the result.
+        emitScalarResult(core, bridge, bridgeFn, resultDataPoint)
       }
     }
 
@@ -341,6 +469,43 @@ export function compileMathInvocationGroup(
             undefined,
             `math_${bridgeFn.resourceName ?? '0'}_${fieldName}${bridge.useCallNamespace ? `_${bridge.callIdx}` : ''}`,
           )
+        // A BRANCH in a record block: the branch structure IS the
+        // field's value — one provider per field, each picking its
+        // own expression out of the branch's returned record.
+        const branchProvider = compileBranchResult(bridgeFn, fieldKind, fieldName)
+        if (branchProvider) {
+          const branchName = buildProviderName(
+            bridgeFn,
+            `field_${fieldName}_${bridge.callIdx}`,
+            `${bridge.callIdx}_${fieldName}`,
+          )
+          if (fieldKind === 'integer') {
+            core.pack.commands.data
+              .modify(fieldDp)
+              .set
+              .compute
+              .default()
+              .integer(branchName)
+            bridgeFn.queueProvider({
+              name: branchName,
+              kind: 'integer',
+              json: branchProvider as JsonContextIntProvider,
+            })
+            continue
+          }
+          core.pack.commands.data
+            .modify(fieldDp)
+            .set
+            .compute
+            .default()
+            .float(branchName)
+          bridgeFn.queueProvider({
+            name: branchName,
+            kind: 'float',
+            json: branchProvider as JsonContextFloatProvider,
+          })
+          continue
+        }
         const constantValue = bridgeFn.recordConstantResult?.[fieldName]
         if (constantValue !== undefined) {
           // Folded field — emit `set value` directly. The field's

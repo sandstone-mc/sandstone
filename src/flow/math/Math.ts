@@ -1,17 +1,21 @@
 import type { SandstoneCore } from '../../core/sandstoneCore'
 import { DataPointClass } from 'sandstone/variables/Data'
-import type { DataPointPickClass } from 'sandstone/core/Macro'
+import { DataPointPickClass } from 'sandstone/core/Macro'
 import { Score } from 'sandstone/variables/Score'
 import {
   CopyNode,
   EnchantmentLevelNode,
   EnvironmentAttributeNode,
+  isNBTNumericOperand,
   LiteralNode,
+  nbtOperandKind,
+  nbtOperandToLiteral,
   PickNode,
   RandomNode,
   ScoreboardRefNode,
   StorageRefNode,
 } from './ast/nodes/leaves'
+import type { NBTNumericOperand } from './ast/nodes/leaves'
 import {
   AggregateNode,
   ArcCosineNode,
@@ -27,16 +31,22 @@ import {
   floatFromDataPoint,
   floatFromFloat,
   floatFromLiteral,
+  floatFromNBT,
   floatFromScore,
   handleFromKind,
+  handleFromNBT,
+  handleToExpr,
   integerFromDataPoint,
+  integerFromFloat,
   integerFromInteger,
   integerFromLiteral,
+  integerFromNBT,
   integerFromScore,
   Float,
   Integer,
 } from './ast/handles'
-import type { MathKind } from './ast/MathExpressionNode'
+import type { FloatOperand } from './ast/handles'
+import type { MathExpressionNode, MathKind } from './ast/MathExpressionNode'
 import { MathConditionNode } from './ast/MathConditionNode'
 import {
   andOf,
@@ -49,8 +59,10 @@ import {
   MathLoopNode,
   MathReturnNode,
 } from './ast/nodes/control'
+import type { MathCaseValue } from './ast/nodes/control'
 import { MathFunctionNode, type MathFunctionOutputs } from './ast/MathFunctionNode'
-import { MathIfStatement } from './ast/MathIfStatement'
+import { MathIfStatement, MathIfReturnOnlyStatement } from './ast/MathIfStatement'
+import { snapshotMathValue } from './ast/nodes/control'
 import {
   MathSwitchStatement,
   executeMathSwitchTuple,
@@ -194,8 +206,9 @@ export class SandstoneMath<R = MathOutputsSchema> {
   // Constructors.
   // -------------------------------------------------------------------------
 
-  float(init: number | Float | Score | DataPointClass | DataPointPickClass = 0): Float {
+  float(init: number | Float | Score | DataPointClass | DataPointPickClass | NBTNumericOperand = 0): Float {
     if (typeof init === 'number') return floatFromLiteral(this.sandstoneCore, init)
+    if (isNBTNumericOperand(init)) return floatFromNBT(this.sandstoneCore, init)
     if (init instanceof Score) return floatFromScore(this.sandstoneCore, init)
     if (init instanceof DataPointClass || (init as { constructor?: { name?: string } }).constructor?.name === 'DataPointPickClass') {
       return floatFromDataPoint(this.sandstoneCore, init as DataPointClass | DataPointPickClass)
@@ -203,13 +216,17 @@ export class SandstoneMath<R = MathOutputsSchema> {
     return floatFromFloat(this.sandstoneCore, init as Float)
   }
 
-  integer(init: number | Integer | Score | DataPointClass | DataPointPickClass = 0): Integer {
+  integer(init: number | Integer | Float | Score | DataPointClass | DataPointPickClass | NBTNumericOperand = 0): Integer {
     if (typeof init === 'number') return integerFromLiteral(this.sandstoneCore, init)
+    if (isNBTNumericOperand(init)) return integerFromNBT(this.sandstoneCore, init)
     if (init instanceof Score) return integerFromScore(this.sandstoneCore, init)
-    if (init instanceof DataPointClass || (init as { constructor?: { name?: string } }).constructor?.name === 'DataPointPickClass') {
-      return integerFromDataPoint(this.sandstoneCore, init as DataPointClass | DataPointPickClass)
+    if (init instanceof DataPointClass || init instanceof DataPointPickClass) {
+      return integerFromDataPoint(this.sandstoneCore, init)
     }
-    return integerFromInteger(this.sandstoneCore, init as Integer)
+    // A float read in the integer context is TRUNCATED toward zero —
+    // exactly what MC's `from_float` provider does.
+    if (init.kind === 'float') return integerFromFloat(this.sandstoneCore, init)
+    return integerFromInteger(this.sandstoneCore, init)
   }
 
   // -------------------------------------------------------------------------
@@ -220,11 +237,11 @@ export class SandstoneMath<R = MathOutputsSchema> {
   sum(...values: Float[]): Float
   sum(values: Integer[]): Integer
   sum(...values: Integer[]): Integer
-  sum(values: (Float | Integer)[]): Float
-  sum(...values: (Float | Integer)[]): Float
-  sum(values: (Float | Integer)[], result: 'float'): Float
-  sum(values: (Float | Integer)[], result: 'integer'): Integer
-  sum(...args: ((Float | Integer)[] | Float | Integer | 'float' | 'integer')[]): any {
+  sum(values: (Float | Integer | NBTNumericOperand)[]): Float
+  sum(...values: (Float | Integer | NBTNumericOperand)[]): Float
+  sum(values: (Float | Integer | NBTNumericOperand)[], result: 'float'): Float
+  sum(values: (Float | Integer | NBTNumericOperand)[], result: 'integer'): Integer
+  sum(...args: ((Float | Integer | NBTNumericOperand)[] | Float | Integer | NBTNumericOperand | 'float' | 'integer')[]): any {
     return aggregate(this.sandstoneCore, 'add', args, 'float', 'add')
   }
 
@@ -232,11 +249,11 @@ export class SandstoneMath<R = MathOutputsSchema> {
   product(...values: Float[]): Float
   product(values: Integer[]): Integer
   product(...values: Integer[]): Integer
-  product(values: (Float | Integer)[]): Float
-  product(...values: (Float | Integer)[]): Float
-  product(values: (Float | Integer)[], result: 'float'): Float
-  product(values: (Float | Integer)[], result: 'integer'): Integer
-  product(...args: ((Float | Integer)[] | Float | Integer | 'float' | 'integer')[]): any {
+  product(values: (Float | Integer | NBTNumericOperand)[]): Float
+  product(...values: (Float | Integer | NBTNumericOperand)[]): Float
+  product(values: (Float | Integer | NBTNumericOperand)[], result: 'float'): Float
+  product(values: (Float | Integer | NBTNumericOperand)[], result: 'integer'): Integer
+  product(...args: ((Float | Integer | NBTNumericOperand)[] | Float | Integer | NBTNumericOperand | 'float' | 'integer')[]): any {
     return aggregate(this.sandstoneCore, 'mul', args, 'float', 'mul')
   }
 
@@ -244,11 +261,11 @@ export class SandstoneMath<R = MathOutputsSchema> {
   average(...values: Float[]): Float
   average(values: Integer[]): Integer
   average(...values: Integer[]): Integer
-  average(values: (Float | Integer)[]): Float
-  average(...values: (Float | Integer)[]): Float
-  average(values: (Float | Integer)[], result: 'float'): Float
-  average(values: (Float | Integer)[], result: 'integer'): Integer
-  average(...args: ((Float | Integer)[] | Float | Integer | 'float' | 'integer')[]): any {
+  average(values: (Float | Integer | NBTNumericOperand)[]): Float
+  average(...values: (Float | Integer | NBTNumericOperand)[]): Float
+  average(values: (Float | Integer | NBTNumericOperand)[], result: 'float'): Float
+  average(values: (Float | Integer | NBTNumericOperand)[], result: 'integer'): Integer
+  average(...args: ((Float | Integer | NBTNumericOperand)[] | Float | Integer | NBTNumericOperand | 'float' | 'integer')[]): any {
     return aggregate(this.sandstoneCore, 'avg', args, 'float', 'avg')
   }
 
@@ -256,11 +273,11 @@ export class SandstoneMath<R = MathOutputsSchema> {
   // Binary operations — produce fresh intermediates.
   // -------------------------------------------------------------------------
 
-  subtract(a: Float, b: Float | Integer): Float
-  subtract(a: Integer, b: Float | Integer): Integer
-  subtract(a: Float | Integer, b: Float | Integer): any {
+  subtract(a: Float, b: Float | Integer | NBTNumericOperand): Float
+  subtract(a: Integer, b: Float | Integer | NBTNumericOperand): Integer
+  subtract(a: Float | Integer, b: Float | Integer | NBTNumericOperand): any {
     const op: BinaryOp = 'sub'
-    if (a.kind === 'integer' && b.kind === 'integer') {
+    if (a.kind === 'integer' && operandKindOf(b) === 'integer') {
       return binaryOp(this.sandstoneCore, op, a, b, 'integer')
     }
     return binaryOp(this.sandstoneCore, op, a, b, 'float')
@@ -270,9 +287,9 @@ export class SandstoneMath<R = MathOutputsSchema> {
   add(...values: Float[]): Float
   add(values: Integer[]): Integer
   add(...values: Integer[]): Integer
-  add(values: (Float | Integer)[]): Float
-  add(...values: (Float | Integer)[]): Float
-  add(...args: ((Float | Integer)[] | Float | Integer)[]): Float | Integer {
+  add(values: (Float | Integer | NBTNumericOperand)[]): Float
+  add(...values: (Float | Integer | NBTNumericOperand)[]): Float
+  add(...args: ((Float | Integer | NBTNumericOperand)[] | Float | Integer | NBTNumericOperand)[]): Float | Integer {
     return aggregate(this.sandstoneCore, 'add', args, 'float', 'add')
   }
 
@@ -280,48 +297,52 @@ export class SandstoneMath<R = MathOutputsSchema> {
   multiply(...values: Float[]): Float
   multiply(values: Integer[]): Integer
   multiply(...values: Integer[]): Integer
-  multiply(values: (Float | Integer)[]): Float
-  multiply(...values: (Float | Integer)[]): Float
-  multiply(...args: ((Float | Integer)[] | Float | Integer)[]): Float | Integer {
+  multiply(values: (Float | Integer | NBTNumericOperand)[]): Float
+  multiply(...values: (Float | Integer | NBTNumericOperand)[]): Float
+  multiply(...args: ((Float | Integer | NBTNumericOperand)[] | Float | Integer | NBTNumericOperand)[]): Float | Integer {
     return aggregate(this.sandstoneCore, 'mul', args, 'float', 'mul')
   }
 
-  divide(a: Float, b: Float | Integer): Float
-  divide(a: Integer, b: Float | Integer, floored?: boolean): Integer
-  divide(a: Float | Integer, b: Float | Integer, floored = true): any {
-    const op: BinaryOp = a.kind === 'integer' && b.kind === 'integer' && floored ? 'floor_div' : 'div'
-    return binaryOp(this.sandstoneCore, op, a, b, a.kind === 'integer' && b.kind === 'integer' ? 'integer' : 'float')
+  divide(a: Float, b: Float | Integer | NBTNumericOperand): Float
+  divide(a: Integer, b: Float | Integer | NBTNumericOperand, floored?: boolean): Integer
+  divide(a: Float | Integer, b: Float | Integer | NBTNumericOperand, floored = true): any {
+    const bothInt = a.kind === 'integer' && operandKindOf(b) === 'integer'
+    const op: BinaryOp = bothInt && floored ? 'floor_div' : 'div'
+    return binaryOp(this.sandstoneCore, op, a, b, bothInt ? 'integer' : 'float')
   }
 
-  modulo(a: Float, b: Float | Integer): Float
-  modulo(a: Integer, b: Float | Integer, floored?: boolean): Integer
-  modulo(a: Float | Integer, b: Float | Integer, floored = true): any {
-    const op: BinaryOp = a.kind === 'integer' && b.kind === 'integer' && floored ? 'floor_mod' : 'mod'
-    return binaryOp(this.sandstoneCore, op, a, b, a.kind === 'integer' && b.kind === 'integer' ? 'integer' : 'float')
+  modulo(a: Float, b: Float | Integer | NBTNumericOperand): Float
+  modulo(a: Integer, b: Float | Integer | NBTNumericOperand, floored?: boolean): Integer
+  modulo(a: Float | Integer, b: Float | Integer | NBTNumericOperand, floored = true): any {
+    const bothInt = a.kind === 'integer' && operandKindOf(b) === 'integer'
+    const op: BinaryOp = bothInt && floored ? 'floor_mod' : 'mod'
+    return binaryOp(this.sandstoneCore, op, a, b, bothInt ? 'integer' : 'float')
   }
 
   abs(value: Float): Float
   abs(value: Integer): Integer
-  abs(value: Float | Integer): any {
-    return unaryOp(this.sandstoneCore, 'abs', value, value.kind)
+  abs(value: Float | Integer | NBTNumericOperand): any {
+    const v = this.unaryOperand(value)
+    return unaryOp(this.sandstoneCore, 'abs', v, v.kind)
   }
 
-  exponentiate(a: Float, b: Float | Integer): Float
-  exponentiate(a: Integer, b: Float | Integer): Integer
-  exponentiate(a: Float | Integer, b: Float | Integer): any {
+  exponentiate(a: Float, b: Float | Integer | NBTNumericOperand): Float
+  exponentiate(a: Integer, b: Float | Integer | NBTNumericOperand): Integer
+  exponentiate(a: Float | Integer, b: Float | Integer | NBTNumericOperand): any {
     const op: BinaryOp = 'pow'
-    return binaryOp(this.sandstoneCore, op, a, b, a.kind === 'float' || b.kind === 'float' ? 'float' : 'integer')
+    const bKind = operandKindOf(b)
+    return binaryOp(this.sandstoneCore, op, a, b, a.kind === 'float' || bKind === 'float' ? 'float' : 'integer')
   }
 
-  sqrt(value: Float): Float {
-    return unaryOp(this.sandstoneCore, 'sqrt', value, 'float')
+  sqrt(value: Float | NBTNumericOperand): Float {
+    return unaryOp(this.sandstoneCore, 'sqrt', this.unaryOperand(value), 'float')
   }
 
   vectorLength(components: Float[]): Float
   vectorLength(...components: Float[]): Float
-  vectorLength(components: (Float | Integer)[]): Float
-  vectorLength(...components: (Float | Integer)[]): Float
-  vectorLength(...args: ((Float | Integer)[] | Float | Integer)[]): any {
+  vectorLength(components: (Float | Integer | NBTNumericOperand)[]): Float
+  vectorLength(...components: (Float | Integer | NBTNumericOperand)[]): Float
+  vectorLength(...args: ((Float | Integer | NBTNumericOperand)[] | Float | Integer | NBTNumericOperand)[]): any {
     return aggregate(this.sandstoneCore, 'length', args as never, 'float', 'length')
   }
 
@@ -329,20 +350,20 @@ export class SandstoneMath<R = MathOutputsSchema> {
   // Rounding — unary. Float-only per placeholder signature.
   // -------------------------------------------------------------------------
 
-  ceil(value: Float): Float { return unaryOp(this.sandstoneCore, 'ceil', value, 'float') }
-  truncate(value: Float): Float { return unaryOp(this.sandstoneCore, 'truncate', value, 'float') }
-  round(value: Float): Float { return unaryOp(this.sandstoneCore, 'round', value, 'float') }
-  floor(value: Float): Float { return unaryOp(this.sandstoneCore, 'floor', value, 'float') }
+  ceil(value: Float | NBTNumericOperand): Float { return unaryOp(this.sandstoneCore, 'ceil', this.unaryOperand(value), 'float') }
+  truncate(value: Float | NBTNumericOperand): Float { return unaryOp(this.sandstoneCore, 'truncate', this.unaryOperand(value), 'float') }
+  round(value: Float | NBTNumericOperand): Float { return unaryOp(this.sandstoneCore, 'round', this.unaryOperand(value), 'float') }
+  floor(value: Float | NBTNumericOperand): Float { return unaryOp(this.sandstoneCore, 'floor', this.unaryOperand(value), 'float') }
 
   // -------------------------------------------------------------------------
   // Trig — unary. Float-only. arcSine/arcCosine throw (polyfill gap).
   // -------------------------------------------------------------------------
 
-  sine(angle: Float): Float { return unaryOp(this.sandstoneCore, 'sin', angle, 'float') }
+  sine(angle: Float | NBTNumericOperand): Float { return unaryOp(this.sandstoneCore, 'sin', this.unaryOperand(angle), 'float') }
   arcSine(ratio: Float): Float {
     return floatFromNode(this.sandstoneCore, new ArcSineNode(this.sandstoneCore, ratio.node))
   }
-  cosine(angle: Float): Float { return unaryOp(this.sandstoneCore, 'cos', angle, 'float') }
+  cosine(angle: Float | NBTNumericOperand): Float { return unaryOp(this.sandstoneCore, 'cos', this.unaryOperand(angle), 'float') }
   arcCosine(ratio: Float): Float {
     return floatFromNode(this.sandstoneCore, new ArcCosineNode(this.sandstoneCore, ratio.node))
   }
@@ -358,14 +379,14 @@ export class SandstoneMath<R = MathOutputsSchema> {
    * follows it: an integer random yields an `Integer` handle (which
    * lowers to MC's `uniform` INT provider), a float one a `Float`.
    */
-  random(range: { min?: Float | Integer; max?: Float | Integer }, result: 'integer'): Integer
-  random(range?: { min?: Float | Integer; max?: Float | Integer }, result?: 'float'): Float
+  random(range: { min?: Float | Integer | NBTNumericOperand; max?: Float | Integer | NBTNumericOperand }, result: 'integer'): Integer
+  random(range?: { min?: Float | Integer | NBTNumericOperand; max?: Float | Integer | NBTNumericOperand }, result?: 'float'): Float
   random(
-    range: { min?: Float | Integer; max?: Float | Integer } = {},
+    range: { min?: Float | Integer | NBTNumericOperand; max?: Float | Integer | NBTNumericOperand } = {},
     result: 'float' | 'integer' = 'float',
   ): Float | Integer {
-    const minNode = range.min ? (range.min as Float | Integer).node : undefined
-    const maxNode = range.max ? (range.max as Float | Integer).node : undefined
+    const minNode = range.min ? operandNode(this.sandstoneCore, range.min) : undefined
+    const maxNode = range.max ? operandNode(this.sandstoneCore, range.max) : undefined
     const node = new RandomNode(this.sandstoneCore, minNode, maxNode, result)
     return handleFromKind(this.sandstoneCore, node, node.kind)
   }
@@ -375,12 +396,14 @@ export class SandstoneMath<R = MathOutputsSchema> {
    * kind decides the result: integer values yield an `Integer` handle
    * (MC's `weighted_list` INT provider), float ones a `Float`.
    */
-  pick(values: { value: Integer; weight: number | Float }[]): Integer
-  pick(values: { value: Float; weight: number | Float }[]): Float
-  pick(values: { value: Float; weight: number | Float }[] | { value: Integer; weight: number | Float }[]) {
+  pick(values: { value: Integer; weight: number | Float | NBTNumericOperand }[]): Integer
+  pick(values: { value: Float; weight: number | Float | NBTNumericOperand }[]): Float
+  pick(values: { value: Float | Integer | NBTNumericOperand; weight: number | Float | NBTNumericOperand }[]) {
     const entries = values.map((entry) => {
-      const value = (entry.value as Float | Integer).node
-      const weight = typeof entry.weight === 'number' ? entry.weight : (entry.weight as Float | Integer).node
+      const value = operandNode(this.sandstoneCore, entry.value)
+      const weight = typeof entry.weight === 'number'
+        ? entry.weight
+        : operandNode(this.sandstoneCore, entry.weight)
       return { value, weight }
     })
     const node = new PickNode(this.sandstoneCore, entries)
@@ -403,14 +426,15 @@ export class SandstoneMath<R = MathOutputsSchema> {
   // -------------------------------------------------------------------------
 
   if(condition: MathConditionNode, callback: () => void): MathIfStatement
-  if(condition: MathConditionNode): MathIfStatement
+  if(condition: MathConditionNode): MathIfReturnOnlyStatement
   if(condition: MathConditionNode, callback?: () => void): any {
     if (callback) {
       return new MathIfStatement(this.sandstoneCore, condition, callback)
     }
-    return new MathIfStatement(this.sandstoneCore, condition, () => {
-      throw new Error('Math if without callback requires a body — use `_.if(cond, () => {...})`.')
-    })
+    // `_.if(cond)` with no body — the RETURN-ONLY form. The clause
+    // is created by the `.return(...)` that follows it; there's no
+    // else chain (use the callback form for that).
+    return new MathIfReturnOnlyStatement(this.sandstoneCore, condition)
   }
 
   and(...conditions: MathConditionNode[]): MathConditionNode
@@ -439,28 +463,7 @@ export class SandstoneMath<R = MathOutputsSchema> {
    * pass through.
    */
   private snapshotValue(v: unknown): unknown {
-    if (v === null || v === undefined) return v
-    if (Array.isArray(v)) return v.map((x) => this.snapshotValue(x))
-    if (typeof v === 'object') {
-      const handleLike = v as { node?: unknown; [k: string]: unknown }
-      // Handle-shaped: `{ node: MathExpressionNode, … }` — store the
-      // current expression so subsequent `*=` mutations don't shift
-      // what this return shows.
-      if (
-        handleLike.node !== undefined &&
-        typeof handleLike.node === 'object' &&
-        handleLike.node !== null
-      ) {
-        return handleLike.node
-      }
-      // Plain record: snapshot each entry.
-      const result: Record<string, unknown> = {}
-      for (const [k, val] of Object.entries(v as Record<string, unknown>)) {
-        result[k] = this.snapshotValue(val)
-      }
-      return result
-    }
-    return v
+    return snapshotMathValue(v)
   }
 
   /**
@@ -494,18 +497,18 @@ export class SandstoneMath<R = MathOutputsSchema> {
   }
 
   for(
-    initial: number | Float | Integer,
+    initial: number | Float | Integer | NBTNumericOperand,
     end: (iterator: Float | Integer) => MathConditionNode,
     iterate: (iterator: Float | Integer) => Float | Integer,
-    callback: (iterator: Float | Integer | number, _continue: () => void) => unknown,
+    callback: (iterator: Float | Integer | number | NBTNumericOperand, _continue: () => void) => unknown,
   ): MathLoopNode
   for(
-    range: [start: number | Float | Integer, end: number | Float | Integer],
+    range: [start: number | Float | Integer | NBTNumericOperand, end: number | Float | Integer | NBTNumericOperand],
     type: 'iterate',
     callback: (iterator: Float | Integer, _continue: () => void) => unknown,
   ): MathLoopNode
   for(
-    arg1: number | Float | Integer | [start: number | Float | Integer, end: number | Float | Integer],
+    arg1: number | Float | Integer | NBTNumericOperand | [start: number | Float | Integer | NBTNumericOperand, end: number | Float | Integer | NBTNumericOperand],
     arg2: ((iterator: Float | Integer) => MathConditionNode) | 'iterate',
     arg3: ((iterator: Float | Integer) => Float | Integer) | ((iterator: Float | Integer, _continue: () => void) => unknown),
     arg4?: (iterator: Float | Integer, _continue: () => void) => unknown,
@@ -513,10 +516,10 @@ export class SandstoneMath<R = MathOutputsSchema> {
     if (arg2 === 'iterate' && Array.isArray(arg1)) {
       // Range form: `_.for([start, end], 'iterate', cb)`. Defaults: step
       // = `it['+='](1)`, end-condition = `it['=='](end)`.
-      const range = arg1 as [number | Float | Integer, number | Float | Integer]
+      const range = arg1 as [number | Float | Integer | NBTNumericOperand, number | Float | Integer | NBTNumericOperand]
       const start = range[0]
       const end = range[1]
-      const endHandle: Float | Integer = typeof end === 'number' ? this.float(end) : end
+      const endHandle: Float | Integer = this.numericHandle(end)
       const cb = arg3 as (iterator: Float | Integer, _continue: () => void) => unknown
       const iterateFn = (it: Float | Integer): Float | Integer => it['+='](1)
       const stubIterator = this.float(0)
@@ -530,10 +533,10 @@ export class SandstoneMath<R = MathOutputsSchema> {
     }
     if (typeof arg2 === 'function') {
       // Explicit form: `_.for(initial, end, iterate, cb)`.
-      const initial = arg1 as number | Float | Integer
-      const cb = (arg4 ?? arg3) as (iterator: Float | Integer | number, _continue: () => void) => unknown
+      const initial = arg1 as number | Float | Integer | NBTNumericOperand
+      const cb = (arg4 ?? arg3) as (iterator: Float | Integer | number | NBTNumericOperand, _continue: () => void) => unknown
       const realIterate = arg3 as (iterator: Float | Integer) => Float | Integer
-      const stubIterator: Float | Integer = typeof initial === 'number' ? this.float(0) : initial
+      const stubIterator: Float | Integer = this.numericHandle(initial)
       const condition = arg2(stubIterator)
       return new MathLoopNode(
         this.sandstoneCore,
@@ -548,11 +551,35 @@ export class SandstoneMath<R = MathOutputsSchema> {
     value: ValueType,
     cases: MathSwitchCaseTuple[],
   ): MathSwitchStatement {
-    return executeMathSwitchTuple(this.sandstoneCore, value, cases)
+    const statement = executeMathSwitchTuple(this.sandstoneCore, value, cases)
+    // Build the switch node now, so it lands in the math function's
+    // body (the lowerer walks the body to find the branch structure).
+    statement.finalize()
+    return statement
   }
 
-  case(value: Float | Integer | number, callback: () => void) {
+  case(value: MathCaseValue, callback: () => void) {
     return { __case: { value, callback } } as const
+  }
+
+  /**
+   * A numeric value as a handle — an NBT primitive becomes a handle of
+   * its OWN kind (the kind is intrinsic to the value), a bare number
+   * becomes a float literal.
+   */
+  private numericHandle(value: number | Float | Integer | NBTNumericOperand): Float | Integer {
+    if (typeof value === 'number') return this.float(value)
+    if (isNBTNumericOperand(value)) return handleFromNBT(this.sandstoneCore, value)
+    return value
+  }
+
+  /**
+   * A unary operand as a handle — an NBT primitive becomes a handle of
+   * its own kind, a handle passes through.
+   */
+  private unaryOperand(value: Float | Integer | NBTNumericOperand): Float | Integer {
+    if (isNBTNumericOperand(value)) return handleFromNBT(this.sandstoneCore, value)
+    return value
   }
 
   mcfunction(fn: unknown): Integer {
@@ -583,7 +610,7 @@ function aggregate(
   defaultKind: MathKind,
   _opName: string,
 ): Float | Integer {
-  const flat: (Float | Integer)[] = []
+  const flat: (Float | Integer | number | NBTNumericOperand)[] = []
   let explicitKind: MathKind | undefined
   for (const a of args) {
     if (a === 'float' || a === 'integer') {
@@ -596,29 +623,57 @@ function aggregate(
           explicitKind = inner
           continue
         }
-        flat.push(inner as Float | Integer)
+        flat.push(inner as Float | Integer | number | NBTNumericOperand)
       }
       continue
     }
-    flat.push(a as Float | Integer)
+    flat.push(a as Float | Integer | number | NBTNumericOperand)
   }
   if (flat.length === 0) {
     throw new Error(`SandstoneMath.aggregate(${op}): no inputs provided.`)
   }
-  const allInt = flat.every((v) => v.kind === 'integer')
+  // A bare number is a literal — it takes the aggregate's kind, and a
+  // fractional one makes the aggregate float (the numeric tower). An
+  // NBT primitive carries its own kind.
+  const allInt = flat.every((v) => (typeof v === 'number' ? Number.isInteger(v) : operandKindOf(v) === 'integer'))
   const kind: MathKind = explicitKind ?? (allInt ? 'integer' : defaultKind)
-  const inputs = flat.map((v) => v.node)
+  const inputs = flat.map((v) => handleToExpr(core, v, kind))
   return handleFromKind(core, new AggregateNode(core, op, inputs, kind), kind)
+}
+
+/**
+ * The numeric kind a value contributes to the numeric tower.
+ *
+ * A bare number has no kind of its own — it takes the kind of the
+ * context it's used in. A handle carries its own kind, and so does an
+ * NBT primitive (`NBT.int(3)` is an integer, `NBT.float(2.5)` a float).
+ */
+function operandKindOf(value: Float | Integer | number | NBTNumericOperand): MathKind | undefined {
+  if (typeof value === 'number') return undefined
+  if (isNBTNumericOperand(value)) return nbtOperandKind(value)
+  return value.kind
+}
+
+/**
+ * A value as an expression node — a handle's own node, or a literal
+ * for an NBT primitive.
+ */
+function operandNode(
+  core: SandstoneCore,
+  value: Float | Integer | NBTNumericOperand,
+): MathExpressionNode {
+  if (isNBTNumericOperand(value)) return nbtOperandToLiteral(core, value)
+  return value.node
 }
 
 function binaryOp<K extends MathKind>(
   core: SandstoneCore,
   op: BinaryOp,
   a: Float | Integer,
-  b: Float | Integer,
+  b: FloatOperand,
   resultKind: K,
 ): K extends 'float' ? Float : Integer {
-  return handleFromKind(core, new BinaryOpNode(core, op, [a.node, b.node], resultKind), resultKind) as K extends 'float' ? Float : Integer
+  return handleFromKind(core, new BinaryOpNode(core, op, [a.node, handleToExpr(core, b, resultKind)], resultKind), resultKind) as K extends 'float' ? Float : Integer
 }
 
 function unaryOp<K extends MathKind>(

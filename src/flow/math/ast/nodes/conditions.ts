@@ -11,6 +11,8 @@ import type { MathExpressionNode } from '../MathExpressionNode'
 import { MathConditionNode } from '../MathConditionNode'
 import { MathConditionContainerNode } from '../MathConditionContainerNode'
 import { LiteralNode } from './leaves'
+import { isNBTNumericOperand, nbtOperandToLiteral } from './leaves'
+import type { NBTNumericOperand } from './leaves'
 
 /**
  * Operators supported by `ComparisonConditionNode`. Map 1:1 to the MC
@@ -386,7 +388,7 @@ export function compare(
   core: SandstoneCore,
   op: ComparisonOp,
   left: Float | Integer,
-  right: Float | Integer | number,
+  right: Float | Integer | number | NBTNumericOperand,
 ): ComparisonConditionNode {
   // Unwrap handles via `.node`; a raw number literal becomes a
   // `LiteralNode` so the resulting condition carries a real
@@ -403,10 +405,22 @@ export function compare(
   // integer chain compares against an integer literal, and a
   // fractional number is rejected there (an integer chain has no
   // fractional value).
+  //
+  // An NBT primitive is different: it is a TYPED value, so it keeps
+  // its own kind (`NBT.int(3)` is an integer, `NBT.float(2.5)` a
+  // float). The comparison's kind is then the widest of the two
+  // operands, and the lowerer bridges the narrower one.
   const leftNode = left.node
-  const rightNode: MathExpressionNode =
-    typeof right === 'number' ? new LiteralNode(core, right, left.kind) : right.node
-  if (typeof right === 'number') rightNode.internal = true
+  let rightNode: MathExpressionNode
+  if (typeof right === 'number') {
+    rightNode = new LiteralNode(core, right, left.kind)
+    rightNode.internal = true
+  } else if (isNBTNumericOperand(right)) {
+    rightNode = nbtOperandToLiteral(core, right)
+    rightNode.internal = true
+  } else {
+    rightNode = right.node
+  }
   return new ComparisonConditionNode(core, op, leftNode, rightNode)
 }
 

@@ -3,6 +3,7 @@ import type { Float, Integer } from './handles'
 import type { MathConditionNode } from './MathConditionNode'
 import type { MathOutputsSchema } from '../../math/Math'
 import {
+  snapshotMathValue,
   MathElseNode,
   MathElseIfNode,
   MathFlowClauseNode,
@@ -50,14 +51,54 @@ export type MathReturnValue =
  * signatures use it.
  */
 export class MathIfStatement<R extends MathOutputsSchema = MathOutputsSchema> {
-  protected node: MathFlowClauseNode
+  /** The clause this statement extends — created on first use. */
+  protected _node?: MathFlowClauseNode
 
   constructor(
     protected sandstoneCore: SandstoneCore,
     protected condition: MathConditionNode,
-    protected callback: () => void,
+    /**
+     * The body callback. OPTIONAL — `_.if(cond)` with no body is a
+     * valid form; the body arrives with the first `.return(...)` /
+     * `.elseIf(...)` / `.else(...)` call.
+     */
+    protected callback?: () => void,
+    /**
+     * An already-created clause to adopt, instead of creating one.
+     *
+     * `elseIf` creates the `MathElseIfNode` itself and then hands the
+     * statement that node — so the statement must NOT create a second
+     * clause (a `MathIfNode` would land in the math function's body as
+     * a stray branch head).
+     *
+     * @internal
+     */
+    protected adoptedNode?: MathFlowClauseNode,
   ) {
-    this.node = new MathIfNode(sandstoneCore, condition, callback)
+    if (adoptedNode) {
+      this._node = adoptedNode
+      return
+    }
+    // A clause WITH a body is created EAGERLY: the body has to run
+    // here, at the call site, so its statements land in the math
+    // function's body in the right order.
+    //
+    // A clause WITHOUT a body is created lazily — the body arrives
+    // with the `.return(...)` that follows it.
+    if (this.callback) {
+      this._node = new MathIfNode(this.sandstoneCore, this.condition, this.callback)
+    }
+  }
+
+  /**
+   * The clause this statement extends. Created on first access when
+   * it wasn't created eagerly (the body-less form).
+   */
+  protected get node(): MathFlowClauseNode {
+    if (!this._node) {
+      this._node = new MathIfNode(this.sandstoneCore, this.condition, this.callback)
+    }
+    return this._node
   }
 
   /**
@@ -73,7 +114,8 @@ export class MathIfStatement<R extends MathOutputsSchema = MathOutputsSchema> {
       this.sandstoneCore,
       condition,
       callback,
-    )._adoptNode(elseIfNode)
+      elseIfNode,
+    )
   }
 
   /**
@@ -94,7 +136,7 @@ export class MathIfStatement<R extends MathOutputsSchema = MathOutputsSchema> {
    * Value must match the schema — `V extends R`.
    */
   return<V extends MathReturnValue>(value: V): MathIfReturnStatement<R> {
-    const returnNode = new MathReturnNode(this.sandstoneCore, value)
+    const returnNode = new MathReturnNode(this.sandstoneCore, snapshotMathValue(value))
     this.node.append(returnNode)
     return new MathIfReturnStatement<R>(
       this.sandstoneCore,
@@ -104,14 +146,53 @@ export class MathIfStatement<R extends MathOutputsSchema = MathOutputsSchema> {
     )
   }
 
+}
+/**
+ * `_.if(cond)` with no body — the RETURN-ONLY form.
+ *
+ * A branch that just returns a value needs no body callback: the
+ * return IS the body. The clause is created when the value is
+ * returned, so the branch lands in the right place in the math
+ * function's body.
+ *
+ * There is no else chain here — a return-only `if` is a single
+ * branch. Use `_.if(cond, () => { ... })` for the chainable form.
+ */
+export class MathIfReturnOnlyStatement<R extends MathOutputsSchema = MathOutputsSchema> {
+  /** The clause — created when the branch returns. */
+  private _node?: MathIfNode
+
+  constructor(
+    protected sandstoneCore: SandstoneCore,
+    protected condition: MathConditionNode,
+  ) {}
+
   /**
-   * @internal — used by `elseIf` to hand back a statement whose `node`
-   * points at the just-created `MathElseIfNode` (so further chain
-   * extensions link from there, not from a fresh head).
+   * Return a value from the branch. The clause is created here, with
+   * the return as its body.
+   *
+   * Value must match the schema — `V extends R`.
    */
-  protected _adoptNode(node: MathFlowClauseNode): this {
-    this.node = node
+  return<V extends MathReturnValue>(value: V): this {
+    if (!this._node) {
+      this._node = new MathIfNode(this.sandstoneCore, this.condition)
+    }
+    const returnNode = new MathReturnNode(this.sandstoneCore, snapshotMathValue(value))
+    // The return belongs to the CLAUSE — the clause isn't on the math
+    // stack (its body is the return), so the owner is set by hand.
+    returnNode.owner = this._node
+    this._node.append(returnNode)
     return this
+  }
+
+  /**
+   * @internal — exposed for lowerer / tests.
+   */
+  getNode(): MathIfNode {
+    if (!this._node) {
+      this._node = new MathIfNode(this.sandstoneCore, this.condition)
+    }
+    return this._node
   }
 }
 

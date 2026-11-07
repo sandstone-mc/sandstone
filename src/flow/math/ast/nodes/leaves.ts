@@ -1,6 +1,7 @@
 import type { SandstoneCore } from '../../../../core/sandstoneCore'
 import * as util from 'util'
 import type { DataPointClass } from '../../../../variables/Data'
+import { NBTByte, NBTDouble, NBTFloat, NBTInt, NBTShort } from '../../../../variables/nbt/NBTs'
 import type { Score } from '../../../../variables/Score'
 import { formatMathLeaf, getIndent } from '../inspectHelpers'
 import type { MathKind } from '../MathExpressionNode'
@@ -90,6 +91,56 @@ export class LiteralNode extends MathExpressionNode {
       ['kind', this.kind],
     ], getIndent(options), this)
   }
+}
+
+/**
+ * An NBT numeric primitive usable as a math operand — `NBT.int(3)`,
+ * `NBT.byte(1)`, `NBT.short(2)`, `NBT.float(2.5)`, `NBT.double(1.5)`.
+ *
+ * Unlike a bare number (whose numeric kind comes from the receiving
+ * chain), an NBT primitive carries its OWN kind: `NBT.int(3)` is an
+ * integer, `NBT.float(2.5)` a float. A mismatched operand is bridged
+ * by MC's `from_int` / `from_float` at the point of use — exactly
+ * like an explicit `_.float(...)` / `_.integer(...)` handle.
+ *
+ * `NBTLong` is deliberately absent: a long is a `bigint`, which the
+ * math AST's `number`-valued literals can't represent exactly.
+ */
+export type NBTNumericOperand = NBTInt | NBTByte | NBTShort | NBTFloat | NBTDouble
+
+/**
+ * True iff the value is an NBT numeric primitive.
+ */
+export function isNBTNumericOperand(value: unknown): value is NBTNumericOperand {
+  return value instanceof NBTInt
+    || value instanceof NBTByte
+    || value instanceof NBTShort
+    || value instanceof NBTFloat
+    || value instanceof NBTDouble
+}
+
+/**
+ * The numeric kind an NBT primitive carries — intrinsic to the value,
+ * exactly like the math block's input rebinding (see `rebindInput`).
+ */
+export function nbtOperandKind(nbt: NBTNumericOperand): MathKind {
+  return nbt instanceof NBTInt || nbt instanceof NBTByte || nbt instanceof NBTShort
+    ? 'integer'
+    : 'float'
+}
+
+/**
+ * Turn an NBT numeric primitive into a `LiteralNode` carrying the
+ * primitive's OWN numeric kind.
+ *
+ * The kind is intrinsic to the primitive — `NBT.int(3)` is an integer
+ * literal, `NBT.float(2.5)` a float one — so the literal keeps it
+ * rather than adopting the receiving chain's kind the way a bare
+ * number does. That lets the numeric tower decide: an integer chain
+ * that meets a float operand widens (or bridges) on its own.
+ */
+export function nbtOperandToLiteral(core: SandstoneCore, nbt: NBTNumericOperand): LiteralNode {
+  return new LiteralNode(core, Number(nbt.value), nbtOperandKind(nbt))
 }
 
 /**
