@@ -123,16 +123,46 @@ export function ensureLiveMC() {
   }, STARTUP_DEADLINE_MS)
 
   afterAll(async () => {
-    if (daemonProc !== null) {
+    const ownedDaemon = daemonProc !== null
+    if (ownedDaemon) {
       console.log(chalk`{blue [test]} Shutting down test server...`)
     }
     if (runFinished !== null) {
       try { await runFinished } catch {}
     }
-    if (daemonProc !== null) {
+    if (ownedDaemon) {
+      await stopDaemon()
       console.log(chalk`{blue [test]} Test server finished shutting down`)
     }
   }, SHUTDOWN_GRACE_MS)
+}
+
+/**
+ * Stop the daemon this process started.
+ *
+ * The teardown cannot live in `process.on('exit')`: Bun's test runner
+ * tears the process down without ever firing the `exit` event (neither
+ * `exit` nor `beforeExit` fire under `bun test`), so the daemon — and
+ * with it the MC server holding the world lock — used to survive the
+ * test run. `afterAll` is the only teardown hook that reliably runs.
+ */
+async function stopDaemon(): Promise<void> {
+  const proc = daemonProc
+  if (proc === null) return
+  daemonProc = null
+  try {
+    if (proc.exitCode === null) proc.kill('SIGTERM')
+  } catch {}
+  // On SIGTERM the daemon stops the MC server it owns (RCON `stop`),
+  // which can take up to ~30s. Wait for it so the world lock is
+  // released before the test process exits.
+  await Promise.race([
+    proc.exited,
+    new Promise<void>((resolve) => {
+      const timer = setTimeout(resolve, 60_000)
+      timer.unref?.()
+    }),
+  ])
 }
 
 /**
@@ -572,11 +602,3 @@ async function runJsonTestProcess(
 function isObject(v: unknown): v is Record<string, unknown> {
   return !!v && typeof v === 'object' && !Array.isArray(v)
 }
-
-process.on('exit', () => {
-  try {
-    if (daemonProc !== null && daemonProc.exitCode === null) {
-      daemonProc.kill('SIGTERM')
-    }
-  } catch {}
-})
