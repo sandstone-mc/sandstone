@@ -46,6 +46,55 @@ bun run test:server:down     # Send --shutdown to the daemon
 
 **Do NOT run `test:server:up` / `test:server:down` yourself.** `test:integrated` starts the daemon on its own if one isn't already running (and reuses an existing one if it is). The up/down scripts exist only for the user to manually restart the daemon after a CLI change — if you've just edited `sandstone-cli/` and need the new build to be live, ask the user to run `test:server:down && test:server:up` instead of doing it yourself. Otherwise the harness owns the daemon lifecycle.
 
+### Benchmark harness
+
+`tests/integrated/benchmark/` holds an A-vs-B benchmark harness that reuses
+the same integrated test server as the GameTest suite.
+
+```bash
+bun run test:bench funny_compare
+```
+
+which dynamically imports `tests/integrated/benchmark/<name>.ts` and
+benchmarks the pair it exposes. `index.ts` is the harness; every other file
+in the folder is a benchmark.
+
+A benchmark file default-exports an object whose `a` and `b` are functions
+taking a `SandstonePack` and returning the mcfunction they created:
+
+```ts
+import type { BenchmarkSpec, SandstonePack } from './types.js'
+
+export default {
+  setup: (pack: SandstonePack) => {
+    pack.Objective.create('bench', 'dummy', undefined, { useDefaultNamespace: false })
+    return pack.MCFunction('bench_setup', () => {
+      pack.commands.scoreboard.players.set('#bench', 'bench', 0)
+    })
+  },
+  a: (pack: SandstonePack) => pack.MCFunction('bench_add', () => { /* ... */ }),
+  b: (pack: SandstonePack) => pack.MCFunction('bench_set', () => { /* ... */ }),
+  iterationsPerTick: 10,
+} as BenchmarkSpec
+```
+
+The types live in `tests/integrated/benchmark/types.ts` — `BenchmarkSpec`,
+`BenchmarkTarget`, and a re-export of `SandstonePack` / `MCFunctionClass`,
+so a benchmark file needs one import.
+
+Import `sandstone` from the same `dist/exports/index.js` path the harness
+uses — the pack is created *before* the benchmark file is imported, so both
+must resolve to the same module instance to share the global pack.
+
+The harness builds the pack, deploys it to
+`world/datapacks/integrated_benchmarks/`, and shells out to
+`sand bench --json` (the same way the test harness shells out to
+`sand test --json`). The numbers land in
+`tests/integrated/.server/.sandstone/bench-result.json`.
+
+`setup` and `cleanup` are optional and run **once** around the whole batch
+of profiling runs — not once per run.
+
 ### `tests/integrated/.server/` is sacred — treat it as read-only
 
 **NEVER delete `tests/integrated/.server/`.** Not for a "clean rebuild", not to fix a stale state, not ever. If something looks broken in there, the bug is elsewhere — in source, in the CLI, in the daemon — never in the directory itself. The directory holds the live MC server's world, mods, generated datapacks, and the daemon's `.sandstone/connect.url` (whose PID is how `test:server:down` finds and kills the daemon). Clearing it strands the server process AND destroys every debugging artifact you might need to diagnose the actual problem.
